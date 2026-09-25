@@ -671,11 +671,35 @@ footer.site-footer {
   flex-wrap: wrap;
 }
 .editor-bar[hidden] { display: none; }
+.editor-nav {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.editor-nav label {
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #aaa;
+}
+.editor-nav select {
+  font-family: 'DM Sans', Arial, sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--white);
+  background: transparent;
+  border: 1px solid #555;
+  border-radius: 20px;
+  padding: 8px 14px;
+  cursor: pointer;
+}
+.editor-nav select option { color: #191817; }
 .editor-hint {
   font-size: 11px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #aaa;
+  color: #777;
 }
 .editor-bar-actions { display: flex; gap: 10px; }
 .editor-bar-actions button {
@@ -1206,7 +1230,11 @@ body.editing .hero-slider { position: relative; }
 </div>
 
 <div class="editor-bar" id="editorBar" hidden>
-  <div class="editor-hint">Modalità editor attiva — clicca sui testi per modificarli</div>
+  <div class="editor-nav">
+    <label for="editorPage">Pagina</label>
+    <select id="editorPage"></select>
+    <span class="editor-hint">clicca sui testi per modificarli</span>
+  </div>
   <div class="editor-bar-actions">
     <button type="button" id="editorReset">Ripristina</button>
     <button type="button" id="editorExit">Esci</button>
@@ -1311,8 +1339,18 @@ document.addEventListener('DOMContentLoaded', function () {
     navLinks.forEach(function (l) {
       l.classList.toggle('active', l.getAttribute('data-nav') === name);
     });
+    syncPageSelect(name);
     window.scrollTo({ top: 0, behavior: 'instant' in window ? 'instant' : 'auto' });
     closeMobileNav();
+  }
+
+  /* tiene allineato il selettore di pagina dell'editor */
+  function syncPageSelect (name) {
+    var select = document.getElementById('editorPage');
+    if (!select) return;
+    for (var i = 0; i < select.options.length; i++) {
+      if (select.options[i].value === name) { select.selectedIndex = i; return; }
+    }
   }
 
   navLinks.forEach(function (link) {
@@ -1397,7 +1435,7 @@ document.addEventListener('DOMContentLoaded', function () {
      EDITOR
      ===================================================== */
   var ACCESS_CODE = 'farna2317';
-  var EDITABLE = 'h1, h2, h3, h4, p, .date-badge, .tag, .venue, .eyebrow, .meta, .brand-title, .brand-sub, .newsletter-label, .footer-legal, .footer-info p, .stat b, .stat span, .main-nav a, .trasparenza-voce, .trasparenza-dato, .btn-calendar';
+  var EDITABLE = 'h1, h2, h3, h4, p, .date-badge, .tag, .venue, .eyebrow, .meta, .brand-title, .brand-sub, .newsletter-label, .footer-legal, .footer-info p, .stat b, .stat span, .main-nav a, .trasparenza-voce, .trasparenza-dato, .btn-calendar, .btn, .trasparenza-link';
   var PLACEHOLDER_IMG = 'https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?q=80&w=900&auto=format&fit=crop';
 
   var modal = document.getElementById('editModal');
@@ -1544,9 +1582,53 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
+  /* elenco delle pagine raggiungibili dall'editor, con le etichette
+     prese dalle voci della barra (così segue le rinominazioni) */
+  function buildPageSelect () {
+    var select = document.getElementById('editorPage');
+    if (!select) return;
+
+    var labels = { home: 'Home' };
+    document.querySelectorAll('[data-nav]').forEach(function (l) {
+      if (l.classList.contains('back-link') || l.classList.contains('brand')) return;
+      var key = l.getAttribute('data-nav');
+      var text = l.textContent.trim();
+      if (key && text) labels[key] = text;
+    });
+
+    /* prima Home, poi le voci nell'ordine della barra, infine il resto */
+    var order = ['home'];
+    document.querySelectorAll('.main-nav [data-nav]').forEach(function (l) {
+      var k = l.getAttribute('data-nav');
+      if (order.indexOf(k) === -1) order.push(k);
+    });
+    document.querySelectorAll('.page').forEach(function (p) {
+      var k = p.getAttribute('data-page');
+      if (order.indexOf(k) === -1) order.push(k);
+    });
+
+    select.innerHTML = '';
+    order.forEach(function (key) {
+      if (!labels[key]) return;
+      if (!document.querySelector('.page[data-page="' + key + '"]')) return;
+      var opt = document.createElement('option');
+      opt.value = key;
+      opt.textContent = labels[key];
+      select.appendChild(opt);
+    });
+
+    var current = document.querySelector('.page:not([hidden])');
+    if (current) syncPageSelect(current.getAttribute('data-page'));
+  }
+
   function enterEditMode () {
     document.body.classList.add('editing');
     editorBar.hidden = false;
+    buildPageSelect();
+    /* in editor niente comparse in dissolvenza: tutto sempre visibile */
+    document.querySelectorAll('.reveal').forEach(function (el) {
+      el.classList.add('is-visible');
+    });
     makeEditable(document.querySelector('main'));
     makeEditable(document.querySelector('header.site-header'));
     makeEditable(document.querySelector('footer.site-footer'));
@@ -1597,6 +1679,10 @@ document.addEventListener('DOMContentLoaded', function () {
       window.alert('Spazio esaurito: le immagini caricate sono troppo pesanti per il salvataggio locale.\n\nSoluzione: copia i file immagine nella cartella del sito e chiedi di collegarli per nome.');
     }
   }
+
+  document.getElementById('editorPage').addEventListener('change', function () {
+    showPage(this.value);
+  });
 
   document.getElementById('editorOpen').addEventListener('click', openModal);
   document.getElementById('editCancel').addEventListener('click', closeModal);

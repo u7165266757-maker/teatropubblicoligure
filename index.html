@@ -31,7 +31,7 @@
   --line: rgba(25,24,23,.14);
   --line-soft: rgba(25,24,23,.08);
 
-  --radius: 16px;
+  --radius: 0;
   --shadow: 0 18px 40px rgba(25,24,23,.10);
   --maxw: 1240px;
 }
@@ -42,7 +42,7 @@ html { scroll-behavior: smooth; }
 
 body {
   margin: 0;
-  font-family: 'DM Sans', Arial, sans-serif;
+  font-family: 'Playfair Display', Georgia, serif;
   color: var(--black);
   background: var(--bg);
   font-size: 16px;
@@ -99,7 +99,7 @@ p { text-align: left; color: var(--dark); }
   text-transform: uppercase;
   letter-spacing: 0.14em;
   border: 1px solid var(--black);
-  border-radius: 30px;
+  border-radius: 0;
   color: var(--black);
   transition: background .25s ease, color .25s ease, border-color .25s ease;
   cursor: pointer;
@@ -153,7 +153,6 @@ header.site-header {
 }
 .brand-text { display: flex; flex-direction: column; }
 .brand-title {
-  font-family: 'DM Sans', Arial, sans-serif;
   font-weight: 700;
   letter-spacing: -0.01em;
   font-size: 20px;
@@ -161,7 +160,6 @@ header.site-header {
   color: var(--black);
 }
 .brand-sub {
-  font-family: 'DM Sans', Arial, sans-serif;
   font-weight: 400;
   font-size: 10px;
   letter-spacing: 0.13em;
@@ -194,7 +192,6 @@ header.site-header {
 .header-social a {
   width: 32px; height: 32px;
   border: 1px solid var(--line);
-  border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
   color: var(--black);
   transition: background .2s ease, border-color .2s ease, color .2s ease;
@@ -206,7 +203,6 @@ header.site-header {
   color: var(--white);
 }
 .main-nav a {
-  font-family: 'DM Sans', Arial, sans-serif;
   text-transform: uppercase;
   font-size: 11px;
   font-weight: 500;
@@ -254,7 +250,7 @@ header.site-header {
   letter-spacing: 0.16em;
   color: var(--dark);
   border: 1px solid var(--line);
-  border-radius: 20px;
+  border-radius: 0;
   padding: 9px 18px;
   margin-bottom: 48px;
   transition: background .2s ease, color .2s ease, border-color .2s ease;
@@ -298,7 +294,6 @@ header.site-header {
 }
 .slider-dots .dot {
   width: 42px; height: 3px;
-  border-radius: 3px;
   border: none;
   background: rgba(255,255,255,.4);
   cursor: pointer;
@@ -404,7 +399,6 @@ section.alt { background: var(--off-white); }
   border: 1px solid var(--black);
   border-radius: 0;
   padding: 26px 76px;
-  font-family: 'DM Sans', Arial, sans-serif;
   font-size: clamp(22px, 3vw, 34px);
   font-weight: 600;
   letter-spacing: 0.16em;
@@ -420,7 +414,6 @@ section.alt { background: var(--off-white); }
   max-width: 820px;
   margin-bottom: 44px;
   overflow: hidden;
-  border-radius: var(--radius);
 }
 .detail-media img { width: 100%; height: auto; }
 .card-detail h2 { font-size: clamp(38px, 5.4vw, 72px); margin-bottom: 22px; }
@@ -433,7 +426,7 @@ section.alt { background: var(--off-white); }
   gap: 70px;
   align-items: center;
 }
-.split .ph-block { height: 480px; overflow: hidden; border-radius: var(--radius); }
+.split .ph-block { height: 480px; overflow: hidden; }
 .split .ph-block img { width: 100%; height: 100%; object-fit: cover; }
 .split h2 { font-size: clamp(32px, 4vw, 52px); }
 .split .stat-row {
@@ -461,7 +454,7 @@ section.alt { background: var(--off-white); }
   grid-template-columns: repeat(3, 1fr);
   gap: 32px;
 }
-.news-card .ph { height: 230px; overflow: hidden; border-radius: var(--radius); }
+.news-card .ph { height: 230px; overflow: hidden; }
 .news-card .ph img {
   width: 100%; height: 100%; object-fit: cover;
   transition: transform .7s cubic-bezier(.2,.7,.3,1);
@@ -478,6 +471,53 @@ section.alt { background: var(--off-white); }
 }
 .news-card h3 { font-size: 22px; line-height: 1.22; }
 .news-card p { font-size: 15px; color: var(--dark); margin-top: 12px; }
+
+/* ============ POSTER (pagina Film) ============ */
+.grid-posters {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 30px;
+}
+.poster-item { margin: 0; position: relative; }
+.poster-ph {
+  position: relative;
+  aspect-ratio: 2 / 3;
+  overflow: hidden;
+  background: var(--off-white);
+}
+.poster-ph img {
+  width: 100%; height: 100%; object-fit: cover;
+  transition: transform .7s cubic-bezier(.2,.7,.3,1);
+}
+.poster-item:hover .poster-ph img { transform: scale(1.04); }
+.poster-item figcaption {
+  margin-top: 14px;
+  font-size: 15px;
+  line-height: 1.4;
+  color: var(--black);
+}
+.poster-item .poster-sub {
+  display: block;
+  margin-top: 5px;
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--dark);
+}
+.add-poster {
+  border: 2px dashed var(--line);
+  background: var(--off-white);
+  color: var(--dark);
+  aspect-ratio: 2 / 3;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.add-poster:hover { border-color: var(--orange-red); color: var(--orange-red); }
+
+@media (max-width: 980px) { .grid-posters { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 720px) { .grid-posters { grid-template-columns: repeat(2, 1fr); } }
 
 /* ============ TRASPARENZA ============ */
 .trasparenza-table { border-top: 1px solid var(--line); max-width: 900px; }
@@ -519,7 +559,6 @@ section.alt { background: var(--off-white); }
   box-shadow: 0 18px 40px rgba(229,80,30,.25);
 }
 .newsletter-label {
-  font-family: 'DM Sans', Arial, sans-serif;
   font-size: clamp(21px, 3vw, 34px);
   font-weight: 600;
   text-transform: uppercase;
@@ -562,7 +601,7 @@ footer.site-footer {
   align-items: center;
   gap: 22px;
 }
-.footer-inner img { height: 40px; border-radius: 6px; }
+.footer-inner img { height: 40px; }
 .footer-info p {
   color: rgba(255,253,249,.55);
   font-size: 14px;
@@ -574,7 +613,6 @@ footer.site-footer {
 .footer-social a {
   width: 38px; height: 38px;
   border: 1px solid rgba(255,253,249,.2);
-  border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
   color: rgba(255,253,249,.7);
   transition: background .2s ease, color .2s ease, border-color .2s ease;
@@ -638,7 +676,7 @@ footer.site-footer {
 .edit-modal-box {
   width: min(400px, 100%);
   background: var(--white);
-  border-radius: 18px;
+  border-radius: 0;
   padding: 32px;
 }
 .edit-modal-box h3 { font-size: 26px; margin-bottom: 8px; }
@@ -647,14 +685,14 @@ footer.site-footer {
   width: 100%;
   padding: 13px 15px;
   border: 1px solid var(--line);
-  border-radius: 8px;
+  border-radius: 0;
   font-family: inherit;
   font-size: 14px;
   outline: none;
 }
 .edit-modal-box input:focus { border-color: var(--orange-red); }
 .edit-modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 18px; }
-.edit-modal-actions .btn { padding: 10px 20px; border-radius: 8px; }
+.edit-modal-actions .btn { padding: 10px 20px; }
 .edit-error { color: var(--orange-red); font-size: 12px; min-height: 18px; margin-top: 10px; }
 
 .editor-bar {
@@ -690,7 +728,7 @@ footer.site-footer {
   color: var(--white);
   background: transparent;
   border: 1px solid #555;
-  border-radius: 20px;
+  border-radius: 0;
   padding: 8px 14px;
   cursor: pointer;
 }
@@ -709,7 +747,7 @@ footer.site-footer {
   letter-spacing: 0.12em;
   text-transform: uppercase;
   padding: 10px 18px;
-  border-radius: 20px;
+  border-radius: 0;
   border: 1px solid #555;
   background: transparent;
   color: var(--white);
@@ -743,11 +781,16 @@ body.editing .hero-slider { position: relative; }
   border: none;
   cursor: pointer;
   padding: 6px 10px;
-  border-radius: 14px;
+  border-radius: 0;
   background: rgba(20,18,17,.82);
   color: var(--white);
 }
 .edit-only:hover { background: var(--orange-red); }
+.poster-tools {
+  position: absolute;
+  top: 18px; left: 18px;
+  z-index: 5;
+}
 .card-tools {
   position: absolute;
   left: 0; right: 0; bottom: 92px;
@@ -764,7 +807,7 @@ body.editing .hero-slider { position: relative; }
 }
 .add-card {
   border: 2px dashed var(--line);
-  border-radius: var(--radius);
+  border-radius: 0;
   background: var(--off-white);
   color: var(--dark);
   aspect-ratio: 3 / 4;
@@ -811,7 +854,7 @@ body.editing .hero-slider { position: relative; }
 
 @media (max-width: 720px) {
   .grid-shows { grid-template-columns: 1fr; }
-  .newsletter-box { padding: 30px 26px; border-radius: 18px; }
+  .newsletter-box { padding: 30px 26px; }
   .hero-slider { height: 70vh; }
 }
 
@@ -1125,7 +1168,26 @@ body.editing .hero-slider { position: relative; }
       <a href="#" class="back-link" data-nav="home">&larr; Home</a>
       <span class="eyebrow">Film</span>
       <h2 style="margin-bottom:20px;">testo qui</h2>
-      <p style="max-width:640px;">testo qui</p>
+      <p style="max-width:640px; margin-bottom:56px;">testo qui</p>
+
+      <div class="grid-posters">
+        <figure class="poster-item">
+          <div class="poster-ph"><img src="hero.jpg" alt=""></div>
+          <figcaption>testo qui<span class="poster-sub">testo qui</span></figcaption>
+        </figure>
+        <figure class="poster-item">
+          <div class="poster-ph"><img src="Dialoghi2026_programma_70x100.jpg" alt=""></div>
+          <figcaption>testo qui<span class="poster-sub">testo qui</span></figcaption>
+        </figure>
+        <figure class="poster-item">
+          <div class="poster-ph"><img src="https://images.unsplash.com/photo-1503095396549-807759245b35?q=80&w=800&auto=format&fit=crop" alt=""></div>
+          <figcaption>testo qui<span class="poster-sub">testo qui</span></figcaption>
+        </figure>
+        <figure class="poster-item">
+          <div class="poster-ph"><img src="https://images.unsplash.com/photo-1514306191717-452ec28c7814?q=80&w=800&auto=format&fit=crop" alt=""></div>
+          <figcaption>testo qui<span class="poster-sub">testo qui</span></figcaption>
+        </figure>
+      </div>
     </div>
   </section>
 
@@ -1244,49 +1306,109 @@ body.editing .hero-slider { position: relative; }
 
 <input type="file" id="editorFileInput" accept="image/*" hidden>
 
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <script>
+/* Stesso progetto Firebase del calendario. Il sito usa un documento tutto suo,
+   "calendars/sito-tpl": il calendario continua a usare "calendars/main" e i due
+   non si toccano. Resta dentro la raccolta "calendars" perché è l'unica che le
+   regole di sicurezza del progetto autorizzano. */
+var firebaseConfig = {
+  apiKey: "AIzaSyB0JvlBt5db-FbrixpSYB0fYjWh5mpvBDA",
+  authDomain: "calendario-71ec4.firebaseapp.com",
+  projectId: "calendario-71ec4",
+  storageBucket: "calendario-71ec4.firebasestorage.app",
+  messagingSenderId: "195557936917",
+  appId: "1:195557936917:web:ba17c3253c8f0fa821631c"
+};
+/* Cloudinary: le foto caricate dall'editor finiscono qui, non nel database */
+var CLOUDINARY_CLOUD_NAME = "orqjfhcj";
+var CLOUDINARY_UPLOAD_PRESET = "md5s3dgi";
+</script>
+
+<script>
+/* =====================================================
+   CONTENUTI PUBBLICATI
+   Le modifiche fatte nell'editor vengono salvate su Firestore,
+   quindi le vedono TUTTI i visitatori, non solo chi le ha fatte.
+   ===================================================== */
+var CONTENT_VERSION = '4';
+var STORE = [
+  { key: 'nav', sel: '#mainNav ul' },
+  { key: 'main', sel: 'main' },
+  { key: 'footer', sel: 'footer.site-footer' }
+];
+
+var SITE_DOC = null;
+try {
+  firebase.initializeApp(firebaseConfig);
+  SITE_DOC = firebase.firestore().collection('calendars').doc('sito-tpl');
+} catch (e) {
+  SITE_DOC = null;
+}
+
+/* ripulisce il contenuto dagli strumenti dell'editor prima di pubblicarlo */
+function snapshot (node) {
+  var clone = node.cloneNode(true);
+  clone.querySelectorAll('.edit-only, .edit-only-wrap').forEach(function (el) { el.remove(); });
+  clone.querySelectorAll('[contenteditable]').forEach(function (el) {
+    el.removeAttribute('contenteditable');
+  });
+  clone.querySelectorAll('.page').forEach(function (p) {
+    p.hidden = p.getAttribute('data-page') !== 'home';
+  });
+  return clone.innerHTML;
+}
+
+function applyContent (data) {
+  STORE.forEach(function (s) {
+    var node = document.querySelector(s.sel);
+    if (node && data[s.key]) node.innerHTML = data[s.key];
+  });
+}
+
+function publishContent () {
+  var data = { version: CONTENT_VERSION, updatedAt: Date.now() };
+  STORE.forEach(function (s) {
+    var node = document.querySelector(s.sel);
+    if (node) data[s.key] = snapshot(node);
+  });
+  return SITE_DOC.set(data);
+}
+
+/* scarica i contenuti pubblicati prima di avviare il sito, così gli
+   eventi si agganciano agli elementi definitivi */
+function loadPublishedContent (done) {
+  if (!SITE_DOC) { done(); return; }
+  var started = false;
+  function go () { if (!started) { started = true; done(); } }
+  setTimeout(go, 4000);
+  SITE_DOC.get().then(function (snap) {
+    var data = snap.exists ? snap.data() : null;
+    if (data && data.version === CONTENT_VERSION) applyContent(data);
+    go();
+  }).catch(go);
+}
+
+/* carica una foto su Cloudinary e restituisce l'indirizzo pubblico */
+function uploadImage (file) {
+  var form = new FormData();
+  form.append('file', file);
+  form.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+  return fetch('https://api.cloudinary.com/v1_1/' + CLOUDINARY_CLOUD_NAME + '/image/upload', {
+    method: 'POST',
+    body: form
+  }).then(function (res) {
+    if (!res.ok) throw new Error('caricamento non riuscito');
+    return res.json();
+  }).then(function (json) { return json.secure_url; });
+}
+
 document.addEventListener('DOMContentLoaded', function () {
+  loadPublishedContent(startApp);
+});
 
-  /* =====================================================
-     CONTENUTI SALVATI (editor) — ripristinati prima di
-     agganciare gli eventi, così i listener finiscono
-     sugli elementi giusti.
-     ===================================================== */
-  var CONTENT_VERSION = '3';
-  var STORE = [
-    { key: 'tpl_nav', sel: '#mainNav ul' },
-    { key: 'tpl_main', sel: 'main' },
-    { key: 'tpl_footer', sel: 'footer.site-footer' }
-  ];
-
-  function storageAvailable () {
-    try {
-      localStorage.setItem('tpl_test', '1');
-      localStorage.removeItem('tpl_test');
-      return true;
-    } catch (e) { return false; }
-  }
-
-  function clearSaved () {
-    if (!storageAvailable()) return;
-    STORE.forEach(function (s) { localStorage.removeItem(s.key); });
-    localStorage.removeItem('tpl_version');
-  }
-
-  function restoreSaved () {
-    if (!storageAvailable()) return;
-    if (localStorage.getItem('tpl_version') !== CONTENT_VERSION) {
-      clearSaved();
-      return;
-    }
-    STORE.forEach(function (s) {
-      var html = localStorage.getItem(s.key);
-      var node = document.querySelector(s.sel);
-      if (html && node) node.innerHTML = html;
-    });
-  }
-
-  restoreSaved();
+function startApp () {
 
   /* ---- mobile nav open/close ---- */
   var toggle = document.querySelector('.nav-toggle');
@@ -1435,7 +1557,7 @@ document.addEventListener('DOMContentLoaded', function () {
      EDITOR
      ===================================================== */
   var ACCESS_CODE = 'farna2317';
-  var EDITABLE = 'h1, h2, h3, h4, p, .date-badge, .tag, .venue, .eyebrow, .meta, .brand-title, .brand-sub, .newsletter-label, .footer-legal, .footer-info p, .stat b, .stat span, .main-nav a, .trasparenza-voce, .trasparenza-dato, .btn-calendar, .btn, .trasparenza-link';
+  var EDITABLE = 'h1, h2, h3, h4, p, .date-badge, .tag, .venue, .eyebrow, .meta, .brand-title, .brand-sub, .newsletter-label, .footer-legal, .footer-info p, .stat b, .stat span, .main-nav a, .trasparenza-voce, .trasparenza-dato, .btn-calendar, .btn, .trasparenza-link, figcaption, .poster-sub';
   var PLACEHOLDER_IMG = 'https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?q=80&w=900&auto=format&fit=crop';
 
   var modal = document.getElementById('editModal');
@@ -1476,17 +1598,27 @@ document.addEventListener('DOMContentLoaded', function () {
   fileInput.addEventListener('change', function () {
     var file = fileInput.files && fileInput.files[0];
     if (!file || !pendingTarget) return;
-    var reader = new FileReader();
-    reader.onload = function (ev) {
-      if (pendingTarget.tagName === 'IMG') {
-        pendingTarget.src = ev.target.result;
+    var target = pendingTarget;
+    pendingTarget = null;
+
+    setEditorBusy('Caricamento immagine…');
+    uploadImage(file).then(function (url) {
+      if (target.tagName === 'IMG') {
+        target.src = url;
       } else {
-        pendingTarget.style.backgroundImage = "url('" + ev.target.result + "')";
+        target.style.backgroundImage = "url('" + url + "')";
       }
-      pendingTarget = null;
-    };
-    reader.readAsDataURL(file);
+      setEditorBusy('');
+    }).catch(function () {
+      setEditorBusy('');
+      window.alert('Non sono riuscito a caricare l\'immagine.\nControlla la connessione e riprova.');
+    });
   });
+
+  function setEditorBusy (text) {
+    var hint = document.querySelector('.editor-hint');
+    if (hint) hint.textContent = text || 'clicca sui testi per modificarli';
+  }
 
   function decorateCard (card) {
     if (card.querySelector('.card-tools')) return;
@@ -1571,8 +1703,40 @@ document.addEventListener('DOMContentLoaded', function () {
     slider.appendChild(box);
   }
 
+  /* pagina Film: ogni poster si può sostituire o eliminare */
+  function decoratePoster (item) {
+    if (item.querySelector('.poster-tools')) return;
+    var tools = document.createElement('div');
+    tools.className = 'poster-tools edit-only-wrap';
+    tools.appendChild(makeTool('Elimina', function () {
+      if (window.confirm('Eliminare questo poster?')) item.remove();
+    }));
+    item.appendChild(tools);
+  }
+
+  function addPosterButton () {
+    var grid = document.querySelector('.grid-posters');
+    if (!grid || grid.querySelector('.add-poster')) return;
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'add-poster edit-only';
+    btn.textContent = '+ Aggiungi poster';
+    btn.addEventListener('click', function () {
+      var item = document.createElement('figure');
+      item.className = 'poster-item';
+      item.innerHTML =
+        '<div class="poster-ph"><img src="' + PLACEHOLDER_IMG + '" alt=""></div>' +
+        '<figcaption>testo qui<span class="poster-sub">testo qui</span></figcaption>';
+      grid.insertBefore(item, btn);
+      makeEditable(item);
+      decoratePoster(item);
+      decorateImages(item);
+    });
+    grid.appendChild(btn);
+  }
+
   function decorateImages (root) {
-    root.querySelectorAll('.split .ph-block img, .news-card img, .card-detail img').forEach(function (img) {
+    root.querySelectorAll('.split .ph-block img, .news-card img, .card-detail img, .poster-ph img').forEach(function (img) {
       var holder = img.parentNode;
       if (holder.querySelector('.slide-tools')) return;
       var box = document.createElement('div');
@@ -1633,9 +1797,11 @@ document.addEventListener('DOMContentLoaded', function () {
     makeEditable(document.querySelector('header.site-header'));
     makeEditable(document.querySelector('footer.site-footer'));
     document.querySelectorAll('.show-card').forEach(decorateCard);
+    document.querySelectorAll('.poster-item').forEach(decoratePoster);
     decorateImages(document);
     heroTool();
     addCardButton();
+    addPosterButton();
   }
 
   function exitEditMode () {
@@ -1649,35 +1815,21 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  function snapshot (node) {
-    var clone = node.cloneNode(true);
-    clone.querySelectorAll('.edit-only, .edit-only-wrap').forEach(function (el) { el.remove(); });
-    clone.querySelectorAll('[contenteditable]').forEach(function (el) {
-      el.removeAttribute('contenteditable');
-    });
-    clone.querySelectorAll('.page').forEach(function (p) {
-      p.hidden = p.getAttribute('data-page') !== 'home';
-    });
-    return clone.innerHTML;
-  }
 
   function saveContent () {
-    if (!storageAvailable()) {
-      window.alert('Il browser non permette il salvataggio locale: le modifiche resteranno solo finché non ricarichi.');
+    closeDetail();
+    if (!SITE_DOC) {
+      window.alert('Salvataggio non disponibile: manca il collegamento al database.');
       return;
     }
-    closeDetail();
-    try {
-      STORE.forEach(function (s) {
-        var node = document.querySelector(s.sel);
-        if (node) localStorage.setItem(s.key, snapshot(node));
-      });
-      localStorage.setItem('tpl_version', CONTENT_VERSION);
-      window.alert('Modifiche salvate su questo browser.');
-    } catch (e) {
-      clearSaved();
-      window.alert('Spazio esaurito: le immagini caricate sono troppo pesanti per il salvataggio locale.\n\nSoluzione: copia i file immagine nella cartella del sito e chiedi di collegarli per nome.');
-    }
+    setEditorBusy('Pubblicazione in corso…');
+    publishContent().then(function () {
+      setEditorBusy('');
+      window.alert('Modifiche pubblicate.\nOra le vedono tutti i visitatori del sito.');
+    }).catch(function (err) {
+      setEditorBusy('');
+      window.alert('Errore nella pubblicazione: ' + err.message);
+    });
   }
 
   document.getElementById('editorPage').addEventListener('change', function () {
@@ -1704,10 +1856,15 @@ document.addEventListener('DOMContentLoaded', function () {
   document.getElementById('editorExit').addEventListener('click', exitEditMode);
 
   document.getElementById('editorReset').addEventListener('click', function () {
-    if (window.confirm('Ripristinare il contenuto originale e annullare tutte le modifiche salvate?')) {
-      clearSaved();
+    if (!window.confirm('Ripristinare il contenuto originale del sito e annullare tutte le modifiche pubblicate?')) return;
+    if (!SITE_DOC) { window.location.reload(); return; }
+    setEditorBusy('Ripristino in corso…');
+    SITE_DOC.delete().then(function () {
       window.location.reload();
-    }
+    }).catch(function (err) {
+      setEditorBusy('');
+      window.alert('Errore nel ripristino: ' + err.message);
+    });
   });
 
   /* in modalità editor i link non devono navigare */
@@ -1716,7 +1873,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var link = e.target.closest('a');
     if (link) e.preventDefault();
   }, true);
-});
+}
 </script>
 </body>
 </html>

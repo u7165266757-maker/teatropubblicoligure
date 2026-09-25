@@ -797,6 +797,21 @@ body.editing .hero-slider { position: relative; }
   color: var(--white);
 }
 .edit-only:hover { background: var(--orange-red); }
+.add-news, .add-row {
+  border: 2px dashed var(--line);
+  background: var(--off-white);
+  color: var(--dark);
+  padding: 22px;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.add-news:hover, .add-row:hover { border-color: var(--orange-red); color: var(--orange-red); }
+.news-card, .trasparenza-row { position: relative; }
+.news-card .card-tools, .trasparenza-row .card-tools { bottom: auto; top: 10px; }
+.add-row { grid-column: 1 / -1; }
+
 .card-tools {
   position: absolute;
   left: 0; right: 0; bottom: 14px;
@@ -876,21 +891,21 @@ body.editing .hero-slider { position: relative; }
     <a href="#" class="brand" data-nav="home">
       <img src="logo.jpeg" alt="Teatro Pubblico Ligure">
       <span class="brand-text">
-        <span class="brand-title">Teatro Pubblico Ligure</span>
-        <span class="brand-sub">centro di produzione teatrale</span>
+        <span class="brand-title" data-id="brand-title">Teatro Pubblico Ligure</span>
+        <span class="brand-sub" data-id="brand-sub">centro di produzione teatrale</span>
       </span>
     </a>
     <nav class="main-nav" id="mainNav">
       <ul>
-        <li><a href="#" data-nav="chisiamo">Chi Siamo</a></li>
-        <li><a href="#" data-nav="stagioni">Stagioni</a></li>
-        <li><a href="#" data-nav="festival">Festival</a></li>
-        <li><a href="#" data-nav="produzioni">Produzioni</a></li>
-        <li><a href="#" data-nav="progetti">Progetti</a></li>
-        <li><a href="#" data-nav="video">Video</a></li>
-        <li><a href="#" data-nav="film">Film</a></li>
-        <li><a href="#" data-nav="press">Press</a></li>
-        <li><a href="https://calendariotpl.it/" target="_blank" rel="noopener noreferrer">Calendario</a></li>
+        <li><a href="#" data-nav="chisiamo" data-id="nav-chisiamo">Chi Siamo</a></li>
+        <li><a href="#" data-nav="stagioni" data-id="nav-stagioni">Stagioni</a></li>
+        <li><a href="#" data-nav="festival" data-id="nav-festival">Festival</a></li>
+        <li><a href="#" data-nav="produzioni" data-id="nav-produzioni">Produzioni</a></li>
+        <li><a href="#" data-nav="progetti" data-id="nav-progetti">Progetti</a></li>
+        <li><a href="#" data-nav="video" data-id="nav-video">Video</a></li>
+        <li><a href="#" data-nav="film" data-id="nav-film">Film</a></li>
+        <li><a href="#" data-nav="press" data-id="nav-press">Press</a></li>
+        <li><a href="https://calendariotpl.it/" target="_blank" rel="noopener noreferrer" data-id="nav-calendario">Calendario</a></li>
       </ul>
     </nav>
     <div class="header-social">
@@ -917,9 +932,9 @@ body.editing .hero-slider { position: relative; }
   <section class="page" id="page-home" data-page="home">
 
     <div class="hero-slider" id="heroSlider">
-      <div class="slide active" style="background-image:url('hero.jpg')"></div>
-      <div class="slide" style="background-image:url('https://images.unsplash.com/photo-1507924538820-ede94a04019d?q=80&w=1800&auto=format&fit=crop')"></div>
-      <div class="slide" style="background-image:url('https://images.unsplash.com/photo-1516307365426-bea591f05011?q=80&w=1800&auto=format&fit=crop')"></div>
+      <div class="slide active" data-id="slide-1" style="background-image:url('hero.jpg')"></div>
+      <div class="slide" data-id="slide-2" style="background-image:url('https://images.unsplash.com/photo-1507924538820-ede94a04019d?q=80&w=1800&auto=format&fit=crop')"></div>
+      <div class="slide" data-id="slide-3" style="background-image:url('https://images.unsplash.com/photo-1516307365426-bea591f05011?q=80&w=1800&auto=format&fit=crop')"></div>
       <div class="slider-dots">
         <button class="dot active" data-slide="0" aria-label="Immagine 1"></button>
         <button class="dot" data-slide="1" aria-label="Immagine 2"></button>
@@ -931,85 +946,92 @@ body.editing .hero-slider { position: relative; }
       <div class="grid-shows">
         <a class="show-card reveal" href="https://www.teatrocavour.it/" target="_blank" rel="noopener noreferrer" title="Teatro Cavour">
           <div class="ph">
-            <img src="https://images.unsplash.com/photo-1507924538820-ede94a04019d?q=80&w=900&auto=format&fit=crop" alt="Teatro Cavour">
+            <img src="https://images.unsplash.com/photo-1507924538820-ede94a04019d?q=80&w=900&auto=format&fit=crop" alt="Teatro Cavour" data-f="img">
+          </div>
+          <div class="card-detail" hidden>
+            <div class="detail-media"><img src="https://images.unsplash.com/photo-1507924538820-ede94a04019d?q=80&w=1200&auto=format&fit=crop" alt="" data-f="d-img"></div>
+            <span class="eyebrow" data-f="d-eyebrow">testo qui</span>
+            <h2 data-f="d-title">testo qui</h2>
+            <p data-f="d-p1">testo qui</p>
+            <p data-f="d-p2">testo qui</p>
           </div>
         </a>
 
         <a class="show-card reveal" href="#" title="Dialoghi">
           <div class="ph">
-            <img src="Dialoghi2026_programma_70x100.jpg" alt="Dialoghi 2026" style="object-position: top center;">
+            <img src="Dialoghi2026_programma_70x100.jpg" alt="Dialoghi 2026" data-f="img">
           </div>
           <div class="card-detail" hidden>
-            <div class="detail-media"><img src="Dialoghi2026_programma_70x100.jpg" alt="Dialoghi 2026"></div>
-            <span class="eyebrow">testo qui</span>
-            <h2>Dialoghi</h2>
-            <p>testo qui</p>
-            <p>testo qui</p>
+            <div class="detail-media"><img src="Dialoghi2026_programma_70x100.jpg" alt="Dialoghi 2026" data-f="d-img"></div>
+            <span class="eyebrow" data-f="d-eyebrow">testo qui</span>
+            <h2 data-f="d-title">Dialoghi</h2>
+            <p data-f="d-p1">testo qui</p>
+            <p data-f="d-p2">testo qui</p>
           </div>
         </a>
 
         <a class="show-card reveal" href="#" title="Pellegrinaggi">
           <div class="ph">
-            <img src="https://images.unsplash.com/photo-1477281765962-ef34e8bb0967?q=80&w=900&auto=format&fit=crop" alt="Pellegrinaggi">
+            <img src="https://images.unsplash.com/photo-1477281765962-ef34e8bb0967?q=80&w=900&auto=format&fit=crop" alt="Pellegrinaggi" data-f="img">
           </div>
           <div class="card-detail" hidden>
-            <div class="detail-media"><img src="https://images.unsplash.com/photo-1477281765962-ef34e8bb0967?q=80&w=1200&auto=format&fit=crop" alt="Pellegrinaggi"></div>
-            <span class="eyebrow">testo qui</span>
-            <h2>Pellegrinaggi</h2>
-            <p>testo qui</p>
-            <p>testo qui</p>
+            <div class="detail-media"><img src="https://images.unsplash.com/photo-1477281765962-ef34e8bb0967?q=80&w=1200&auto=format&fit=crop" alt="Pellegrinaggi" data-f="d-img"></div>
+            <span class="eyebrow" data-f="d-eyebrow">testo qui</span>
+            <h2 data-f="d-title">Pellegrinaggi</h2>
+            <p data-f="d-p1">testo qui</p>
+            <p data-f="d-p2">testo qui</p>
           </div>
         </a>
 
         <a class="show-card reveal" href="#" title="Nuovo quadrante">
           <div class="ph">
-            <img src="https://images.unsplash.com/photo-1503095396549-807759245b35?q=80&w=900&auto=format&fit=crop" alt="">
+            <img src="https://images.unsplash.com/photo-1503095396549-807759245b35?q=80&w=900&auto=format&fit=crop" alt="" data-f="img">
           </div>
           <div class="card-detail" hidden>
-            <div class="detail-media"><img src="https://images.unsplash.com/photo-1503095396549-807759245b35?q=80&w=1200&auto=format&fit=crop" alt=""></div>
-            <span class="eyebrow">testo qui</span>
-            <h2>testo qui</h2>
-            <p>testo qui</p>
-            <p>testo qui</p>
+            <div class="detail-media"><img src="https://images.unsplash.com/photo-1503095396549-807759245b35?q=80&w=1200&auto=format&fit=crop" alt="" data-f="d-img"></div>
+            <span class="eyebrow" data-f="d-eyebrow">testo qui</span>
+            <h2 data-f="d-title">testo qui</h2>
+            <p data-f="d-p1">testo qui</p>
+            <p data-f="d-p2">testo qui</p>
           </div>
         </a>
 
         <a class="show-card reveal" href="#" title="Nuovo quadrante">
           <div class="ph">
-            <img src="https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?q=80&w=900&auto=format&fit=crop" alt="">
+            <img src="https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?q=80&w=900&auto=format&fit=crop" alt="" data-f="img">
           </div>
           <div class="card-detail" hidden>
-            <div class="detail-media"><img src="https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?q=80&w=1200&auto=format&fit=crop" alt=""></div>
-            <span class="eyebrow">testo qui</span>
-            <h2>testo qui</h2>
-            <p>testo qui</p>
-            <p>testo qui</p>
+            <div class="detail-media"><img src="https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?q=80&w=1200&auto=format&fit=crop" alt="" data-f="d-img"></div>
+            <span class="eyebrow" data-f="d-eyebrow">testo qui</span>
+            <h2 data-f="d-title">testo qui</h2>
+            <p data-f="d-p1">testo qui</p>
+            <p data-f="d-p2">testo qui</p>
           </div>
         </a>
 
         <a class="show-card reveal" href="#" title="Nuovo quadrante">
           <div class="ph">
-            <img src="https://images.unsplash.com/photo-1514306191717-452ec28c7814?q=80&w=900&auto=format&fit=crop" alt="">
+            <img src="https://images.unsplash.com/photo-1514306191717-452ec28c7814?q=80&w=900&auto=format&fit=crop" alt="" data-f="img">
           </div>
           <div class="card-detail" hidden>
-            <div class="detail-media"><img src="https://images.unsplash.com/photo-1514306191717-452ec28c7814?q=80&w=1200&auto=format&fit=crop" alt=""></div>
-            <span class="eyebrow">testo qui</span>
-            <h2>testo qui</h2>
-            <p>testo qui</p>
-            <p>testo qui</p>
+            <div class="detail-media"><img src="https://images.unsplash.com/photo-1514306191717-452ec28c7814?q=80&w=1200&auto=format&fit=crop" alt="" data-f="d-img"></div>
+            <span class="eyebrow" data-f="d-eyebrow">testo qui</span>
+            <h2 data-f="d-title">testo qui</h2>
+            <p data-f="d-p1">testo qui</p>
+            <p data-f="d-p2">testo qui</p>
           </div>
         </a>
       </div>
 
       <div class="section-foot reveal">
-        <a href="https://calendariotpl.it/" class="btn-calendar" target="_blank" rel="noopener noreferrer">Calendario</a>
+        <a href="https://calendariotpl.it/" class="btn-calendar" data-id="btn-calendario" target="_blank" rel="noopener noreferrer">Calendario</a>
       </div>
     </div>
 
     <section class="cta-newsletter">
       <div class="wrap">
         <a class="newsletter-box reveal" href="https://newsletter.teatropubblicoligure.it/" target="_blank" rel="noopener noreferrer">
-          <span class="newsletter-label">Iscriviti alla newsletter</span>
+          <span class="newsletter-label" data-id="newsletter-label">Iscriviti alla newsletter</span>
           <span class="newsletter-arrow">&rarr;</span>
         </a>
         <div class="editor-entry">
@@ -1025,20 +1047,20 @@ body.editing .hero-slider { position: relative; }
       <a href="#" class="back-link" data-nav="home">&larr; Home</a>
       <div class="split reveal">
         <div class="ph-block">
-          <img src="https://images.unsplash.com/photo-1503095396549-807759245b35?q=80&w=1000&auto=format&fit=crop" alt="Sala teatrale">
+          <img src="https://images.unsplash.com/photo-1503095396549-807759245b35?q=80&w=1000&auto=format&fit=crop" alt="Sala teatrale" data-id="chisiamo-img">
         </div>
         <div>
-          <span class="eyebrow">Chi siamo</span>
-          <h2>testo qui</h2>
-          <p style="margin-top:20px;">testo qui</p>
-          <p style="margin-top:14px;">testo qui</p>
+          <span class="eyebrow" data-id="chisiamo-eyebrow">Chi siamo</span>
+          <h2 data-id="chisiamo-title">testo qui</h2>
+          <p style="margin-top:20px;" data-id="chisiamo-p1">testo qui</p>
+          <p style="margin-top:14px;" data-id="chisiamo-p2">testo qui</p>
           <div class="stat-row">
-            <div class="stat"><b>testo qui</b><span>Teatri in rete</span></div>
-            <div class="stat"><b>testo qui</b><span>Spettacoli l'anno</span></div>
-            <div class="stat"><b>testo qui</b><span>Spettatori</span></div>
+            <div class="stat"><b data-id="stat1-num">testo qui</b><span data-id="stat1-lab">Teatri in rete</span></div>
+            <div class="stat"><b data-id="stat2-num">testo qui</b><span data-id="stat2-lab">Spettacoli l'anno</span></div>
+            <div class="stat"><b data-id="stat3-num">testo qui</b><span data-id="stat3-lab">Spettatori</span></div>
           </div>
           <div style="margin-top:34px;">
-            <a href="#" class="btn btn-blue">Scopri il progetto</a>
+            <a href="#" class="btn btn-blue" data-id="chisiamo-btn">Scopri il progetto</a>
           </div>
         </div>
       </div>
@@ -1049,26 +1071,26 @@ body.editing .hero-slider { position: relative; }
   <section class="page" id="page-trasparenza" data-page="trasparenza" hidden>
     <div class="wrap">
       <a href="#" class="back-link" data-nav="home">&larr; Home</a>
-      <span class="eyebrow">Amministrazione trasparente</span>
-      <h2 style="margin-bottom:26px;">Trasparenza</h2>
-      <p style="max-width:640px; margin-bottom:40px;">testo qui</p>
+      <span class="eyebrow" data-id="trasp-eyebrow">Amministrazione trasparente</span>
+      <h2 style="margin-bottom:26px;" data-id="trasp-title">Trasparenza</h2>
+      <p style="max-width:640px; margin-bottom:40px;" data-id="trasp-intro">testo qui</p>
 
       <div class="trasparenza-table">
         <div class="trasparenza-row">
-          <div class="trasparenza-voce">testo qui</div>
-          <div class="trasparenza-dato">testo qui</div>
+          <div class="trasparenza-voce" data-f="voce">testo qui</div>
+          <div class="trasparenza-dato" data-f="dato">testo qui</div>
         </div>
         <div class="trasparenza-row">
-          <div class="trasparenza-voce">testo qui</div>
-          <div class="trasparenza-dato">testo qui</div>
+          <div class="trasparenza-voce" data-f="voce">testo qui</div>
+          <div class="trasparenza-dato" data-f="dato">testo qui</div>
         </div>
         <div class="trasparenza-row">
-          <div class="trasparenza-voce">testo qui</div>
-          <div class="trasparenza-dato">testo qui</div>
+          <div class="trasparenza-voce" data-f="voce">testo qui</div>
+          <div class="trasparenza-dato" data-f="dato">testo qui</div>
         </div>
         <div class="trasparenza-row">
-          <div class="trasparenza-voce">testo qui</div>
-          <div class="trasparenza-dato">testo qui</div>
+          <div class="trasparenza-voce" data-f="voce">testo qui</div>
+          <div class="trasparenza-dato" data-f="dato">testo qui</div>
         </div>
       </div>
     </div>
@@ -1086,9 +1108,9 @@ body.editing .hero-slider { position: relative; }
   <section class="page" id="page-stagioni" data-page="stagioni" hidden>
     <div class="wrap">
       <a href="#" class="back-link" data-nav="home">&larr; Home</a>
-      <span class="eyebrow">Stagioni</span>
-      <h2 style="margin-bottom:20px;">testo qui</h2>
-      <p style="max-width:640px;">testo qui</p>
+      <span class="eyebrow" data-id="stagioni-eyebrow">Stagioni</span>
+      <h2 style="margin-bottom:20px;" data-id="stagioni-title">testo qui</h2>
+      <p style="max-width:640px; margin-bottom:56px;" data-id="stagioni-text">testo qui</p>
     </div>
   </section>
 
@@ -1096,9 +1118,9 @@ body.editing .hero-slider { position: relative; }
   <section class="page" id="page-festival" data-page="festival" hidden>
     <div class="wrap">
       <a href="#" class="back-link" data-nav="home">&larr; Home</a>
-      <span class="eyebrow">Festival</span>
-      <h2 style="margin-bottom:20px;">testo qui</h2>
-      <p style="max-width:640px;">testo qui</p>
+      <span class="eyebrow" data-id="festival-eyebrow">Festival</span>
+      <h2 style="margin-bottom:20px;" data-id="festival-title">testo qui</h2>
+      <p style="max-width:640px; margin-bottom:56px;" data-id="festival-text">testo qui</p>
     </div>
   </section>
 
@@ -1106,9 +1128,9 @@ body.editing .hero-slider { position: relative; }
   <section class="page" id="page-produzioni" data-page="produzioni" hidden>
     <div class="wrap">
       <a href="#" class="back-link" data-nav="home">&larr; Home</a>
-      <span class="eyebrow">Produzioni</span>
-      <h2 style="margin-bottom:20px;">testo qui</h2>
-      <p style="max-width:640px;">testo qui</p>
+      <span class="eyebrow" data-id="produzioni-eyebrow">Produzioni</span>
+      <h2 style="margin-bottom:20px;" data-id="produzioni-title">testo qui</h2>
+      <p style="max-width:640px; margin-bottom:56px;" data-id="produzioni-text">testo qui</p>
     </div>
   </section>
 
@@ -1116,9 +1138,9 @@ body.editing .hero-slider { position: relative; }
   <section class="page" id="page-progetti" data-page="progetti" hidden>
     <div class="wrap">
       <a href="#" class="back-link" data-nav="home">&larr; Home</a>
-      <span class="eyebrow">Progetti</span>
-      <h2 style="margin-bottom:20px;">testo qui</h2>
-      <p style="max-width:640px;">testo qui</p>
+      <span class="eyebrow" data-id="progetti-eyebrow">Progetti</span>
+      <h2 style="margin-bottom:20px;" data-id="progetti-title">testo qui</h2>
+      <p style="max-width:640px; margin-bottom:56px;" data-id="progetti-text">testo qui</p>
     </div>
   </section>
 
@@ -1126,31 +1148,31 @@ body.editing .hero-slider { position: relative; }
   <section class="page" id="page-video" data-page="video" hidden>
     <div class="wrap">
       <a href="#" class="back-link" data-nav="home">&larr; Home</a>
-      <span class="eyebrow">Video</span>
-      <h2 style="margin-bottom:20px;">testo qui</h2>
-      <p style="max-width:640px; margin-bottom:56px;">testo qui</p>
+      <span class="eyebrow" data-id="video-eyebrow">Video</span>
+      <h2 style="margin-bottom:20px;" data-id="video-title">testo qui</h2>
+      <p style="max-width:640px; margin-bottom:56px;" data-id="video-text">testo qui</p>
 
       <div class="grid-videos">
         <a class="video-item" href="https://www.youtube.com/@TeatroPubblicoLigure/playlists" target="_blank" rel="noopener noreferrer">
           <div class="video-ph">
-            <img src="https://images.unsplash.com/photo-1503095396549-807759245b35?q=80&w=900&auto=format&fit=crop" alt="">
+            <img src="https://images.unsplash.com/photo-1503095396549-807759245b35?q=80&w=900&auto=format&fit=crop" alt="" data-f="img">
             <span class="video-play"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span>
           </div>
-          <div class="video-caption">Playlist<span class="poster-sub">testo qui</span></div>
+          <div class="video-caption" data-f="caption">Playlist</div><div class="poster-sub" data-f="sub">testo qui</div>
         </a>
         <a class="video-item" href="https://www.youtube.com/@TeatroPubblicoLigure/playlists" target="_blank" rel="noopener noreferrer">
           <div class="video-ph">
-            <img src="https://images.unsplash.com/photo-1514306191717-452ec28c7814?q=80&w=900&auto=format&fit=crop" alt="">
+            <img src="https://images.unsplash.com/photo-1514306191717-452ec28c7814?q=80&w=900&auto=format&fit=crop" alt="" data-f="img">
             <span class="video-play"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span>
           </div>
-          <div class="video-caption">testo qui<span class="poster-sub">testo qui</span></div>
+          <div class="video-caption" data-f="caption">testo qui</div><div class="poster-sub" data-f="sub">testo qui</div>
         </a>
         <a class="video-item" href="https://www.youtube.com/@TeatroPubblicoLigure/playlists" target="_blank" rel="noopener noreferrer">
           <div class="video-ph">
-            <img src="https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?q=80&w=900&auto=format&fit=crop" alt="">
+            <img src="https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?q=80&w=900&auto=format&fit=crop" alt="" data-f="img">
             <span class="video-play"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span>
           </div>
-          <div class="video-caption">testo qui<span class="poster-sub">testo qui</span></div>
+          <div class="video-caption" data-f="caption">testo qui</div><div class="poster-sub" data-f="sub">testo qui</div>
         </a>
       </div>
     </div>
@@ -1160,42 +1182,42 @@ body.editing .hero-slider { position: relative; }
   <section class="page" id="page-film" data-page="film" hidden>
     <div class="wrap">
       <a href="#" class="back-link" data-nav="home">&larr; Home</a>
-      <span class="eyebrow">Film</span>
-      <h2 style="margin-bottom:20px;">testo qui</h2>
-      <p style="max-width:640px; margin-bottom:56px;">testo qui</p>
+      <span class="eyebrow" data-id="film-eyebrow">Film</span>
+      <h2 style="margin-bottom:20px;" data-id="film-title">testo qui</h2>
+      <p style="max-width:640px; margin-bottom:56px;" data-id="film-text">testo qui</p>
 
       <div class="grid-posters">
         <a class="poster-item" href="#">
-          <div class="poster-ph"><img src="hero.jpg" alt=""></div>
-          <div class="poster-caption">testo qui<span class="poster-sub">testo qui</span></div>
+          <div class="poster-ph"><img src="hero.jpg" alt="" data-f="img"></div>
+          <div class="poster-caption" data-f="caption">testo qui</div><div class="poster-sub" data-f="sub">testo qui</div>
           <div class="card-detail" hidden>
-            <div class="detail-media"><img src="hero.jpg" alt=""></div>
-            <span class="eyebrow">testo qui</span>
-            <h2>testo qui</h2>
-            <p>testo qui</p>
-            <p>testo qui</p>
+            <div class="detail-media"><img src="hero.jpg" alt="" data-f="d-img"></div>
+            <span class="eyebrow" data-f="d-eyebrow">testo qui</span>
+            <h2 data-f="d-title">testo qui</h2>
+            <p data-f="d-p1">testo qui</p>
+            <p data-f="d-p2">testo qui</p>
           </div>
         </a>
         <a class="poster-item" href="#">
-          <div class="poster-ph"><img src="Dialoghi2026_programma_70x100.jpg" alt=""></div>
-          <div class="poster-caption">testo qui<span class="poster-sub">testo qui</span></div>
+          <div class="poster-ph"><img src="Dialoghi2026_programma_70x100.jpg" alt="" data-f="img"></div>
+          <div class="poster-caption" data-f="caption">testo qui</div><div class="poster-sub" data-f="sub">testo qui</div>
           <div class="card-detail" hidden>
-            <div class="detail-media"><img src="Dialoghi2026_programma_70x100.jpg" alt=""></div>
-            <span class="eyebrow">testo qui</span>
-            <h2>testo qui</h2>
-            <p>testo qui</p>
-            <p>testo qui</p>
+            <div class="detail-media"><img src="Dialoghi2026_programma_70x100.jpg" alt="" data-f="d-img"></div>
+            <span class="eyebrow" data-f="d-eyebrow">testo qui</span>
+            <h2 data-f="d-title">testo qui</h2>
+            <p data-f="d-p1">testo qui</p>
+            <p data-f="d-p2">testo qui</p>
           </div>
         </a>
         <a class="poster-item" href="#">
-          <div class="poster-ph"><img src="https://images.unsplash.com/photo-1503095396549-807759245b35?q=80&w=800&auto=format&fit=crop" alt=""></div>
-          <div class="poster-caption">testo qui<span class="poster-sub">testo qui</span></div>
+          <div class="poster-ph"><img src="https://images.unsplash.com/photo-1503095396549-807759245b35?q=80&w=800&auto=format&fit=crop" alt="" data-f="img"></div>
+          <div class="poster-caption" data-f="caption">testo qui</div><div class="poster-sub" data-f="sub">testo qui</div>
           <div class="card-detail" hidden>
-            <div class="detail-media"><img src="https://images.unsplash.com/photo-1503095396549-807759245b35?q=80&w=1200&auto=format&fit=crop" alt=""></div>
-            <span class="eyebrow">testo qui</span>
-            <h2>testo qui</h2>
-            <p>testo qui</p>
-            <p>testo qui</p>
+            <div class="detail-media"><img src="https://images.unsplash.com/photo-1503095396549-807759245b35?q=80&w=1200&auto=format&fit=crop" alt="" data-f="d-img"></div>
+            <span class="eyebrow" data-f="d-eyebrow">testo qui</span>
+            <h2 data-f="d-title">testo qui</h2>
+            <p data-f="d-p1">testo qui</p>
+            <p data-f="d-p2">testo qui</p>
           </div>
         </a>
       </div>
@@ -1208,43 +1230,43 @@ body.editing .hero-slider { position: relative; }
       <a href="#" class="back-link" data-nav="home">&larr; Home</a>
       <div class="section-head reveal">
         <div>
-          <span class="eyebrow">Rassegna stampa</span>
-          <h2><span class="c-orange">Press</span></h2>
+          <span class="eyebrow" data-id="press-eyebrow">Rassegna stampa</span>
+          <h2 data-id="press-title"><span class="c-orange">Press</span></h2>
         </div>
-        <p class="desc">testo qui</p>
+        <p class="desc" data-id="press-desc">testo qui</p>
       </div>
 
       <div class="grid-news">
         <article class="news-card reveal">
           <div class="ph">
-            <img src="https://images.unsplash.com/photo-1490312278390-ab64016e0aa9?q=80&w=800&auto=format&fit=crop" alt="Press">
+            <img src="https://images.unsplash.com/photo-1490312278390-ab64016e0aa9?q=80&w=800&auto=format&fit=crop" alt="Press" data-f="img">
           </div>
           <div class="body">
-            <div class="meta">testo qui</div>
-            <h3>testo qui</h3>
-            <p>testo qui</p>
+            <div class="meta" data-f="meta">testo qui</div>
+            <h3 data-f="title">testo qui</h3>
+            <p data-f="text">testo qui</p>
           </div>
         </article>
 
         <article class="news-card reveal">
           <div class="ph">
-            <img src="https://images.unsplash.com/photo-1524368535928-5b5e00ddc76b?q=80&w=800&auto=format&fit=crop" alt="Press">
+            <img src="https://images.unsplash.com/photo-1524368535928-5b5e00ddc76b?q=80&w=800&auto=format&fit=crop" alt="Press" data-f="img">
           </div>
           <div class="body">
-            <div class="meta">testo qui</div>
-            <h3>testo qui</h3>
-            <p>testo qui</p>
+            <div class="meta" data-f="meta">testo qui</div>
+            <h3 data-f="title">testo qui</h3>
+            <p data-f="text">testo qui</p>
           </div>
         </article>
 
         <article class="news-card reveal">
           <div class="ph">
-            <img src="https://images.unsplash.com/photo-1560421683-6856ea585c78?q=80&w=800&auto=format&fit=crop" alt="Press">
+            <img src="https://images.unsplash.com/photo-1560421683-6856ea585c78?q=80&w=800&auto=format&fit=crop" alt="Press" data-f="img">
           </div>
           <div class="body">
-            <div class="meta">testo qui</div>
-            <h3>testo qui</h3>
-            <p>testo qui</p>
+            <div class="meta" data-f="meta">testo qui</div>
+            <h3 data-f="title">testo qui</h3>
+            <p data-f="text">testo qui</p>
           </div>
         </article>
       </div>
@@ -1257,7 +1279,7 @@ body.editing .hero-slider { position: relative; }
   <div class="wrap footer-inner">
     <img src="logo.jpeg" alt="Teatro Pubblico Ligure">
     <div class="footer-info">
-      <p>testo qui</p>
+      <p data-id="footer-text">testo qui</p>
     </div>
     <div class="footer-social">
       <a href="https://www.facebook.com/share/1C5XxWqkhw/?mibextid=wwXIfr" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
@@ -1272,7 +1294,7 @@ body.editing .hero-slider { position: relative; }
     </div>
   </div>
   <div class="wrap footer-bottom">
-    <p class="footer-legal">
+    <p class="footer-legal" data-id="footer-legal">
       <strong>TEATRO PUBBLICO LIGURE S.R.L. IMPRESA SOCIALE</strong><br>
       Centro di Produzione Teatrale<br>
       Sede legale Via del Teatro 2, 18100 IMPERIA<br>
@@ -1285,7 +1307,7 @@ body.editing .hero-slider { position: relative; }
       Codice destinatario USAL8PV<br>
       Pec: teatropubblicoliguresrl@aep-pec.it
     </p>
-    <a href="#" class="trasparenza-link" data-nav="trasparenza">Trasparenza</a>
+    <a href="#" class="trasparenza-link" data-nav="trasparenza" data-id="footer-trasparenza">Trasparenza</a>
   </div>
 </footer>
 
@@ -1340,15 +1362,13 @@ var CLOUDINARY_UPLOAD_PRESET = "md5s3dgi";
 <script>
 /* =====================================================
    CONTENUTI PUBBLICATI
-   Le modifiche fatte nell'editor vengono salvate su Firestore,
-   quindi le vedono TUTTI i visitatori, non solo chi le ha fatte.
+   Si salvano i DATI (testi, immagini, link), non la pagina:
+   così aggiornare il codice non cancella più i contenuti.
+   Ogni elemento modificabile porta un'etichetta stabile:
+     data-id  -> campo singolo (titolo, paragrafo, logo...)
+     data-f   -> campo dentro un elenco (quadrati, poster, video...)
    ===================================================== */
-var CONTENT_VERSION = '6';
-var STORE = [
-  { key: 'nav', sel: '#mainNav ul' },
-  { key: 'main', sel: 'main' },
-  { key: 'footer', sel: 'footer.site-footer' }
-];
+var SCHEMA = 1;
 
 var SITE_DOC = null;
 try {
@@ -1358,33 +1378,202 @@ try {
   SITE_DOC = null;
 }
 
-/* ripulisce il contenuto dagli strumenti dell'editor prima di pubblicarlo */
-function snapshot (node) {
-  var clone = node.cloneNode(true);
-  clone.querySelectorAll('.edit-only, .edit-only-wrap').forEach(function (el) { el.remove(); });
-  clone.querySelectorAll('[contenteditable]').forEach(function (el) {
-    el.removeAttribute('contenteditable');
-  });
-  clone.querySelectorAll('.page').forEach(function (p) {
-    p.hidden = p.getAttribute('data-page') !== 'home';
-  });
-  return clone.innerHTML;
+var CARD_FIELDS = ['img', 'd-img', 'd-eyebrow', 'd-title', 'd-p1', 'd-p2'];
+var POSTER_FIELDS = ['img', 'caption', 'sub', 'd-img', 'd-eyebrow', 'd-title', 'd-p1', 'd-p2'];
+var VIDEO_FIELDS = ['img', 'caption', 'sub'];
+var NEWS_FIELDS = ['img', 'meta', 'title', 'text'];
+var ROW_FIELDS = ['voce', 'dato'];
+
+var LISTS = [
+  { sel: '.grid-shows', item: '.show-card', key: 'cards', fields: CARD_FIELDS, link: true },
+  { sel: '.grid-posters', item: '.poster-item', key: 'posters', fields: POSTER_FIELDS, link: true },
+  { sel: '.grid-videos', item: '.video-item', key: 'videos', fields: VIDEO_FIELDS, link: true },
+  { sel: '.grid-news', item: '.news-card', key: 'news', fields: NEWS_FIELDS, link: false },
+  { sel: '.trasparenza-table', item: '.trasparenza-row', key: 'rows', fields: ROW_FIELDS, link: false }
+];
+
+/* ---------- sicurezza: il database è aperto, quindi ripulisco ---------- */
+var ALLOWED_TAGS = { BR: 1, B: 1, STRONG: 1, I: 1, EM: 1, U: 1, SPAN: 1 };
+
+function safeHtml (value) {
+  var box = document.createElement('div');
+  box.innerHTML = String(value == null ? '' : value);
+  (function clean (node) {
+    var i = 0;
+    while (i < node.childNodes.length) {
+      var n = node.childNodes[i];
+      if (n.nodeType === 1) {
+        if (!ALLOWED_TAGS[n.tagName]) {
+          while (n.firstChild) node.insertBefore(n.firstChild, n);
+          node.removeChild(n);
+          continue;
+        }
+        Array.prototype.slice.call(n.attributes).forEach(function (a) {
+          if (a.name !== 'class') n.removeAttribute(a.name);
+        });
+        clean(n);
+        i++;
+      } else if (n.nodeType === 3) {
+        i++;
+      } else {
+        node.removeChild(n);
+      }
+    }
+  })(box);
+  return box.innerHTML;
 }
 
+function safeUrl (value) {
+  var u = String(value == null ? '' : value).trim();
+  if (!u || /^\s*javascript:/i.test(u) || /^\s*data:/i.test(u)) return '';
+  return u;
+}
+
+function esc (value) {
+  return String(value == null ? '' : value).replace(/[&<>"]/g, function (c) {
+    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
+  });
+}
+
+function setLink (a, url) {
+  var u = safeUrl(url) || '#';
+  a.setAttribute('href', u);
+  if (/^https?:/i.test(u)) {
+    a.setAttribute('target', '_blank');
+    a.setAttribute('rel', 'noopener noreferrer');
+  } else {
+    a.removeAttribute('target');
+    a.removeAttribute('rel');
+  }
+}
+
+function linkAttrs (url) {
+  var u = safeUrl(url) || '#';
+  return 'href="' + esc(u) + '"' + (/^https?:/i.test(u) ? ' target="_blank" rel="noopener noreferrer"' : '');
+}
+
+/* ---------- DOM -> dati ---------- */
+function slideUrl (el) {
+  var m = /url\(["']?(.*?)["']?\)/.exec(el.style.backgroundImage || '');
+  return m ? m[1] : '';
+}
+
+function collectItem (el, fields) {
+  var o = {};
+  fields.forEach(function (f) {
+    var n = el.querySelector('[data-f="' + f + '"]');
+    if (!n) return;
+    o[f] = n.tagName === 'IMG' ? (n.getAttribute('src') || '') : n.innerHTML.trim();
+  });
+  return o;
+}
+
+function collectContent () {
+  var data = { schema: SCHEMA, updatedAt: Date.now(), fields: {} };
+
+  document.querySelectorAll('[data-id]').forEach(function (el) {
+    var id = el.getAttribute('data-id');
+    if (el.tagName === 'IMG') {
+      data.fields[id] = { s: el.getAttribute('src') || '' };
+    } else if (el.classList.contains('slide')) {
+      data.fields[id] = { s: slideUrl(el) };
+    } else {
+      var o = { t: el.innerHTML.trim() };
+      if (el.tagName === 'A' && el.hasAttribute('href')) o.u = el.getAttribute('href');
+      data.fields[id] = o;
+    }
+  });
+
+  LISTS.forEach(function (l) {
+    data[l.key] = Array.prototype.map.call(document.querySelectorAll(l.sel + ' ' + l.item), function (el) {
+      var o = collectItem(el, l.fields);
+      if (l.link) o.href = el.getAttribute('href') || '#';
+      return o;
+    });
+  });
+
+  return data;
+}
+
+/* ---------- dati -> DOM ---------- */
+function detailHtml (d) {
+  return '<div class="card-detail" hidden>' +
+    '<div class="detail-media"><img src="' + esc(safeUrl(d['d-img'])) + '" alt="" data-f="d-img"></div>' +
+    '<span class="eyebrow" data-f="d-eyebrow">' + safeHtml(d['d-eyebrow']) + '</span>' +
+    '<h2 data-f="d-title">' + safeHtml(d['d-title']) + '</h2>' +
+    '<p data-f="d-p1">' + safeHtml(d['d-p1']) + '</p>' +
+    '<p data-f="d-p2">' + safeHtml(d['d-p2']) + '</p>' +
+    '</div>';
+}
+
+function renderCard (c) {
+  return '<a class="show-card reveal" ' + linkAttrs(c.href) + '>' +
+    '<div class="ph"><img src="' + esc(safeUrl(c.img)) + '" alt="" data-f="img"></div>' +
+    detailHtml(c) + '</a>';
+}
+
+function renderPoster (p) {
+  return '<a class="poster-item" ' + linkAttrs(p.href) + '>' +
+    '<div class="poster-ph"><img src="' + esc(safeUrl(p.img)) + '" alt="" data-f="img"></div>' +
+    '<div class="poster-caption" data-f="caption">' + safeHtml(p.caption) + '</div>' +
+    '<div class="poster-sub" data-f="sub">' + safeHtml(p.sub) + '</div>' +
+    detailHtml(p) + '</a>';
+}
+
+function renderVideo (v) {
+  return '<a class="video-item" ' + linkAttrs(v.href) + '>' +
+    '<div class="video-ph"><img src="' + esc(safeUrl(v.img)) + '" alt="" data-f="img">' +
+    '<span class="video-play"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span></div>' +
+    '<div class="video-caption" data-f="caption">' + safeHtml(v.caption) + '</div>' +
+    '<div class="poster-sub" data-f="sub">' + safeHtml(v.sub) + '</div></a>';
+}
+
+function renderNews (n) {
+  return '<article class="news-card reveal">' +
+    '<div class="ph"><img src="' + esc(safeUrl(n.img)) + '" alt="" data-f="img"></div>' +
+    '<div class="body">' +
+    '<div class="meta" data-f="meta">' + safeHtml(n.meta) + '</div>' +
+    '<h3 data-f="title">' + safeHtml(n.title) + '</h3>' +
+    '<p data-f="text">' + safeHtml(n.text) + '</p>' +
+    '</div></article>';
+}
+
+function renderRow (r) {
+  return '<div class="trasparenza-row">' +
+    '<div class="trasparenza-voce" data-f="voce">' + safeHtml(r.voce) + '</div>' +
+    '<div class="trasparenza-dato" data-f="dato">' + safeHtml(r.dato) + '</div></div>';
+}
+
+var RENDERERS = { cards: renderCard, posters: renderPoster, videos: renderVideo, news: renderNews, rows: renderRow };
+
 function applyContent (data) {
-  STORE.forEach(function (s) {
-    var node = document.querySelector(s.sel);
-    if (node && data[s.key]) node.innerHTML = data[s.key];
+  if (!data) return;
+  var fields = data.fields || {};
+
+  document.querySelectorAll('[data-id]').forEach(function (el) {
+    var v = fields[el.getAttribute('data-id')];
+    if (!v) return;
+    if (el.tagName === 'IMG') {
+      if (v.s) el.setAttribute('src', safeUrl(v.s));
+    } else if (el.classList.contains('slide')) {
+      if (v.s) el.style.backgroundImage = "url('" + safeUrl(v.s) + "')";
+    } else {
+      if (typeof v.t === 'string') el.innerHTML = safeHtml(v.t);
+      if (v.u && el.tagName === 'A') setLink(el, v.u);
+    }
+  });
+
+  LISTS.forEach(function (l) {
+    var items = data[l.key];
+    if (!items || !items.length) return;
+    var grid = document.querySelector(l.sel);
+    if (!grid) return;
+    grid.innerHTML = items.map(RENDERERS[l.key]).join('');
   });
 }
 
 function publishContent () {
-  var data = { version: CONTENT_VERSION, updatedAt: Date.now() };
-  STORE.forEach(function (s) {
-    var node = document.querySelector(s.sel);
-    if (node) data[s.key] = snapshot(node);
-  });
-  return SITE_DOC.set(data);
+  return SITE_DOC.set(collectContent());
 }
 
 /* scarica i contenuti pubblicati prima di avviare il sito, così gli
@@ -1395,8 +1584,7 @@ function loadPublishedContent (done) {
   function go () { if (!started) { started = true; done(); } }
   setTimeout(go, 4000);
   SITE_DOC.get().then(function (snap) {
-    var data = snap.exists ? snap.data() : null;
-    if (data && data.version === CONTENT_VERSION) applyContent(data);
+    if (snap.exists) applyContent(snap.data());
     go();
   }).catch(go);
 }
@@ -1568,7 +1756,7 @@ function startApp () {
      EDITOR
      ===================================================== */
   var ACCESS_CODE = 'farna2317';
-  var EDITABLE = 'h1, h2, h3, h4, p, .eyebrow, .meta, .brand-title, .brand-sub, .newsletter-label, .footer-legal, .footer-info p, .stat b, .stat span, .main-nav a, .trasparenza-voce, .trasparenza-dato, .btn-calendar, .btn, .trasparenza-link, .poster-caption, .poster-sub, .video-caption';
+  var EDITABLE = '[data-id]:not(img):not(.slide), [data-f]:not(img)';
   var PLACEHOLDER_IMG = 'https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?q=80&w=900&auto=format&fit=crop';
 
   var modal = document.getElementById('editModal');
@@ -1671,32 +1859,35 @@ function startApp () {
     });
   }
 
-  function addCardButton () {
-    var grid = document.querySelector('.grid-shows');
-    if (!grid || grid.querySelector('.add-card')) return;
+  function addItemButton (gridSel, cls, label, html, decorate) {
+    var grid = document.querySelector(gridSel);
+    if (!grid || grid.querySelector('.' + cls)) return;
     var btn = document.createElement('button');
     btn.type = 'button';
-    btn.className = 'add-card edit-only';
-    btn.textContent = '+ Aggiungi quadrante';
+    btn.className = cls + ' edit-only';
+    btn.textContent = label;
     btn.addEventListener('click', function () {
-      var card = document.createElement('a');
-      card.className = 'show-card';
-      card.setAttribute('href', '#');
-      card.innerHTML =
-        '<div class="ph"><img src="' + PLACEHOLDER_IMG + '" alt=""></div>' +
-        '<div class="card-detail" hidden>' +
-          '<div class="detail-media"><img src="' + PLACEHOLDER_IMG + '" alt=""></div>' +
-          '<span class="eyebrow">testo qui</span>' +
-          '<h2>testo qui</h2>' +
-          '<p>testo qui</p>' +
-          '<p>testo qui</p>' +
-        '</div>';
-      grid.insertBefore(card, btn);
-      makeEditable(card);
-      decorateCard(card);
-      decorateImages(card);
+      var box = document.createElement('div');
+      box.innerHTML = html();
+      var item = box.firstElementChild;
+      grid.insertBefore(item, btn);
+      makeEditable(item);
+      if (decorate) decorate(item);
+      decorateImages(item);
     });
     grid.appendChild(btn);
+  }
+
+  var VUOTO = {
+    'img': PLACEHOLDER_IMG, 'd-img': PLACEHOLDER_IMG, 'd-eyebrow': 'testo qui',
+    'd-title': 'testo qui', 'd-p1': 'testo qui', 'd-p2': 'testo qui',
+    caption: 'testo qui', sub: 'testo qui', meta: 'testo qui',
+    title: 'testo qui', text: 'testo qui', voce: 'testo qui', dato: 'testo qui', href: '#'
+  };
+
+  function addCardButton () {
+    addItemButton('.grid-shows', 'add-card', '+ Aggiungi quadrante',
+      function () { return renderCard(VUOTO); }, decorateCard);
   }
 
   function heroTool () {
@@ -1712,32 +1903,8 @@ function startApp () {
   }
 
   function addPosterButton () {
-    var grid = document.querySelector('.grid-posters');
-    if (!grid || grid.querySelector('.add-poster')) return;
-    var btn = document.createElement('button');
-    btn.type = 'button';
-    btn.className = 'add-poster edit-only';
-    btn.textContent = '+ Aggiungi poster';
-    btn.addEventListener('click', function () {
-      var item = document.createElement('a');
-      item.className = 'poster-item';
-      item.setAttribute('href', '#');
-      item.innerHTML =
-        '<div class="poster-ph"><img src="' + PLACEHOLDER_IMG + '" alt=""></div>' +
-        '<div class="poster-caption">testo qui<span class="poster-sub">testo qui</span></div>' +
-        '<div class="card-detail" hidden>' +
-          '<div class="detail-media"><img src="' + PLACEHOLDER_IMG + '" alt=""></div>' +
-          '<span class="eyebrow">testo qui</span>' +
-          '<h2>testo qui</h2>' +
-          '<p>testo qui</p>' +
-          '<p>testo qui</p>' +
-        '</div>';
-      grid.insertBefore(item, btn);
-      makeEditable(item);
-      decorateCard(item);
-      decorateImages(item);
-    });
-    grid.appendChild(btn);
+    addItemButton('.grid-posters', 'add-poster', '+ Aggiungi poster',
+      function () { return renderPoster(VUOTO); }, decorateCard);
   }
 
   /* pagina Video: riquadro con icona play, immagine e link */
@@ -1767,30 +1934,30 @@ function startApp () {
   }
 
   function addVideoButton () {
-    var grid = document.querySelector('.grid-videos');
-    if (!grid || grid.querySelector('.add-video')) return;
-    var btn = document.createElement('button');
-    btn.type = 'button';
-    btn.className = 'add-video edit-only';
-    btn.textContent = '+ Aggiungi video';
-    btn.addEventListener('click', function () {
-      var item = document.createElement('a');
-      item.className = 'video-item';
-      item.setAttribute('href', 'https://www.youtube.com/@TeatroPubblicoLigure/playlists');
-      item.setAttribute('target', '_blank');
-      item.setAttribute('rel', 'noopener noreferrer');
-      item.innerHTML =
-        '<div class="video-ph">' +
-          '<img src="' + PLACEHOLDER_IMG + '" alt="">' +
-          '<span class="video-play"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span>' +
-        '</div>' +
-        '<div class="video-caption">testo qui<span class="poster-sub">testo qui</span></div>';
-      grid.insertBefore(item, btn);
-      makeEditable(item);
-      decorateVideo(item);
-      decorateImages(item);
-    });
-    grid.appendChild(btn);
+    var v = Object.assign({}, VUOTO, { href: 'https://www.youtube.com/@TeatroPubblicoLigure/playlists' });
+    addItemButton('.grid-videos', 'add-video', '+ Aggiungi video',
+      function () { return renderVideo(v); }, decorateVideo);
+  }
+
+  function addNewsButton () {
+    addItemButton('.grid-news', 'add-news', '+ Aggiungi notizia',
+      function () { return renderNews(VUOTO); }, decorateSimple);
+  }
+
+  function addRowButton () {
+    addItemButton('.trasparenza-table', 'add-row', '+ Aggiungi riga',
+      function () { return renderRow(VUOTO); }, decorateSimple);
+  }
+
+  /* elementi senza link e senza contenuto interno: basta poterli eliminare */
+  function decorateSimple (item) {
+    if (item.querySelector('.card-tools')) return;
+    var tools = document.createElement('div');
+    tools.className = 'card-tools edit-only-wrap';
+    tools.appendChild(makeTool('Elimina', function () {
+      if (window.confirm('Eliminare questo elemento?')) item.remove();
+    }));
+    item.appendChild(tools);
   }
 
   function decorateImages (root) {
@@ -1857,11 +2024,14 @@ function startApp () {
     document.querySelectorAll('.show-card').forEach(decorateCard);
     document.querySelectorAll('.poster-item').forEach(decorateCard);
     document.querySelectorAll('.video-item').forEach(decorateVideo);
+    document.querySelectorAll('.news-card, .trasparenza-row').forEach(decorateSimple);
     decorateImages(document);
     heroTool();
     addCardButton();
     addPosterButton();
     addVideoButton();
+    addNewsButton();
+    addRowButton();
   }
 
   function exitEditMode () {

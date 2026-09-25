@@ -348,49 +348,6 @@ section.alt { background: var(--off-white); }
   transition: transform .7s cubic-bezier(.2,.7,.3,1);
 }
 .show-card:hover img { transform: scale(1.06); }
-.show-card .date-badge {
-  position: absolute; top: 14px; left: 14px;
-  background: var(--orange);
-  color: #fff;
-  font-weight: 600;
-  font-size: 10px;
-  letter-spacing: 0.14em;
-  padding: 7px 12px;
-  text-transform: uppercase;
-}
-.grid-shows .show-card:nth-child(3n+2) .date-badge { background: var(--green); }
-.grid-shows .show-card:nth-child(3n+3) .date-badge { background: var(--blue); }
-.show-card .tag {
-  position: absolute; top: 14px; right: 14px;
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: #fff;
-  background: rgba(25,24,23,.45);
-  -webkit-backdrop-filter: blur(8px);
-  backdrop-filter: blur(8px);
-  border: 1px solid rgba(255,255,255,.25);
-  padding: 6px 11px;
-}
-.show-card .info {
-  position: absolute; left: 0; right: 0; bottom: 0;
-  padding: 70px 24px 24px;
-  background: linear-gradient(0deg, rgba(25,24,23,.96) 10%, rgba(25,24,23,.72) 45%, rgba(25,24,23,0));
-  color: #fff;
-}
-.show-card .info h3 {
-  font-size: 24px;
-  color: #fff;
-  text-shadow: 0 1px 12px rgba(0,0,0,.35);
-}
-.show-card .info .venue {
-  margin-top: 8px;
-  font-size: 10px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: rgba(255,255,255,.72);
-}
 
 .section-foot { text-align: center; margin-top: 46px; }
 
@@ -475,13 +432,14 @@ section.alt { background: var(--off-white); }
 /* ============ POSTER (pagina Film) ============ */
 .grid-posters {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 30px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 36px;
 }
-.poster-item { margin: 0; position: relative; }
+.poster-item { display: block; position: relative; cursor: pointer; }
+/* formato manifesto 70x100 */
 .poster-ph {
   position: relative;
-  aspect-ratio: 2 / 3;
+  aspect-ratio: 70 / 100;
   overflow: hidden;
   background: var(--off-white);
 }
@@ -490,15 +448,15 @@ section.alt { background: var(--off-white); }
   transition: transform .7s cubic-bezier(.2,.7,.3,1);
 }
 .poster-item:hover .poster-ph img { transform: scale(1.04); }
-.poster-item figcaption {
-  margin-top: 14px;
-  font-size: 15px;
-  line-height: 1.4;
+.poster-caption {
+  margin-top: 16px;
+  font-size: 17px;
+  line-height: 1.35;
   color: var(--black);
 }
-.poster-item .poster-sub {
+.poster-sub {
   display: block;
-  margin-top: 5px;
+  margin-top: 6px;
   font-size: 10px;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -508,7 +466,7 @@ section.alt { background: var(--off-white); }
   border: 2px dashed var(--line);
   background: var(--off-white);
   color: var(--dark);
-  aspect-ratio: 2 / 3;
+  aspect-ratio: 70 / 100;
   font-size: 12px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -516,8 +474,61 @@ section.alt { background: var(--off-white); }
 }
 .add-poster:hover { border-color: var(--orange-red); color: var(--orange-red); }
 
-@media (max-width: 980px) { .grid-posters { grid-template-columns: repeat(3, 1fr); } }
-@media (max-width: 720px) { .grid-posters { grid-template-columns: repeat(2, 1fr); } }
+/* ============ VIDEO ============ */
+.grid-videos {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 36px;
+}
+.video-item { display: block; position: relative; cursor: pointer; }
+.video-ph {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: var(--black);
+}
+.video-ph img {
+  width: 100%; height: 100%; object-fit: cover;
+  opacity: .78;
+  transition: transform .7s cubic-bezier(.2,.7,.3,1), opacity .4s ease;
+}
+.video-item:hover .video-ph img { transform: scale(1.04); opacity: .95; }
+.video-play {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 62px; height: 62px;
+  border: 1px solid rgba(255,255,255,.85);
+  display: flex; align-items: center; justify-content: center;
+  pointer-events: none;
+  transition: background .25s ease;
+}
+.video-play svg { width: 20px; height: 20px; fill: #fff; margin-left: 3px; }
+.video-item:hover .video-play { background: rgba(255,255,255,.18); }
+.video-caption {
+  margin-top: 16px;
+  font-size: 17px;
+  line-height: 1.35;
+  color: var(--black);
+}
+.add-video {
+  border: 2px dashed var(--line);
+  background: var(--off-white);
+  color: var(--dark);
+  aspect-ratio: 16 / 9;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.add-video:hover { border-color: var(--orange-red); color: var(--orange-red); }
+
+@media (max-width: 980px) {
+  .grid-posters, .grid-videos { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 720px) {
+  .grid-posters, .grid-videos { grid-template-columns: 1fr; }
+}
 
 /* ============ TRASPARENZA ============ */
 .trasparenza-table { border-top: 1px solid var(--line); max-width: 900px; }
@@ -786,14 +797,9 @@ body.editing .hero-slider { position: relative; }
   color: var(--white);
 }
 .edit-only:hover { background: var(--orange-red); }
-.poster-tools {
-  position: absolute;
-  top: 18px; left: 18px;
-  z-index: 5;
-}
 .card-tools {
   position: absolute;
-  left: 0; right: 0; bottom: 92px;
+  left: 0; right: 0; bottom: 14px;
   z-index: 5;
   display: flex;
   gap: 6px;
@@ -927,23 +933,11 @@ body.editing .hero-slider { position: relative; }
           <div class="ph">
             <img src="https://images.unsplash.com/photo-1507924538820-ede94a04019d?q=80&w=900&auto=format&fit=crop" alt="Teatro Cavour">
           </div>
-          <span class="date-badge">testo qui</span>
-          <span class="tag">testo qui</span>
-          <div class="info">
-            <h3>testo qui</h3>
-            <div class="venue">testo qui</div>
-          </div>
         </a>
 
         <a class="show-card reveal" href="#" title="Dialoghi">
           <div class="ph">
             <img src="Dialoghi2026_programma_70x100.jpg" alt="Dialoghi 2026" style="object-position: top center;">
-          </div>
-          <span class="date-badge">testo qui</span>
-          <span class="tag">testo qui</span>
-          <div class="info">
-            <h3>Dialoghi</h3>
-            <div class="venue">testo qui</div>
           </div>
           <div class="card-detail" hidden>
             <div class="detail-media"><img src="Dialoghi2026_programma_70x100.jpg" alt="Dialoghi 2026"></div>
@@ -958,12 +952,6 @@ body.editing .hero-slider { position: relative; }
           <div class="ph">
             <img src="https://images.unsplash.com/photo-1477281765962-ef34e8bb0967?q=80&w=900&auto=format&fit=crop" alt="Pellegrinaggi">
           </div>
-          <span class="date-badge">testo qui</span>
-          <span class="tag">testo qui</span>
-          <div class="info">
-            <h3>Pellegrinaggi</h3>
-            <div class="venue">testo qui</div>
-          </div>
           <div class="card-detail" hidden>
             <div class="detail-media"><img src="https://images.unsplash.com/photo-1477281765962-ef34e8bb0967?q=80&w=1200&auto=format&fit=crop" alt="Pellegrinaggi"></div>
             <span class="eyebrow">testo qui</span>
@@ -976,12 +964,6 @@ body.editing .hero-slider { position: relative; }
         <a class="show-card reveal" href="#" title="Nuovo quadrante">
           <div class="ph">
             <img src="https://images.unsplash.com/photo-1503095396549-807759245b35?q=80&w=900&auto=format&fit=crop" alt="">
-          </div>
-          <span class="date-badge">testo qui</span>
-          <span class="tag">testo qui</span>
-          <div class="info">
-            <h3>testo qui</h3>
-            <div class="venue">testo qui</div>
           </div>
           <div class="card-detail" hidden>
             <div class="detail-media"><img src="https://images.unsplash.com/photo-1503095396549-807759245b35?q=80&w=1200&auto=format&fit=crop" alt=""></div>
@@ -996,12 +978,6 @@ body.editing .hero-slider { position: relative; }
           <div class="ph">
             <img src="https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?q=80&w=900&auto=format&fit=crop" alt="">
           </div>
-          <span class="date-badge">testo qui</span>
-          <span class="tag">testo qui</span>
-          <div class="info">
-            <h3>testo qui</h3>
-            <div class="venue">testo qui</div>
-          </div>
           <div class="card-detail" hidden>
             <div class="detail-media"><img src="https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?q=80&w=1200&auto=format&fit=crop" alt=""></div>
             <span class="eyebrow">testo qui</span>
@@ -1014,12 +990,6 @@ body.editing .hero-slider { position: relative; }
         <a class="show-card reveal" href="#" title="Nuovo quadrante">
           <div class="ph">
             <img src="https://images.unsplash.com/photo-1514306191717-452ec28c7814?q=80&w=900&auto=format&fit=crop" alt="">
-          </div>
-          <span class="date-badge">testo qui</span>
-          <span class="tag">testo qui</span>
-          <div class="info">
-            <h3>testo qui</h3>
-            <div class="venue">testo qui</div>
           </div>
           <div class="card-detail" hidden>
             <div class="detail-media"><img src="https://images.unsplash.com/photo-1514306191717-452ec28c7814?q=80&w=1200&auto=format&fit=crop" alt=""></div>
@@ -1158,7 +1128,31 @@ body.editing .hero-slider { position: relative; }
       <a href="#" class="back-link" data-nav="home">&larr; Home</a>
       <span class="eyebrow">Video</span>
       <h2 style="margin-bottom:20px;">testo qui</h2>
-      <p style="max-width:640px;">testo qui</p>
+      <p style="max-width:640px; margin-bottom:56px;">testo qui</p>
+
+      <div class="grid-videos">
+        <a class="video-item" href="https://www.youtube.com/@TeatroPubblicoLigure/playlists" target="_blank" rel="noopener noreferrer">
+          <div class="video-ph">
+            <img src="https://images.unsplash.com/photo-1503095396549-807759245b35?q=80&w=900&auto=format&fit=crop" alt="">
+            <span class="video-play"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span>
+          </div>
+          <div class="video-caption">Playlist<span class="poster-sub">testo qui</span></div>
+        </a>
+        <a class="video-item" href="https://www.youtube.com/@TeatroPubblicoLigure/playlists" target="_blank" rel="noopener noreferrer">
+          <div class="video-ph">
+            <img src="https://images.unsplash.com/photo-1514306191717-452ec28c7814?q=80&w=900&auto=format&fit=crop" alt="">
+            <span class="video-play"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span>
+          </div>
+          <div class="video-caption">testo qui<span class="poster-sub">testo qui</span></div>
+        </a>
+        <a class="video-item" href="https://www.youtube.com/@TeatroPubblicoLigure/playlists" target="_blank" rel="noopener noreferrer">
+          <div class="video-ph">
+            <img src="https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?q=80&w=900&auto=format&fit=crop" alt="">
+            <span class="video-play"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span>
+          </div>
+          <div class="video-caption">testo qui<span class="poster-sub">testo qui</span></div>
+        </a>
+      </div>
     </div>
   </section>
 
@@ -1171,22 +1165,39 @@ body.editing .hero-slider { position: relative; }
       <p style="max-width:640px; margin-bottom:56px;">testo qui</p>
 
       <div class="grid-posters">
-        <figure class="poster-item">
+        <a class="poster-item" href="#">
           <div class="poster-ph"><img src="hero.jpg" alt=""></div>
-          <figcaption>testo qui<span class="poster-sub">testo qui</span></figcaption>
-        </figure>
-        <figure class="poster-item">
+          <div class="poster-caption">testo qui<span class="poster-sub">testo qui</span></div>
+          <div class="card-detail" hidden>
+            <div class="detail-media"><img src="hero.jpg" alt=""></div>
+            <span class="eyebrow">testo qui</span>
+            <h2>testo qui</h2>
+            <p>testo qui</p>
+            <p>testo qui</p>
+          </div>
+        </a>
+        <a class="poster-item" href="#">
           <div class="poster-ph"><img src="Dialoghi2026_programma_70x100.jpg" alt=""></div>
-          <figcaption>testo qui<span class="poster-sub">testo qui</span></figcaption>
-        </figure>
-        <figure class="poster-item">
+          <div class="poster-caption">testo qui<span class="poster-sub">testo qui</span></div>
+          <div class="card-detail" hidden>
+            <div class="detail-media"><img src="Dialoghi2026_programma_70x100.jpg" alt=""></div>
+            <span class="eyebrow">testo qui</span>
+            <h2>testo qui</h2>
+            <p>testo qui</p>
+            <p>testo qui</p>
+          </div>
+        </a>
+        <a class="poster-item" href="#">
           <div class="poster-ph"><img src="https://images.unsplash.com/photo-1503095396549-807759245b35?q=80&w=800&auto=format&fit=crop" alt=""></div>
-          <figcaption>testo qui<span class="poster-sub">testo qui</span></figcaption>
-        </figure>
-        <figure class="poster-item">
-          <div class="poster-ph"><img src="https://images.unsplash.com/photo-1514306191717-452ec28c7814?q=80&w=800&auto=format&fit=crop" alt=""></div>
-          <figcaption>testo qui<span class="poster-sub">testo qui</span></figcaption>
-        </figure>
+          <div class="poster-caption">testo qui<span class="poster-sub">testo qui</span></div>
+          <div class="card-detail" hidden>
+            <div class="detail-media"><img src="https://images.unsplash.com/photo-1503095396549-807759245b35?q=80&w=1200&auto=format&fit=crop" alt=""></div>
+            <span class="eyebrow">testo qui</span>
+            <h2>testo qui</h2>
+            <p>testo qui</p>
+            <p>testo qui</p>
+          </div>
+        </a>
       </div>
     </div>
   </section>
@@ -1332,7 +1343,7 @@ var CLOUDINARY_UPLOAD_PRESET = "md5s3dgi";
    Le modifiche fatte nell'editor vengono salvate su Firestore,
    quindi le vedono TUTTI i visitatori, non solo chi le ha fatte.
    ===================================================== */
-var CONTENT_VERSION = '4';
+var CONTENT_VERSION = '6';
 var STORE = [
   { key: 'nav', sel: '#mainNav ul' },
   { key: 'main', sel: 'main' },
@@ -1486,7 +1497,7 @@ function startApp () {
   /* click su un quadrante: link esterno naviga, altrimenti apre il contenuto interno */
   document.addEventListener('click', function (e) {
     if (document.body.classList.contains('editing')) return;
-    var card = e.target.closest('.show-card');
+    var card = e.target.closest('.show-card, .poster-item');
     if (!card) return;
     var href = card.getAttribute('href') || '';
     if (/^https?:/i.test(href)) return;
@@ -1557,7 +1568,7 @@ function startApp () {
      EDITOR
      ===================================================== */
   var ACCESS_CODE = 'farna2317';
-  var EDITABLE = 'h1, h2, h3, h4, p, .date-badge, .tag, .venue, .eyebrow, .meta, .brand-title, .brand-sub, .newsletter-label, .footer-legal, .footer-info p, .stat b, .stat span, .main-nav a, .trasparenza-voce, .trasparenza-dato, .btn-calendar, .btn, .trasparenza-link, figcaption, .poster-sub';
+  var EDITABLE = 'h1, h2, h3, h4, p, .eyebrow, .meta, .brand-title, .brand-sub, .newsletter-label, .footer-legal, .footer-info p, .stat b, .stat span, .main-nav a, .trasparenza-voce, .trasparenza-dato, .btn-calendar, .btn, .trasparenza-link, .poster-caption, .poster-sub, .video-caption';
   var PLACEHOLDER_IMG = 'https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?q=80&w=900&auto=format&fit=crop';
 
   var modal = document.getElementById('editModal');
@@ -1626,7 +1637,7 @@ function startApp () {
     tools.className = 'card-tools edit-only-wrap';
 
     tools.appendChild(makeTool('Immagine', function () {
-      var img = card.querySelector('.ph img');
+      var img = card.querySelector('.ph img, .poster-ph img');
       if (img) pickImage(img);
     }));
 
@@ -1648,7 +1659,7 @@ function startApp () {
     }));
 
     tools.appendChild(makeTool('Elimina', function () {
-      if (window.confirm('Eliminare questo quadrante?')) card.remove();
+      if (window.confirm('Eliminare questo elemento?')) card.remove();
     }));
 
     card.appendChild(tools);
@@ -1673,9 +1684,6 @@ function startApp () {
       card.setAttribute('href', '#');
       card.innerHTML =
         '<div class="ph"><img src="' + PLACEHOLDER_IMG + '" alt=""></div>' +
-        '<span class="date-badge">testo qui</span>' +
-        '<span class="tag">testo qui</span>' +
-        '<div class="info"><h3>testo qui</h3><div class="venue">testo qui</div></div>' +
         '<div class="card-detail" hidden>' +
           '<div class="detail-media"><img src="' + PLACEHOLDER_IMG + '" alt=""></div>' +
           '<span class="eyebrow">testo qui</span>' +
@@ -1703,17 +1711,6 @@ function startApp () {
     slider.appendChild(box);
   }
 
-  /* pagina Film: ogni poster si può sostituire o eliminare */
-  function decoratePoster (item) {
-    if (item.querySelector('.poster-tools')) return;
-    var tools = document.createElement('div');
-    tools.className = 'poster-tools edit-only-wrap';
-    tools.appendChild(makeTool('Elimina', function () {
-      if (window.confirm('Eliminare questo poster?')) item.remove();
-    }));
-    item.appendChild(tools);
-  }
-
   function addPosterButton () {
     var grid = document.querySelector('.grid-posters');
     if (!grid || grid.querySelector('.add-poster')) return;
@@ -1722,21 +1719,82 @@ function startApp () {
     btn.className = 'add-poster edit-only';
     btn.textContent = '+ Aggiungi poster';
     btn.addEventListener('click', function () {
-      var item = document.createElement('figure');
+      var item = document.createElement('a');
       item.className = 'poster-item';
+      item.setAttribute('href', '#');
       item.innerHTML =
         '<div class="poster-ph"><img src="' + PLACEHOLDER_IMG + '" alt=""></div>' +
-        '<figcaption>testo qui<span class="poster-sub">testo qui</span></figcaption>';
+        '<div class="poster-caption">testo qui<span class="poster-sub">testo qui</span></div>' +
+        '<div class="card-detail" hidden>' +
+          '<div class="detail-media"><img src="' + PLACEHOLDER_IMG + '" alt=""></div>' +
+          '<span class="eyebrow">testo qui</span>' +
+          '<h2>testo qui</h2>' +
+          '<p>testo qui</p>' +
+          '<p>testo qui</p>' +
+        '</div>';
       grid.insertBefore(item, btn);
       makeEditable(item);
-      decoratePoster(item);
+      decorateCard(item);
+      decorateImages(item);
+    });
+    grid.appendChild(btn);
+  }
+
+  /* pagina Video: riquadro con icona play, immagine e link */
+  function decorateVideo (item) {
+    if (item.querySelector('.card-tools')) return;
+    var tools = document.createElement('div');
+    tools.className = 'card-tools edit-only-wrap';
+
+    tools.appendChild(makeTool('Immagine', function () {
+      var img = item.querySelector('.video-ph img');
+      if (img) pickImage(img);
+    }));
+
+    tools.appendChild(makeTool('Link', function () {
+      var url = window.prompt('Indirizzo del video:', item.getAttribute('href') || '');
+      if (url === null) return;
+      item.setAttribute('href', url);
+      item.setAttribute('target', '_blank');
+      item.setAttribute('rel', 'noopener noreferrer');
+    }));
+
+    tools.appendChild(makeTool('Elimina', function () {
+      if (window.confirm('Eliminare questo video?')) item.remove();
+    }));
+
+    item.appendChild(tools);
+  }
+
+  function addVideoButton () {
+    var grid = document.querySelector('.grid-videos');
+    if (!grid || grid.querySelector('.add-video')) return;
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'add-video edit-only';
+    btn.textContent = '+ Aggiungi video';
+    btn.addEventListener('click', function () {
+      var item = document.createElement('a');
+      item.className = 'video-item';
+      item.setAttribute('href', 'https://www.youtube.com/@TeatroPubblicoLigure/playlists');
+      item.setAttribute('target', '_blank');
+      item.setAttribute('rel', 'noopener noreferrer');
+      item.innerHTML =
+        '<div class="video-ph">' +
+          '<img src="' + PLACEHOLDER_IMG + '" alt="">' +
+          '<span class="video-play"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span>' +
+        '</div>' +
+        '<div class="video-caption">testo qui<span class="poster-sub">testo qui</span></div>';
+      grid.insertBefore(item, btn);
+      makeEditable(item);
+      decorateVideo(item);
       decorateImages(item);
     });
     grid.appendChild(btn);
   }
 
   function decorateImages (root) {
-    root.querySelectorAll('.split .ph-block img, .news-card img, .card-detail img, .poster-ph img').forEach(function (img) {
+    root.querySelectorAll('.split .ph-block img, .news-card img, .card-detail img, .poster-ph img, .video-ph img').forEach(function (img) {
       var holder = img.parentNode;
       if (holder.querySelector('.slide-tools')) return;
       var box = document.createElement('div');
@@ -1797,11 +1855,13 @@ function startApp () {
     makeEditable(document.querySelector('header.site-header'));
     makeEditable(document.querySelector('footer.site-footer'));
     document.querySelectorAll('.show-card').forEach(decorateCard);
-    document.querySelectorAll('.poster-item').forEach(decoratePoster);
+    document.querySelectorAll('.poster-item').forEach(decorateCard);
+    document.querySelectorAll('.video-item').forEach(decorateVideo);
     decorateImages(document);
     heroTool();
     addCardButton();
     addPosterButton();
+    addVideoButton();
   }
 
   function exitEditMode () {

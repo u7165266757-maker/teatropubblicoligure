@@ -744,6 +744,15 @@ footer.site-footer {
   cursor: pointer;
 }
 .editor-nav select option { color: #191817; }
+.editor-version {
+  font-family: 'DM Sans', Arial, sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: var(--orange-red);
+  border: 1px solid var(--orange-red);
+  padding: 4px 8px;
+}
 .editor-hint {
   font-size: 11px;
   letter-spacing: 0.08em;
@@ -1328,6 +1337,7 @@ body.editing .hero-slider { position: relative; }
   <div class="editor-nav">
     <label for="editorPage">Pagina</label>
     <select id="editorPage"></select>
+    <span class="editor-version" id="editorVersion"></span>
     <span class="editor-hint">clicca sui testi per modificarli</span>
   </div>
   <div class="editor-bar-actions">
@@ -1368,7 +1378,9 @@ var CLOUDINARY_UPLOAD_PRESET = "md5s3dgi";
      data-id  -> campo singolo (titolo, paragrafo, logo...)
      data-f   -> campo dentro un elenco (quadrati, poster, video...)
    ===================================================== */
+var SITE_VERSION = '7';   /* si vede nella barra dell'editor: serve a capire quale codice è online */
 var SCHEMA = 1;
+var LEGACY_DOC = false;   /* true se nel database c'è ancora il vecchio salvataggio */
 
 var SITE_DOC = null;
 try {
@@ -1584,7 +1596,14 @@ function loadPublishedContent (done) {
   function go () { if (!started) { started = true; done(); } }
   setTimeout(go, 4000);
   SITE_DOC.get().then(function (snap) {
-    if (snap.exists) applyContent(snap.data());
+    if (snap.exists) {
+      var d = snap.data();
+      if (d && !d.fields && (d.main || d.nav || d.footer)) {
+        LEGACY_DOC = true;          /* salvataggio del vecchio impianto: non si può usare */
+      } else {
+        applyContent(d);
+      }
+    }
     go();
   }).catch(go);
 }
@@ -2013,7 +2032,14 @@ function startApp () {
   function enterEditMode () {
     document.body.classList.add('editing');
     editorBar.hidden = false;
+    var stamp = document.getElementById('editorVersion');
+    if (stamp) stamp.textContent = 'v' + SITE_VERSION;
     buildPageSelect();
+    if (LEGACY_DOC) {
+      window.alert('Attenzione: nel database c\'è ancora il salvataggio del vecchio impianto,\n' +
+        'che questo codice non può usare.\n\nPremi SALVA una volta per sostituirlo: da quel momento\n' +
+        'i contenuti resteranno anche aggiornando il codice.');
+    }
     /* in editor niente comparse in dissolvenza: tutto sempre visibile */
     document.querySelectorAll('.reveal').forEach(function (el) {
       el.classList.add('is-visible');
@@ -2047,18 +2073,44 @@ function startApp () {
 
 
   function saveContent () {
-    closeDetail();
     if (!SITE_DOC) {
       window.alert('Salvataggio non disponibile: manca il collegamento al database.');
       return;
     }
+
+    var dati;
+    try {
+      closeDetail();
+      dati = collectContent();
+    } catch (err) {
+      window.alert('Errore nel raccogliere i contenuti: ' + err.message);
+      return;
+    }
+
     setEditorBusy('Pubblicazione in corso…');
-    publishContent().then(function () {
+
+    SITE_DOC.set(dati).then(function () {
+      /* rileggo dal database per essere certo che sia stato scritto davvero */
+      return SITE_DOC.get();
+    }).then(function (snap) {
       setEditorBusy('');
-      window.alert('Modifiche pubblicate.\nOra le vedono tutti i visitatori del sito.');
+      var d = snap.exists ? snap.data() : null;
+      if (!d || !d.fields) {
+        window.alert('La scrittura non risulta salvata. Riprova o segnalalo.');
+        return;
+      }
+      LEGACY_DOC = false;
+      window.alert('Modifiche pubblicate e verificate.\n\n' +
+        Object.keys(d.fields).length + ' testi\n' +
+        (d.cards || []).length + ' quadrati\n' +
+        (d.posters || []).length + ' poster\n' +
+        (d.videos || []).length + ' video\n' +
+        (d.news || []).length + ' notizie\n' +
+        (d.rows || []).length + ' righe trasparenza\n\n' +
+        'Ora le vedono tutti i visitatori.');
     }).catch(function (err) {
       setEditorBusy('');
-      window.alert('Errore nella pubblicazione: ' + err.message);
+      window.alert('Errore nella pubblicazione: ' + (err && err.message ? err.message : err));
     });
   }
 
@@ -2107,3 +2159,4 @@ function startApp () {
 </script>
 </body>
 </html>
+

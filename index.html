@@ -1351,6 +1351,7 @@ body.editing .hero-slider { position: relative; }
 
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script>
 /* Stesso progetto Firebase del calendario. Il sito usa un documento tutto suo,
    "calendars/sito-tpl": il calendario continua a usare "calendars/main" e i due
@@ -1378,16 +1379,27 @@ var CLOUDINARY_UPLOAD_PRESET = "md5s3dgi";
      data-id  -> campo singolo (titolo, paragrafo, logo...)
      data-f   -> campo dentro un elenco (quadrati, poster, video...)
    ===================================================== */
-var SITE_VERSION = '7';   /* si vede nella barra dell'editor: serve a capire quale codice è online */
+var SITE_VERSION = '8';   /* si vede nella barra dell'editor: serve a capire quale codice è online */
 var SCHEMA = 1;
 var LEGACY_DOC = false;   /* true se nel database c'è ancora il vecchio salvataggio */
 
 var SITE_DOC = null;
+var SITE_AUTH = null;
 try {
   firebase.initializeApp(firebaseConfig);
   SITE_DOC = firebase.firestore().collection('calendars').doc('sito-tpl');
+  SITE_AUTH = firebase.auth();
 } catch (e) {
   SITE_DOC = null;
+}
+
+/* Le regole del progetto Firebase consentono la lettura a tutti ma la
+   scrittura solo a chi ha fatto l'accesso: quindi prima di salvare ci si
+   autentica in forma anonima, esattamente come fa calendariotpl.it. */
+function ensureSignedIn () {
+  if (!SITE_AUTH) return Promise.reject(new Error('modulo di accesso non caricato'));
+  if (SITE_AUTH.currentUser) return Promise.resolve(SITE_AUTH.currentUser);
+  return SITE_AUTH.signInAnonymously();
 }
 
 var CARD_FIELDS = ['img', 'd-img', 'd-eyebrow', 'd-title', 'd-p1', 'd-p2'];
@@ -2089,7 +2101,9 @@ function startApp () {
 
     setEditorBusy('Pubblicazione in corso…');
 
-    SITE_DOC.set(dati).then(function () {
+    ensureSignedIn().then(function () {
+      return SITE_DOC.set(dati);
+    }).then(function () {
       /* rileggo dal database per essere certo che sia stato scritto davvero */
       return SITE_DOC.get();
     }).then(function (snap) {
@@ -2122,12 +2136,18 @@ function startApp () {
   document.getElementById('editCancel').addEventListener('click', closeModal);
 
   document.getElementById('editConfirm').addEventListener('click', function () {
-    if (codeInput.value === ACCESS_CODE) {
+    if (codeInput.value !== ACCESS_CODE) {
+      codeError.textContent = 'Codice non valido.';
+      return;
+    }
+    codeError.textContent = 'Accesso in corso…';
+    ensureSignedIn().then(function () {
+      codeError.textContent = '';
       closeModal();
       enterEditMode();
-    } else {
-      codeError.textContent = 'Codice non valido.';
-    }
+    }).catch(function (err) {
+      codeError.textContent = 'Accesso non riuscito: ' + (err && err.message ? err.message : err);
+    });
   });
 
   codeInput.addEventListener('keydown', function (e) {
@@ -2159,4 +2179,3 @@ function startApp () {
 </script>
 </body>
 </html>
-

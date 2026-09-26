@@ -3,6 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-KBBR6BBS');</script>
+<!-- End Google Tag Manager -->
+
 <title>Teatro Pubblico Ligure — Stagione 2026</title>
 <meta name="description" content="Teatro Pubblico Ligure: prosa, danza, teatro ragazzi e spettacolo dal vivo nei teatri della rete regionale ligure.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -904,6 +913,11 @@ body.editing .hero-slider { position: relative; }
 </head>
 <body>
 
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KBBR6BBS"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
 <header class="site-header">
   <div class="wrap header-row">
     <a href="#" class="brand" data-nav="home">
@@ -1388,7 +1402,7 @@ var CLOUDINARY_UPLOAD_PRESET = "md5s3dgi";
      data-id  -> campo singolo (titolo, paragrafo, logo...)
      data-f   -> campo dentro un elenco (quadrati, poster, video...)
    ===================================================== */
-var SITE_VERSION = '9';   /* si vede nella barra dell'editor: serve a capire quale codice è online */
+var SITE_VERSION = '10';   /* si vede nella barra dell'editor: serve a capire quale codice è online */
 var SCHEMA = 1;
 var LEGACY_DOC = false;   /* true se nel database c'è ancora il vecchio salvataggio */
 
@@ -1629,6 +1643,16 @@ function loadPublishedContent (done) {
   }).catch(go);
 }
 
+/* Segnala un fatto a Tag Manager. Non invia nulla di suo e non scrive cookie:
+   deposita solo una voce nella lista dataLayer. Sarà Tag Manager a decidere
+   cosa farne, e solo dopo il consenso dell'utente. */
+function traccia (evento, dati) {
+  window.dataLayer = window.dataLayer || [];
+  var voce = { event: evento };
+  if (dati) Object.keys(dati).forEach(function (k) { voce[k] = dati[k]; });
+  window.dataLayer.push(voce);
+}
+
 /* carica una foto su Cloudinary e restituisce l'indirizzo pubblico */
 function uploadImage (file) {
   var form = new FormData();
@@ -1689,6 +1713,10 @@ function startApp () {
     detail.hidden = false;
     detailHost.appendChild(detail);
     openDetailCard = card;
+    var tit = detail.querySelector('[data-f="d-title"]');
+    if (!document.body.classList.contains('editing')) {
+      traccia('apri_spettacolo', { spettacolo: tit ? tit.textContent.trim() : '(senza titolo)' });
+    }
     showPage('dettaglio');
   }
 
@@ -1701,6 +1729,9 @@ function startApp () {
       l.classList.toggle('active', l.getAttribute('data-nav') === name);
     });
     syncPageSelect(name);
+    if (!document.body.classList.contains('editing')) {
+      traccia('cambio_sezione', { sezione: name });
+    }
     window.scrollTo({ top: 0, behavior: 'instant' in window ? 'instant' : 'auto' });
     closeMobileNav();
   }
@@ -1732,6 +1763,29 @@ function startApp () {
     if (!card.querySelector('.card-detail')) return;
     e.preventDefault();
     openDetail(card);
+  });
+
+  /* ---- fatti da misurare: clic verso calendario, newsletter, social, video ---- */
+  document.addEventListener('click', function (e) {
+    if (document.body.classList.contains('editing')) return;
+
+    var el = e.target.closest('a');
+    if (!el) return;
+
+    var href = el.getAttribute('href') || '';
+
+    if (el.classList.contains('btn-calendar') || /calendariotpl\.it/i.test(href)) {
+      traccia('clic_calendario', { destinazione: href });
+    } else if (el.classList.contains('newsletter-box')) {
+      traccia('clic_newsletter', {});
+    } else if (el.classList.contains('video-item')) {
+      var cap = el.querySelector('[data-f="caption"]');
+      traccia('clic_video', { video: cap ? cap.textContent.trim() : '', destinazione: href });
+    } else if (el.closest('.header-social, .footer-social')) {
+      traccia('clic_social', { rete: el.getAttribute('aria-label') || '' });
+    } else if (/^https?:/i.test(href)) {
+      traccia('clic_esterno', { destinazione: href });
+    }
   });
 
   /* ---- hero slider ---- */

@@ -12,6 +12,19 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 })(window,document,'script','dataLayer','GTM-KBBR6BBS');</script>
 <!-- End Google Tag Manager -->
 
+<script>
+/* Tiene velato il contenuto finché non arrivano i testi e le immagini
+   pubblicati: senza questo, per un attimo si vedrebbero quelli di esempio.
+   Se il JavaScript è disattivato la classe non viene mai aggiunta e il sito
+   resta visibile; se la rete è lenta ci pensa il tempo massimo qui sotto. */
+(function () {
+  var doc = document.documentElement;
+  doc.classList.add('in-attesa');
+  window.mostraSito = function () { doc.classList.remove('in-attesa'); };
+  window.setTimeout(window.mostraSito, 1200);
+})();
+</script>
+
 <title>Teatro Pubblico Ligure — Stagione 2026</title>
 <meta name="description" content="Teatro Pubblico Ligure: prosa, danza, teatro ragazzi e spettacolo dal vivo nei teatri della rete regionale ligure.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -47,7 +60,21 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
 * { box-sizing: border-box; }
 
-html { scroll-behavior: smooth; }
+html {
+  scroll-behavior: smooth;
+  background: var(--bg);   /* durante l'attesa si vede la carta, non il bianco */
+}
+
+/* comparsa morbida quando i contenuti sono pronti */
+.site-header,
+.header-strip,
+main,
+footer.site-footer { transition: opacity .35s ease; }
+
+html.in-attesa .site-header,
+html.in-attesa .header-strip,
+html.in-attesa main,
+html.in-attesa footer.site-footer { opacity: 0; }
 
 body {
   margin: 0;
@@ -127,6 +154,7 @@ body.js-reveal .reveal.is-visible { opacity: 1; transform: none; }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
+  .site-header, .header-strip, main, footer.site-footer { transition: none; }
   body.js-reveal .reveal { opacity: 1; transform: none; transition: none; }
 }
 
@@ -370,6 +398,44 @@ section.alt { background: var(--off-white); }
 .detail-media img { width: 100%; height: auto; }
 .card-detail h2 { font-size: clamp(38px, 5.4vw, 72px); margin-bottom: 22px; }
 .card-detail p { max-width: 620px; margin-bottom: 16px; font-size: 17px; }
+
+
+/* ---- manifesti aggiuntivi dentro il contenuto ---- */
+.detail-gallery { margin-top: 54px; }
+.detail-gallery:empty { display: none; }
+
+/* i manifesti stanno uno sotto l'altro, interi e leggibili */
+.gal-item {
+  position: relative;
+  margin: 0 0 48px;
+  max-width: 560px;
+}
+.gal-ph {
+  position: relative;
+  aspect-ratio: 70 / 100;   /* formato manifesto */
+  overflow: hidden;
+  background: var(--off-white);
+}
+.gal-ph img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.gal-cap {
+  margin-top: 14px;
+  font-size: 15px;
+  line-height: 1.4;
+  color: var(--dark);
+}
+.add-gal {
+  display: block;
+  width: 100%;
+  max-width: 560px;
+  border: 2px dashed var(--line);
+  background: var(--off-white);
+  color: var(--dark);
+  padding: 20px;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
 
 /* ============ CHI SIAMO / SPLIT ============ */
 .split {
@@ -924,6 +990,8 @@ body.editing .hero-slider { position: relative; }
    appiccicato (il tasto Calendario restava nero): così non accade più.
    ========================================================= */
 @media (hover: hover) and (pointer: fine) {
+  .add-gal:hover { border-color: var(--orange-red); color: var(--orange-red); }
+
   .sec-card:hover .sec-ph img { transform: scale(1.04); }
   .add-sec:hover { border-color: var(--orange-red); color: var(--orange-red); }
   .trasparenza-pdf:hover { background: var(--black); border-color: var(--black); color: var(--white); }
@@ -1049,6 +1117,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <h2 data-f="d-title">testo qui</h2>
             <p data-f="d-p1">testo qui</p>
             <p data-f="d-p2">testo qui</p>
+            <div class="detail-gallery" data-gallery></div>
           </div>
         </a>
 
@@ -1062,6 +1131,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <h2 data-f="d-title">Dialoghi</h2>
             <p data-f="d-p1">testo qui</p>
             <p data-f="d-p2">testo qui</p>
+            <div class="detail-gallery" data-gallery></div>
           </div>
         </a>
 
@@ -1075,6 +1145,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <h2 data-f="d-title">Pellegrinaggi</h2>
             <p data-f="d-p1">testo qui</p>
             <p data-f="d-p2">testo qui</p>
+            <div class="detail-gallery" data-gallery></div>
           </div>
         </a>
 
@@ -1088,6 +1159,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <h2 data-f="d-title">testo qui</h2>
             <p data-f="d-p1">testo qui</p>
             <p data-f="d-p2">testo qui</p>
+            <div class="detail-gallery" data-gallery></div>
           </div>
         </a>
 
@@ -1101,6 +1173,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <h2 data-f="d-title">testo qui</h2>
             <p data-f="d-p1">testo qui</p>
             <p data-f="d-p2">testo qui</p>
+            <div class="detail-gallery" data-gallery></div>
           </div>
         </a>
 
@@ -1114,6 +1187,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <h2 data-f="d-title">testo qui</h2>
             <p data-f="d-p1">testo qui</p>
             <p data-f="d-p2">testo qui</p>
+            <div class="detail-gallery" data-gallery></div>
           </div>
         </a>
       </div>
@@ -1222,6 +1296,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <h2 data-f="d-title">testo qui</h2>
             <p data-f="d-p1">testo qui</p>
             <p data-f="d-p2">testo qui</p>
+            <div class="detail-gallery" data-gallery></div>
           </div>
         </a>
         <a class="sec-card" href="#">
@@ -1234,6 +1309,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <h2 data-f="d-title">testo qui</h2>
             <p data-f="d-p1">testo qui</p>
             <p data-f="d-p2">testo qui</p>
+            <div class="detail-gallery" data-gallery></div>
           </div>
         </a>
         <a class="sec-card" href="#">
@@ -1246,6 +1322,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <h2 data-f="d-title">testo qui</h2>
             <p data-f="d-p1">testo qui</p>
             <p data-f="d-p2">testo qui</p>
+            <div class="detail-gallery" data-gallery></div>
           </div>
         </a>
       </div>
@@ -1271,6 +1348,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <h2 data-f="d-title">testo qui</h2>
             <p data-f="d-p1">testo qui</p>
             <p data-f="d-p2">testo qui</p>
+            <div class="detail-gallery" data-gallery></div>
           </div>
         </a>
         <a class="sec-card" href="#">
@@ -1283,6 +1361,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <h2 data-f="d-title">testo qui</h2>
             <p data-f="d-p1">testo qui</p>
             <p data-f="d-p2">testo qui</p>
+            <div class="detail-gallery" data-gallery></div>
           </div>
         </a>
         <a class="sec-card" href="#">
@@ -1295,6 +1374,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <h2 data-f="d-title">testo qui</h2>
             <p data-f="d-p1">testo qui</p>
             <p data-f="d-p2">testo qui</p>
+            <div class="detail-gallery" data-gallery></div>
           </div>
         </a>
       </div>
@@ -1320,6 +1400,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <h2 data-f="d-title">testo qui</h2>
             <p data-f="d-p1">testo qui</p>
             <p data-f="d-p2">testo qui</p>
+            <div class="detail-gallery" data-gallery></div>
           </div>
         </a>
         <a class="sec-card" href="#">
@@ -1332,6 +1413,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <h2 data-f="d-title">testo qui</h2>
             <p data-f="d-p1">testo qui</p>
             <p data-f="d-p2">testo qui</p>
+            <div class="detail-gallery" data-gallery></div>
           </div>
         </a>
         <a class="sec-card" href="#">
@@ -1344,6 +1426,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <h2 data-f="d-title">testo qui</h2>
             <p data-f="d-p1">testo qui</p>
             <p data-f="d-p2">testo qui</p>
+            <div class="detail-gallery" data-gallery></div>
           </div>
         </a>
       </div>
@@ -1369,6 +1452,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <h2 data-f="d-title">testo qui</h2>
             <p data-f="d-p1">testo qui</p>
             <p data-f="d-p2">testo qui</p>
+            <div class="detail-gallery" data-gallery></div>
           </div>
         </a>
         <a class="sec-card" href="#">
@@ -1381,6 +1465,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <h2 data-f="d-title">testo qui</h2>
             <p data-f="d-p1">testo qui</p>
             <p data-f="d-p2">testo qui</p>
+            <div class="detail-gallery" data-gallery></div>
           </div>
         </a>
         <a class="sec-card" href="#">
@@ -1393,6 +1478,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <h2 data-f="d-title">testo qui</h2>
             <p data-f="d-p1">testo qui</p>
             <p data-f="d-p2">testo qui</p>
+            <div class="detail-gallery" data-gallery></div>
           </div>
         </a>
       </div>
@@ -1451,6 +1537,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <h2 data-f="d-title">testo qui</h2>
             <p data-f="d-p1">testo qui</p>
             <p data-f="d-p2">testo qui</p>
+            <div class="detail-gallery" data-gallery></div>
           </div>
         </a>
         <a class="poster-item" href="#">
@@ -1462,6 +1549,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <h2 data-f="d-title">testo qui</h2>
             <p data-f="d-p1">testo qui</p>
             <p data-f="d-p2">testo qui</p>
+            <div class="detail-gallery" data-gallery></div>
           </div>
         </a>
         <a class="poster-item" href="#">
@@ -1473,6 +1561,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <h2 data-f="d-title">testo qui</h2>
             <p data-f="d-p1">testo qui</p>
             <p data-f="d-p2">testo qui</p>
+            <div class="detail-gallery" data-gallery></div>
           </div>
         </a>
       </div>
@@ -1626,7 +1715,7 @@ var CLOUDINARY_UPLOAD_PRESET = "md5s3dgi";
      data-id  -> campo singolo (titolo, paragrafo, logo...)
      data-f   -> campo dentro un elenco (quadrati, poster, video...)
    ===================================================== */
-var SITE_VERSION = '11';   /* si vede nella barra dell'editor: serve a capire quale codice è online */
+var SITE_VERSION = '15';   /* si vede nella barra dell'editor: serve a capire quale codice è online */
 var SCHEMA = 1;
 var LEGACY_DOC = false;   /* true se nel database c'è ancora il vecchio salvataggio */
 
@@ -1747,6 +1836,19 @@ function collectItem (el, fields) {
     else if (f === 'pdf') o[f] = n.getAttribute('href') || '';
     else o[f] = n.innerHTML.trim();
   });
+
+  /* manifesti aggiuntivi dentro il contenuto (elenco a parte) */
+  var gal = el.querySelector('[data-gallery]');
+  if (gal) {
+    o.manifesti = Array.prototype.map.call(gal.querySelectorAll('.gal-item'), function (g) {
+      var img = g.querySelector('[data-g="img"]');
+      var cap = g.querySelector('[data-g="cap"]');
+      return {
+        img: img ? (img.getAttribute('src') || '') : '',
+        cap: cap ? cap.innerHTML.trim() : ''
+      };
+    });
+  }
   return o;
 }
 
@@ -1778,6 +1880,16 @@ function collectContent () {
 }
 
 /* ---------- dati -> DOM ---------- */
+function galleriaHtml (lista) {
+  var items = (lista || []).map(function (g) {
+    return '<figure class="gal-item">' +
+      '<div class="gal-ph"><img src="' + esc(safeUrl(g.img)) + '" alt="" data-g="img"></div>' +
+      '<figcaption class="gal-cap" data-g="cap">' + safeHtml(g.cap) + '</figcaption>' +
+      '</figure>';
+  }).join('');
+  return '<div class="detail-gallery" data-gallery>' + items + '</div>';
+}
+
 function detailHtml (d) {
   return '<div class="card-detail" hidden>' +
     '<div class="detail-media"><img src="' + esc(safeUrl(d['d-img'])) + '" alt="" data-f="d-img"></div>' +
@@ -1785,6 +1897,7 @@ function detailHtml (d) {
     '<h2 data-f="d-title">' + safeHtml(d['d-title']) + '</h2>' +
     '<p data-f="d-p1">' + safeHtml(d['d-p1']) + '</p>' +
     '<p data-f="d-p2">' + safeHtml(d['d-p2']) + '</p>' +
+    galleriaHtml(d.manifesti) +
     '</div>';
 }
 
@@ -1873,9 +1986,14 @@ function publishContent () {
 /* scarica i contenuti pubblicati prima di avviare il sito, così gli
    eventi si agganciano agli elementi definitivi */
 function loadPublishedContent (done) {
-  if (!SITE_DOC) { done(); return; }
   var started = false;
-  function go () { if (!started) { started = true; done(); } }
+  function go () {
+    if (started) return;
+    started = true;
+    if (window.mostraSito) window.mostraSito();
+    done();
+  }
+  if (!SITE_DOC) { go(); return; }
   setTimeout(go, 4000);
   SITE_DOC.get().then(function (snap) {
     if (snap.exists) {
@@ -2099,7 +2217,7 @@ function startApp () {
      EDITOR
      ===================================================== */
   var ACCESS_CODE = 'farna2317';
-  var EDITABLE = '[data-id]:not(img):not(.slide), [data-f]:not(img)';
+  var EDITABLE = '[data-id]:not(img):not(.slide), [data-f]:not(img), [data-g]:not(img)';
   var PLACEHOLDER_IMG = 'https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?q=80&w=900&auto=format&fit=crop';
 
   var modal = document.getElementById('editModal');
@@ -2298,8 +2416,41 @@ function startApp () {
         makeEditable(item);
         cfg.decora(item);
         decorateImages(item);
+        addGalleryButtons(item);
       });
       l.grid.appendChild(btn);
+    });
+  }
+
+  /* un manifesto della galleria: si sostituisce l'immagine o si elimina */
+  function decorateGal (item) {
+    if (item.querySelector('.card-tools')) return;
+    var tools = document.createElement('div');
+    tools.className = 'card-tools edit-only-wrap';
+    tools.appendChild(makeTool('Elimina', function () {
+      if (window.confirm('Eliminare questo manifesto?')) item.remove();
+    }));
+    item.appendChild(tools);
+  }
+
+  /* ogni contenuto può ospitare più manifesti */
+  function addGalleryButtons (root) {
+    (root || document).querySelectorAll('[data-gallery]').forEach(function (gal) {
+      if (gal.querySelector('.add-gal')) return;
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'add-gal edit-only';
+      btn.textContent = '+ Manifesto';
+      btn.addEventListener('click', function () {
+        var box = document.createElement('div');
+        box.innerHTML = galleriaHtml([{ img: PLACEHOLDER_IMG, cap: 'testo qui' }]);
+        var item = box.firstElementChild.firstElementChild;
+        gal.insertBefore(item, btn);
+        makeEditable(item);
+        decorateGal(item);
+        decorateImages(item);
+      });
+      gal.appendChild(btn);
     });
   }
 
@@ -2373,7 +2524,7 @@ function startApp () {
   }
 
   function decorateImages (root) {
-    root.querySelectorAll('.split .ph-block img, .news-card img, .card-detail img, .poster-ph img, .video-ph img, .sec-ph img').forEach(function (img) {
+    root.querySelectorAll('.split .ph-block img, .news-card img, .card-detail img, .poster-ph img, .video-ph img, .sec-ph img, .gal-ph img').forEach(function (img) {
       var holder = img.parentNode;
       if (holder.querySelector('.slide-tools')) return;
       var box = document.createElement('div');
@@ -2446,9 +2597,11 @@ function startApp () {
     document.querySelectorAll('.sec-card').forEach(decorateCard);
     document.querySelectorAll('.news-card').forEach(decorateSimple);
     document.querySelectorAll('.trasparenza-row').forEach(decorateRow);
+    document.querySelectorAll('.gal-item').forEach(decorateGal);
     decorateImages(document);
     heroTool();
     addButtons();
+    addGalleryButtons();
   }
 
   function exitEditMode () {

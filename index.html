@@ -21,7 +21,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   var doc = document.documentElement;
   doc.classList.add('in-attesa');
   window.mostraSito = function () { doc.classList.remove('in-attesa'); };
-  window.setTimeout(window.mostraSito, 1200);
+  window.setTimeout(window.mostraSito, 3000);
 })();
 </script>
 
@@ -1715,7 +1715,7 @@ var CLOUDINARY_UPLOAD_PRESET = "md5s3dgi";
      data-id  -> campo singolo (titolo, paragrafo, logo...)
      data-f   -> campo dentro un elenco (quadrati, poster, video...)
    ===================================================== */
-var SITE_VERSION = '15';   /* si vede nella barra dell'editor: serve a capire quale codice è online */
+var SITE_VERSION = '16';   /* si vede nella barra dell'editor: serve a capire quale codice è online */
 var SCHEMA = 1;
 var LEGACY_DOC = false;   /* true se nel database c'è ancora il vecchio salvataggio */
 
@@ -1983,39 +1983,63 @@ function publishContent () {
   return SITE_DOC.set(collectContent());
 }
 
-/* scarica i contenuti pubblicati prima di avviare il sito, così gli
-   eventi si agganciano agli elementi definitivi */
+/* MEMORIA LOCALE
+   Il browser conserva una copia dei contenuti dell'ultima visita e la applica
+   all'istante, senza aspettare la rete: su telefono, dove il database può
+   metterci più di un secondo, è ciò che evita di veder comparire i contenuti
+   di esempio. Subito dopo si scarica comunque la versione aggiornata e, se è
+   cambiata, sostituisce quella in memoria. */
+var CACHE_KEY = 'tpl_contenuti';
+
+function leggiCache () {
+  try {
+    var s = localStorage.getItem(CACHE_KEY);
+    return s ? JSON.parse(s) : null;
+  } catch (e) { return null; }
+}
+
+function scriviCache (dati) {
+  try { localStorage.setItem(CACHE_KEY, JSON.stringify(dati)); } catch (e) {}
+}
+
 function loadPublishedContent (done) {
-  var started = false;
-  function go () {
-    if (started) return;
-    started = true;
+  var partito = false;
+  function avvia () {
+    if (partito) return;
+    partito = true;
     if (window.mostraSito) window.mostraSito();
     done();
   }
-  if (!SITE_DOC) { go(); return; }
-  setTimeout(go, 4000);
+
+  /* c'è una copia dell'ultima visita: si parte subito, niente attesa */
+  var cache = leggiCache();
+  if (cache) {
+    applyContent(cache);
+    avvia();
+  }
+
+  if (!SITE_DOC) { avvia(); return; }
+
+  /* prima visita: si aspetta il database, ma non oltre */
+  if (!cache) window.setTimeout(avvia, 2500);
+
   SITE_DOC.get().then(function (snap) {
     if (snap.exists) {
       var d = snap.data();
       if (d && !d.fields && (d.main || d.nav || d.footer)) {
-        LEGACY_DOC = true;          /* salvataggio del vecchio impianto: non si può usare */
-      } else {
-        applyContent(d);
+        LEGACY_DOC = true;                      /* vecchio impianto: inutilizzabile */
+      } else if (d) {
+        scriviCache(d);
+        var cambiato = !cache || d.updatedAt !== cache.updatedAt;
+        /* non sovrascrivo mai il lavoro di chi sta modificando */
+        if (cambiato && !document.body.classList.contains('editing')) {
+          applyContent(d);
+          if (window.riosservaComparse) window.riosservaComparse();
+        }
       }
     }
-    go();
-  }).catch(go);
-}
-
-/* Segnala un fatto a Tag Manager. Non invia nulla di suo e non scrive cookie:
-   deposita solo una voce nella lista dataLayer. Sarà Tag Manager a decidere
-   cosa farne, e solo dopo il consenso dell'utente. */
-function traccia (evento, dati) {
-  window.dataLayer = window.dataLayer || [];
-  var voce = { event: evento };
-  if (dati) Object.keys(dati).forEach(function (k) { voce[k] = dati[k]; });
-  window.dataLayer.push(voce);
+    avvia();
+  }).catch(avvia);
 }
 
 /* carica una foto su Cloudinary e restituisce l'indirizzo pubblico */
@@ -2206,6 +2230,7 @@ function startApp () {
     }
 
     observeReveals();
+    window.riosservaComparse = observeReveals;
 
     /* i contenuti nascosti nelle altre pagine entrano in scena quando si aprono */
     document.addEventListener('click', function () {
@@ -2646,6 +2671,7 @@ function startApp () {
         return;
       }
       LEGACY_DOC = false;
+      scriviCache(d);
       window.alert('Modifiche pubblicate e verificate.\n\n' +
         Object.keys(d.fields).length + ' testi\n' +
         (d.cards || []).length + ' quadrati\n' +

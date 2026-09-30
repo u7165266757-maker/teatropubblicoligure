@@ -49,7 +49,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   --white: #fffdf9;
   --off-white: #f1eee8;
   --black: #191817;
-  --dark: #6f6963;
+  --dark: #544e47;
   --line: rgba(25,24,23,.14);
   --line-soft: rgba(25,24,23,.08);
 
@@ -954,18 +954,40 @@ body.editing .hero-slider { position: relative; }
   cursor: pointer;
 }
 .news-card, .trasparenza-row { position: relative; }
-.news-card .card-tools, .trasparenza-row .card-tools { bottom: auto; top: 10px; }
 .add-row { grid-column: 1 / -1; }
 
+/* I pulsanti stanno SOTTO l'elemento, non sopra: non coprono né le immagini
+   né i testi che si stanno scrivendo. */
 .card-tools {
   position: absolute;
-  left: 0; right: 0; bottom: 14px;
+  top: calc(100% + 8px);
+  left: 0;
   z-index: 5;
   display: flex;
   gap: 6px;
-  justify-content: center;
+  justify-content: flex-start;
   flex-wrap: wrap;
 }
+
+/* serve spazio sotto ogni elemento perché i pulsanti ci stiano */
+body.editing .show-card,
+body.editing .poster-item,
+body.editing .sec-card,
+body.editing .video-item,
+body.editing .news-card,
+body.editing .gal-item { overflow: visible; }
+
+body.editing .grid-shows,
+body.editing .grid-posters,
+body.editing .grid-sec,
+body.editing .grid-videos,
+body.editing .grid-news { row-gap: 76px; }
+
+body.editing .gal-item { margin-bottom: 96px; }
+
+/* nelle righe della trasparenza i pulsanti restano dentro la riga, in fondo */
+body.editing .trasparenza-row { padding-bottom: 50px; }
+body.editing .trasparenza-row .card-tools { top: auto; bottom: 10px; }
 .slide-tools {
   position: absolute;
   top: 20px; right: 20px;
@@ -1767,7 +1789,7 @@ var CLOUDINARY_UPLOAD_PRESET = "md5s3dgi";
      data-id  -> campo singolo (titolo, paragrafo, logo...)
      data-f   -> campo dentro un elenco (quadrati, poster, video...)
    ===================================================== */
-var SITE_VERSION = '20';   /* si vede nella barra dell'editor: serve a capire quale codice è online */
+var SITE_VERSION = '23';   /* si vede nella barra dell'editor: serve a capire quale codice è online */
 var SCHEMA = 1;
 var LEGACY_DOC = false;   /* true se nel database c'è ancora il vecchio salvataggio */
 
@@ -2398,6 +2420,27 @@ function startApp () {
     if (hint) hint.textContent = text || 'clicca su un testo: potrai scriverlo e scegliere maiuscolo o minuscolo';
   }
 
+  /* Quando si incolla da Word, da una mail o da un altro sito, il testo si
+     porta dietro il suo carattere e i suoi colori. Qui lo si ripulisce:
+     entra come testo semplice e prende l'aspetto del sito. */
+  document.addEventListener('paste', function (e) {
+    if (!document.body.classList.contains('editing')) return;
+    var el = e.target.closest ? e.target.closest('[contenteditable="true"]') : null;
+    if (!el) return;
+    e.preventDefault();
+    var testo = (e.clipboardData || window.clipboardData).getData('text/plain');
+    testo = testo.replace(/\r/g, '').replace(/\n{2,}/g, '\n').trim();
+    if (document.execCommand) {
+      document.execCommand('insertText', false, testo);
+    } else {
+      var sel = window.getSelection();
+      if (!sel.rangeCount) return;
+      sel.deleteFromDocument();
+      sel.getRangeAt(0).insertNode(document.createTextNode(testo));
+      sel.collapseToEnd();
+    }
+  });
+
   /* MAIUSCOLO / minuscolo
      La scelta viene salvata dentro il testo stesso, avvolgendolo in un
      contrassegno che il salvataggio conserva: non serve nessun campo in pi\u00f9
@@ -2670,7 +2713,8 @@ function startApp () {
   }
 
   function decorateImages (root) {
-    root.querySelectorAll('.split .ph-block img, .news-card img, .card-detail img, .poster-ph img, .video-ph img, .sec-ph img, .gal-ph img').forEach(function (img) {
+    /* solo le immagini che non hanno già il proprio pulsante nella fila sotto */
+    root.querySelectorAll('.split .ph-block img, .news-card img, .card-detail img, .gal-ph img').forEach(function (img) {
       var holder = img.parentNode;
       if (holder.querySelector('.slide-tools')) return;
       var box = document.createElement('div');

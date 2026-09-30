@@ -769,6 +769,49 @@ footer.site-footer {
   transition: background .2s ease, color .2s ease, border-color .2s ease;
 }
 
+
+/* ---- maiuscolo / minuscolo scelti dall'editor ---- */
+.txt-up { text-transform: uppercase; }
+.txt-low { text-transform: lowercase; }
+
+.case-picker {
+  position: absolute;
+  z-index: 360;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--orange-red);
+  padding: 5px 6px 5px 10px;
+  box-shadow: 0 6px 18px rgba(25,24,23,.28);
+}
+.case-picker[hidden] { display: none; }
+.case-label {
+  font-family: 'DM Sans', Arial, sans-serif;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.85);
+  margin-right: 4px;
+  white-space: nowrap;
+}
+.case-picker button {
+  border: 1px solid rgba(255,255,255,.55);
+  background: transparent;
+  color: #fff;
+  font-family: 'DM Sans', Arial, sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 6px 11px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.case-picker button.scelto {
+  background: #fff;
+  color: var(--orange-red);
+  border-color: #fff;
+}
+
 /* ============ EDITOR ============ */
 .edit-modal {
   position: fixed;
@@ -990,6 +1033,8 @@ body.editing .hero-slider { position: relative; }
    appiccicato (il tasto Calendario restava nero): così non accade più.
    ========================================================= */
 @media (hover: hover) and (pointer: fine) {
+  .case-picker button:hover { background: rgba(255,255,255,.22); }
+
   .add-gal:hover { border-color: var(--orange-red); color: var(--orange-red); }
 
   .sec-card:hover .sec-ph img { transform: scale(1.04); }
@@ -1668,12 +1713,19 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </div>
 </div>
 
+<div class="case-picker" id="casePicker" hidden>
+  <span class="case-label">Testo</span>
+  <button type="button" data-caso="up">MAIUSCOLO</button>
+  <button type="button" data-caso="low">minuscolo</button>
+  <button type="button" data-caso="normale">Normale</button>
+</div>
+
 <div class="editor-bar" id="editorBar" hidden>
   <div class="editor-nav">
     <label for="editorPage">Pagina</label>
     <select id="editorPage"></select>
     <span class="editor-version" id="editorVersion"></span>
-    <span class="editor-hint">clicca sui testi per modificarli</span>
+    <span class="editor-hint">clicca su un testo: potrai scriverlo e scegliere maiuscolo o minuscolo</span>
   </div>
   <div class="editor-bar-actions">
     <button type="button" id="editorReset">Ripristina</button>
@@ -1715,7 +1767,7 @@ var CLOUDINARY_UPLOAD_PRESET = "md5s3dgi";
      data-id  -> campo singolo (titolo, paragrafo, logo...)
      data-f   -> campo dentro un elenco (quadrati, poster, video...)
    ===================================================== */
-var SITE_VERSION = '16';   /* si vede nella barra dell'editor: serve a capire quale codice è online */
+var SITE_VERSION = '20';   /* si vede nella barra dell'editor: serve a capire quale codice è online */
 var SCHEMA = 1;
 var LEGACY_DOC = false;   /* true se nel database c'è ancora il vecchio salvataggio */
 
@@ -2042,6 +2094,16 @@ function loadPublishedContent (done) {
   }).catch(avvia);
 }
 
+/* Segnala un fatto a Tag Manager. Non invia nulla di suo e non scrive cookie:
+   deposita solo una voce nella lista dataLayer. Sarà Tag Manager a decidere
+   cosa farne, e solo dopo il consenso dell'utente. */
+function traccia (evento, dati) {
+  window.dataLayer = window.dataLayer || [];
+  var voce = { event: evento };
+  if (dati) Object.keys(dati).forEach(function (k) { voce[k] = dati[k]; });
+  window.dataLayer.push(voce);
+}
+
 /* carica una foto su Cloudinary e restituisce l'indirizzo pubblico */
 function uploadFile (file, tipo) {
   var form = new FormData();
@@ -2333,8 +2395,74 @@ function startApp () {
 
   function setEditorBusy (text) {
     var hint = document.querySelector('.editor-hint');
-    if (hint) hint.textContent = text || 'clicca sui testi per modificarli';
+    if (hint) hint.textContent = text || 'clicca su un testo: potrai scriverlo e scegliere maiuscolo o minuscolo';
   }
+
+  /* MAIUSCOLO / minuscolo
+     La scelta viene salvata dentro il testo stesso, avvolgendolo in un
+     contrassegno che il salvataggio conserva: non serve nessun campo in pi\u00f9
+     nel database e vale per qualunque testo modificabile. */
+  var casePicker = document.getElementById('casePicker');
+  var campoAttivo = null;
+
+  function applicaCaso (el, modo) {
+    var box = document.createElement('div');
+    box.innerHTML = el.innerHTML;
+    /* tolgo un eventuale contrassegno precedente, senza perdere il testo */
+    box.querySelectorAll('span.txt-up, span.txt-low').forEach(function (s) {
+      while (s.firstChild) s.parentNode.insertBefore(s.firstChild, s);
+      s.parentNode.removeChild(s);
+    });
+    var interno = box.innerHTML;
+    el.innerHTML = (modo === 'normale')
+      ? interno
+      : '<span class="txt-' + modo + '">' + interno + '</span>';
+    segnaScelta(el);
+  }
+
+  /* evidenzia la scelta attuale del campo su cui si sta lavorando */
+  function segnaScelta (el) {
+    var attuale = el.querySelector('span.txt-up') ? 'up'
+                : el.querySelector('span.txt-low') ? 'low' : 'normale';
+    casePicker.querySelectorAll('button[data-caso]').forEach(function (b) {
+      b.classList.toggle('scelto', b.getAttribute('data-caso') === attuale);
+    });
+  }
+
+  function mostraSelettore (el) {
+    campoAttivo = el;
+    segnaScelta(el);
+    casePicker.hidden = false;
+
+    var r = el.getBoundingClientRect();
+    var alto = casePicker.offsetHeight || 38;
+    /* sopra il testo se c'\u00e8 spazio sotto l'intestazione, altrimenti sotto */
+    var sopra = r.top - alto - 8;
+    var y = (sopra > 120) ? sopra : r.bottom + 8;
+    casePicker.style.top = (y + window.scrollY) + 'px';
+    casePicker.style.left = Math.max(10, r.left + window.scrollX) + 'px';
+  }
+
+  function nascondiSelettore () {
+    casePicker.hidden = true;
+    campoAttivo = null;
+  }
+
+  document.addEventListener('focusin', function (e) {
+    if (!document.body.classList.contains('editing')) return;
+    var el = e.target.closest('[contenteditable="true"]');
+    if (el) mostraSelettore(el);
+  });
+
+  /* il clic sul selettore non deve togliere il fuoco al testo */
+  casePicker.addEventListener('mousedown', function (e) { e.preventDefault(); });
+
+  casePicker.addEventListener('click', function (e) {
+    var b = e.target.closest('button[data-caso]');
+    if (!b || !campoAttivo) return;
+    applicaCaso(campoAttivo, b.getAttribute('data-caso'));
+    nascondiSelettore();       /* scelta fatta: la barretta si toglie di mezzo */
+  });
 
   function decorateCard (card) {
     if (card.querySelector('.card-tools')) return;
@@ -2394,13 +2522,6 @@ function startApp () {
     });
     grid.appendChild(btn);
   }
-
-  var VUOTO = {
-    'img': PLACEHOLDER_IMG, 'd-img': PLACEHOLDER_IMG, 'd-eyebrow': 'testo qui',
-    'd-title': 'testo qui', 'd-p1': 'testo qui', 'd-p2': 'testo qui',
-    caption: 'testo qui', sub: 'testo qui', meta: 'testo qui',
-    title: 'testo qui', text: 'testo qui', voce: 'testo qui', dato: 'testo qui', href: '#'
-  };
 
   var VUOTO = {
     'img': PLACEHOLDER_IMG, 'd-img': PLACEHOLDER_IMG, 'd-eyebrow': 'testo qui',
@@ -2632,6 +2753,7 @@ function startApp () {
   function exitEditMode () {
     document.body.classList.remove('editing');
     editorBar.hidden = true;
+    nascondiSelettore();
     document.querySelectorAll('[contenteditable]').forEach(function (el) {
       el.removeAttribute('contenteditable');
     });

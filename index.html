@@ -1015,7 +1015,7 @@ body.editing .trasparenza-row .card-tools { top: auto; bottom: 10px; }
   .split .ph-block { height: 320px; }
 }
 
-@media (max-width: 1100px) {
+@media (max-width: 1200px) {
   .brand-title { font-size: 11px; }
   .nav-toggle { display: flex; }
   .main-nav {
@@ -1134,6 +1134,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <li><a href="#" data-nav="progetti" data-id="nav-progetti">Progetti</a></li>
         <li><a href="#" data-nav="video" data-id="nav-video">Video</a></li>
         <li><a href="#" data-nav="film" data-id="nav-film">Film</a></li>
+        <li><a href="#" data-nav="mostre" data-id="nav-mostre">Mostre</a></li>
         <li><a href="#" data-nav="press" data-id="nav-press">Press</a></li>
         <li><a href="https://calendariotpl.it/" target="_blank" rel="noopener noreferrer" data-id="nav-calendario">Calendario</a></li>
       </ul>
@@ -1635,6 +1636,58 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </div>
   </section>
 
+  <!-- ============ MOSTRE ============ -->
+  <section class="page" id="page-mostre" data-page="mostre" hidden>
+    <div class="wrap">
+      <a href="#" class="back-link" data-nav="home">&larr; Home</a>
+      <span class="eyebrow" data-id="mostre-eyebrow">Mostre</span>
+      <h2 style="margin-bottom:20px;" data-id="mostre-title">testo qui</h2>
+      <p style="max-width:640px; margin-bottom:56px;" data-id="mostre-text">testo qui</p>
+
+      <div class="grid-sec" data-list="sec-mostre" data-kind="sec">
+        <a class="sec-card" href="#">
+          <div class="sec-ph"><img src="https://images.unsplash.com/photo-1503095396549-807759245b35?q=80&w=900&auto=format&fit=crop" alt="" data-f="img"></div>
+          <div class="sec-caption" data-f="caption">testo qui</div>
+          <div class="poster-sub" data-f="sub">testo qui</div>
+          <div class="card-detail" hidden>
+            <div class="detail-media"><img src="https://images.unsplash.com/photo-1503095396549-807759245b35?q=80&w=900&auto=format&fit=crop" alt="" data-f="d-img"></div>
+            <span class="eyebrow" data-f="d-eyebrow">testo qui</span>
+            <h2 data-f="d-title">testo qui</h2>
+            <p data-f="d-p1">testo qui</p>
+            <p data-f="d-p2">testo qui</p>
+            <div class="detail-gallery" data-gallery></div>
+          </div>
+        </a>
+        <a class="sec-card" href="#">
+          <div class="sec-ph"><img src="https://images.unsplash.com/photo-1514306191717-452ec28c7814?q=80&w=900&auto=format&fit=crop" alt="" data-f="img"></div>
+          <div class="sec-caption" data-f="caption">testo qui</div>
+          <div class="poster-sub" data-f="sub">testo qui</div>
+          <div class="card-detail" hidden>
+            <div class="detail-media"><img src="https://images.unsplash.com/photo-1514306191717-452ec28c7814?q=80&w=900&auto=format&fit=crop" alt="" data-f="d-img"></div>
+            <span class="eyebrow" data-f="d-eyebrow">testo qui</span>
+            <h2 data-f="d-title">testo qui</h2>
+            <p data-f="d-p1">testo qui</p>
+            <p data-f="d-p2">testo qui</p>
+            <div class="detail-gallery" data-gallery></div>
+          </div>
+        </a>
+        <a class="sec-card" href="#">
+          <div class="sec-ph"><img src="https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?q=80&w=900&auto=format&fit=crop" alt="" data-f="img"></div>
+          <div class="sec-caption" data-f="caption">testo qui</div>
+          <div class="poster-sub" data-f="sub">testo qui</div>
+          <div class="card-detail" hidden>
+            <div class="detail-media"><img src="https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?q=80&w=900&auto=format&fit=crop" alt="" data-f="d-img"></div>
+            <span class="eyebrow" data-f="d-eyebrow">testo qui</span>
+            <h2 data-f="d-title">testo qui</h2>
+            <p data-f="d-p1">testo qui</p>
+            <p data-f="d-p2">testo qui</p>
+            <div class="detail-gallery" data-gallery></div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
   <!-- ============ PRESS ============ -->
   <section class="page" id="page-press" data-page="press" hidden>
     <div class="wrap">
@@ -1789,7 +1842,7 @@ var CLOUDINARY_UPLOAD_PRESET = "md5s3dgi";
      data-id  -> campo singolo (titolo, paragrafo, logo...)
      data-f   -> campo dentro un elenco (quadrati, poster, video...)
    ===================================================== */
-var SITE_VERSION = '23';   /* si vede nella barra dell'editor: serve a capire quale codice è online */
+var SITE_VERSION = '25';   /* si vede nella barra dell'editor: serve a capire quale codice è online */
 var SCHEMA = 1;
 var LEGACY_DOC = false;   /* true se nel database c'è ancora il vecchio salvataggio */
 

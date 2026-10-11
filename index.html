@@ -437,6 +437,39 @@ section.alt { background: var(--off-white); }
   cursor: pointer;
 }
 
+
+/* ---- fotografie dentro il contenuto: tre per riga ---- */
+.detail-photos {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-top: 54px;
+  max-width: 900px;
+}
+.detail-photos:empty { display: none; }
+.foto-item { position: relative; margin: 0; }
+.foto-ph {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  background: var(--off-white);
+}
+.foto-ph img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.add-foto {
+  border: 2px dashed var(--line);
+  background: var(--off-white);
+  color: var(--dark);
+  aspect-ratio: 1 / 1;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+body.editing .detail-photos { row-gap: 70px; }
+body.editing .foto-item { overflow: visible; }
+
+@media (max-width: 720px) { .detail-photos { grid-template-columns: repeat(2, 1fr); } }
+
 /* ============ CHI SIAMO / SPLIT ============ */
 .split {
   display: grid;
@@ -1055,6 +1088,8 @@ body.editing .trasparenza-row .card-tools { top: auto; bottom: 10px; }
    appiccicato (il tasto Calendario restava nero): così non accade più.
    ========================================================= */
 @media (hover: hover) and (pointer: fine) {
+  .add-foto:hover { border-color: var(--orange-red); color: var(--orange-red); }
+
   .case-picker button:hover { background: rgba(255,255,255,.22); }
 
   .add-gal:hover { border-color: var(--orange-red); color: var(--orange-red); }
@@ -1186,6 +1221,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <p data-f="d-p1">testo qui</p>
             <p data-f="d-p2">testo qui</p>
             <div class="detail-gallery" data-gallery></div>
+            <div class="detail-photos" data-photos></div>
           </div>
         </a>
 
@@ -1200,6 +1236,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <p data-f="d-p1">testo qui</p>
             <p data-f="d-p2">testo qui</p>
             <div class="detail-gallery" data-gallery></div>
+            <div class="detail-photos" data-photos></div>
           </div>
         </a>
 
@@ -1214,6 +1251,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <p data-f="d-p1">testo qui</p>
             <p data-f="d-p2">testo qui</p>
             <div class="detail-gallery" data-gallery></div>
+            <div class="detail-photos" data-photos></div>
           </div>
         </a>
 
@@ -1228,6 +1266,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <p data-f="d-p1">testo qui</p>
             <p data-f="d-p2">testo qui</p>
             <div class="detail-gallery" data-gallery></div>
+            <div class="detail-photos" data-photos></div>
           </div>
         </a>
 
@@ -1242,6 +1281,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <p data-f="d-p1">testo qui</p>
             <p data-f="d-p2">testo qui</p>
             <div class="detail-gallery" data-gallery></div>
+            <div class="detail-photos" data-photos></div>
           </div>
         </a>
 
@@ -1256,6 +1296,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <p data-f="d-p1">testo qui</p>
             <p data-f="d-p2">testo qui</p>
             <div class="detail-gallery" data-gallery></div>
+            <div class="detail-photos" data-photos></div>
           </div>
         </a>
       </div>
@@ -1365,6 +1406,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <p data-f="d-p1">testo qui</p>
             <p data-f="d-p2">testo qui</p>
             <div class="detail-gallery" data-gallery></div>
+            <div class="detail-photos" data-photos></div>
           </div>
         </a>
         <a class="sec-card" href="#">
@@ -1378,6 +1420,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <p data-f="d-p1">testo qui</p>
             <p data-f="d-p2">testo qui</p>
             <div class="detail-gallery" data-gallery></div>
+            <div class="detail-photos" data-photos></div>
           </div>
         </a>
         <a class="sec-card" href="#">
@@ -1391,6 +1434,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <p data-f="d-p1">testo qui</p>
             <p data-f="d-p2">testo qui</p>
             <div class="detail-gallery" data-gallery></div>
+            <div class="detail-photos" data-photos></div>
           </div>
         </a>
       </div>
@@ -1417,6 +1461,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <p data-f="d-p1">testo qui</p>
             <p data-f="d-p2">testo qui</p>
             <div class="detail-gallery" data-gallery></div>
+            <div class="detail-photos" data-photos></div>
           </div>
         </a>
         <a class="sec-card" href="#">
@@ -1430,6 +1475,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <p data-f="d-p1">testo qui</p>
             <p data-f="d-p2">testo qui</p>
             <div class="detail-gallery" data-gallery></div>
+            <div class="detail-photos" data-photos></div>
           </div>
         </a>
         <a class="sec-card" href="#">
@@ -1443,6 +1489,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <p data-f="d-p1">testo qui</p>
             <p data-f="d-p2">testo qui</p>
             <div class="detail-gallery" data-gallery></div>
+            <div class="detail-photos" data-photos></div>
           </div>
         </a>
       </div>
@@ -1469,6 +1516,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <p data-f="d-p1">testo qui</p>
             <p data-f="d-p2">testo qui</p>
             <div class="detail-gallery" data-gallery></div>
+            <div class="detail-photos" data-photos></div>
           </div>
         </a>
         <a class="sec-card" href="#">
@@ -1482,6 +1530,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <p data-f="d-p1">testo qui</p>
             <p data-f="d-p2">testo qui</p>
             <div class="detail-gallery" data-gallery></div>
+            <div class="detail-photos" data-photos></div>
           </div>
         </a>
         <a class="sec-card" href="#">
@@ -1495,6 +1544,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <p data-f="d-p1">testo qui</p>
             <p data-f="d-p2">testo qui</p>
             <div class="detail-gallery" data-gallery></div>
+            <div class="detail-photos" data-photos></div>
           </div>
         </a>
       </div>
@@ -1521,6 +1571,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <p data-f="d-p1">testo qui</p>
             <p data-f="d-p2">testo qui</p>
             <div class="detail-gallery" data-gallery></div>
+            <div class="detail-photos" data-photos></div>
           </div>
         </a>
         <a class="sec-card" href="#">
@@ -1534,6 +1585,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <p data-f="d-p1">testo qui</p>
             <p data-f="d-p2">testo qui</p>
             <div class="detail-gallery" data-gallery></div>
+            <div class="detail-photos" data-photos></div>
           </div>
         </a>
         <a class="sec-card" href="#">
@@ -1547,6 +1599,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <p data-f="d-p1">testo qui</p>
             <p data-f="d-p2">testo qui</p>
             <div class="detail-gallery" data-gallery></div>
+            <div class="detail-photos" data-photos></div>
           </div>
         </a>
       </div>
@@ -1606,6 +1659,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <p data-f="d-p1">testo qui</p>
             <p data-f="d-p2">testo qui</p>
             <div class="detail-gallery" data-gallery></div>
+            <div class="detail-photos" data-photos></div>
           </div>
         </a>
         <a class="poster-item" href="#">
@@ -1618,6 +1672,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <p data-f="d-p1">testo qui</p>
             <p data-f="d-p2">testo qui</p>
             <div class="detail-gallery" data-gallery></div>
+            <div class="detail-photos" data-photos></div>
           </div>
         </a>
         <a class="poster-item" href="#">
@@ -1630,6 +1685,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <p data-f="d-p1">testo qui</p>
             <p data-f="d-p2">testo qui</p>
             <div class="detail-gallery" data-gallery></div>
+            <div class="detail-photos" data-photos></div>
           </div>
         </a>
       </div>
@@ -1656,6 +1712,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <p data-f="d-p1">testo qui</p>
             <p data-f="d-p2">testo qui</p>
             <div class="detail-gallery" data-gallery></div>
+            <div class="detail-photos" data-photos></div>
           </div>
         </a>
         <a class="sec-card" href="#">
@@ -1669,6 +1726,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <p data-f="d-p1">testo qui</p>
             <p data-f="d-p2">testo qui</p>
             <div class="detail-gallery" data-gallery></div>
+            <div class="detail-photos" data-photos></div>
           </div>
         </a>
         <a class="sec-card" href="#">
@@ -1682,6 +1740,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <p data-f="d-p1">testo qui</p>
             <p data-f="d-p2">testo qui</p>
             <div class="detail-gallery" data-gallery></div>
+            <div class="detail-photos" data-photos></div>
           </div>
         </a>
       </div>
@@ -1842,7 +1901,7 @@ var CLOUDINARY_UPLOAD_PRESET = "md5s3dgi";
      data-id  -> campo singolo (titolo, paragrafo, logo...)
      data-f   -> campo dentro un elenco (quadrati, poster, video...)
    ===================================================== */
-var SITE_VERSION = '25';   /* si vede nella barra dell'editor: serve a capire quale codice è online */
+var SITE_VERSION = '26';   /* si vede nella barra dell'editor: serve a capire quale codice è online */
 var SCHEMA = 1;
 var LEGACY_DOC = false;   /* true se nel database c'è ancora il vecchio salvataggio */
 
@@ -1976,6 +2035,15 @@ function collectItem (el, fields) {
       };
     });
   }
+
+  /* fotografie dentro il contenuto (tre per riga) */
+  var fot = el.querySelector('[data-photos]');
+  if (fot) {
+    o.foto = Array.prototype.map.call(fot.querySelectorAll('.foto-item'), function (f) {
+      var img = f.querySelector('[data-p="img"]');
+      return { img: img ? (img.getAttribute('src') || '') : '' };
+    });
+  }
   return o;
 }
 
@@ -2017,6 +2085,15 @@ function galleriaHtml (lista) {
   return '<div class="detail-gallery" data-gallery>' + items + '</div>';
 }
 
+function fotoHtml (lista) {
+  var items = (lista || []).map(function (f) {
+    return '<figure class="foto-item">' +
+      '<div class="foto-ph"><img src="' + esc(safeUrl(f.img)) + '" alt="" data-p="img"></div>' +
+      '</figure>';
+  }).join('');
+  return '<div class="detail-photos" data-photos>' + items + '</div>';
+}
+
 function detailHtml (d) {
   return '<div class="card-detail" hidden>' +
     '<div class="detail-media"><img src="' + esc(safeUrl(d['d-img'])) + '" alt="" data-f="d-img"></div>' +
@@ -2025,6 +2102,7 @@ function detailHtml (d) {
     '<p data-f="d-p1">' + safeHtml(d['d-p1']) + '</p>' +
     '<p data-f="d-p2">' + safeHtml(d['d-p2']) + '</p>' +
     galleriaHtml(d.manifesti) +
+    fotoHtml(d.foto) +
     '</div>';
 }
 
@@ -2659,6 +2737,7 @@ function startApp () {
         cfg.decora(item);
         decorateImages(item);
         addGalleryButtons(item);
+        addPhotoButtons(item);
       });
       l.grid.appendChild(btn);
     });
@@ -2693,6 +2772,37 @@ function startApp () {
         decorateImages(item);
       });
       gal.appendChild(btn);
+    });
+  }
+
+  /* una fotografia: si sostituisce o si elimina */
+  function decorateFoto (item) {
+    if (item.querySelector('.card-tools')) return;
+    var tools = document.createElement('div');
+    tools.className = 'card-tools edit-only-wrap';
+    tools.appendChild(makeTool('Elimina', function () {
+      if (window.confirm('Eliminare questa foto?')) item.remove();
+    }));
+    item.appendChild(tools);
+  }
+
+  /* ogni contenuto pu\u00f2 ospitare tante foto, allineate a tre a tre */
+  function addPhotoButtons (root) {
+    (root || document).querySelectorAll('[data-photos]').forEach(function (griglia) {
+      if (griglia.querySelector('.add-foto')) return;
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'add-foto edit-only';
+      btn.textContent = '+ Foto';
+      btn.addEventListener('click', function () {
+        var box = document.createElement('div');
+        box.innerHTML = fotoHtml([{ img: PLACEHOLDER_IMG }]);
+        var item = box.firstElementChild.firstElementChild;
+        griglia.insertBefore(item, btn);
+        decorateFoto(item);
+        decorateImages(item);
+      });
+      griglia.appendChild(btn);
     });
   }
 
@@ -2767,7 +2877,7 @@ function startApp () {
 
   function decorateImages (root) {
     /* solo le immagini che non hanno già il proprio pulsante nella fila sotto */
-    root.querySelectorAll('.split .ph-block img, .news-card img, .card-detail img, .gal-ph img').forEach(function (img) {
+    root.querySelectorAll('.split .ph-block img, .news-card img, .card-detail img, .gal-ph img, .foto-ph img').forEach(function (img) {
       var holder = img.parentNode;
       if (holder.querySelector('.slide-tools')) return;
       var box = document.createElement('div');
@@ -2841,10 +2951,12 @@ function startApp () {
     document.querySelectorAll('.news-card').forEach(decorateSimple);
     document.querySelectorAll('.trasparenza-row').forEach(decorateRow);
     document.querySelectorAll('.gal-item').forEach(decorateGal);
+    document.querySelectorAll('.foto-item').forEach(decorateFoto);
     decorateImages(document);
     heroTool();
     addButtons();
     addGalleryButtons();
+    addPhotoButtons();
   }
 
   function exitEditMode () {

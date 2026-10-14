@@ -390,12 +390,53 @@ section.alt { background: var(--off-white); }
 
 /* ---- contenuto interno del quadrante ---- */
 .card-detail[hidden] { display: none; }
-.detail-media {
-  max-width: 820px;
-  margin-bottom: 44px;
+/* L'apertura del contenuto è una fascia grande che scorre, come quella
+   della home: più immagini che si alternano da sole, con i pallini sotto. */
+.detail-slider {
+  position: relative;
+  height: clamp(320px, 56vh, 620px);
   overflow: hidden;
+  background: var(--off-white);
+  margin-bottom: 44px;
 }
-.detail-media img { width: 100%; height: auto; }
+.detail-slider .dslide {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 0;
+  transition: opacity 1.2s ease;
+}
+.detail-slider .dslide.active { opacity: 1; }
+
+/* in editor le immagini non scorrono: stanno una sotto l'altra, così si
+   possono cambiare o togliere una per una */
+body.editing .detail-slider { height: auto; overflow: visible; background: none; }
+body.editing .detail-slider .dslide {
+  position: relative;
+  inset: auto;
+  opacity: 1;
+  height: 320px;
+  margin-bottom: 78px;
+}
+body.editing .detail-slider .slider-dots { display: none; }
+.add-slide {
+  display: block;
+  width: 100%;
+  border: 2px dashed var(--line);
+  background: var(--off-white);
+  color: var(--dark);
+  padding: 20px;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+/* vecchio contenuto con una sola immagine fissa */
+.detail-media { margin-bottom: 44px; overflow: hidden; }
+.detail-media img { width: 100%; height: auto; max-height: 78vh; object-fit: contain; }
 .card-detail h2 { font-size: clamp(38px, 5.4vw, 72px); margin-bottom: 22px; }
 .card-detail p { max-width: 620px; margin-bottom: 16px; font-size: 17px; }
 
@@ -438,35 +479,54 @@ section.alt { background: var(--off-white); }
 }
 
 
-/* ---- fotografie dentro il contenuto: tre per riga ---- */
+/* ---- fotografie dentro il contenuto ----
+   tre per fila, piccole e in formato orizzontale, con la didascalia sotto */
 .detail-photos {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
+  gap: 26px;
   margin-top: 54px;
-  max-width: 900px;
+  max-width: 1000px;
 }
 .detail-photos:empty { display: none; }
 .foto-item { position: relative; margin: 0; }
 .foto-ph {
   position: relative;
-  aspect-ratio: 1 / 1;
+  aspect-ratio: 3 / 2;        /* orizzontale */
   overflow: hidden;
   background: var(--off-white);
 }
 .foto-ph img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.foto-cap {
+  margin-top: 10px;
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--dark);
+}
 .add-foto {
   border: 2px dashed var(--line);
   background: var(--off-white);
   color: var(--dark);
-  aspect-ratio: 1 / 1;
+  aspect-ratio: 3 / 2;
   font-size: 11px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   cursor: pointer;
+  align-self: start;
 }
-body.editing .detail-photos { row-gap: 70px; }
+body.editing .detail-photos { row-gap: 76px; }
 body.editing .foto-item { overflow: visible; }
+
+/* Una didascalia ancora vuota non occuperebbe spazio: in editor resterebbe
+   invisibile e non si potrebbe cliccare per scriverci. Qui le si dà sempre
+   un'altezza e un invito a scrivere, così sotto ogni foto c'è dove digitare. */
+body.editing .foto-cap,
+body.editing .gal-cap { min-height: 22px; }
+body.editing .foto-cap:empty::before,
+body.editing .gal-cap:empty::before {
+  content: 'scrivi qui il testo';
+  color: #a39c93;
+}
 
 @media (max-width: 720px) { .detail-photos { grid-template-columns: repeat(2, 1fr); } }
 
@@ -1089,6 +1149,7 @@ body.editing .trasparenza-row .card-tools { top: auto; bottom: 10px; }
    ========================================================= */
 @media (hover: hover) and (pointer: fine) {
   .add-foto:hover { border-color: var(--orange-red); color: var(--orange-red); }
+  .add-slide:hover { border-color: var(--orange-red); color: var(--orange-red); }
 
   .case-picker button:hover { background: rgba(255,255,255,.22); }
 
@@ -1215,7 +1276,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <img src="https://images.unsplash.com/photo-1507924538820-ede94a04019d?q=80&w=900&auto=format&fit=crop" alt="Teatro Cavour" data-f="img">
           </div>
           <div class="card-detail" hidden>
-            <div class="detail-media"><img src="https://images.unsplash.com/photo-1507924538820-ede94a04019d?q=80&w=1200&auto=format&fit=crop" alt="" data-f="d-img"></div>
+            <div class="detail-slider" data-slides><div class="dslide active" style="background-image:url('https://images.unsplash.com/photo-1507924538820-ede94a04019d?q=80&w=1200&auto=format&fit=crop')"></div></div>
             <span class="eyebrow" data-f="d-eyebrow">testo qui</span>
             <h2 data-f="d-title">testo qui</h2>
             <p data-f="d-p1">testo qui</p>
@@ -1230,7 +1291,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <img src="Dialoghi2026_programma_70x100.jpg" alt="Dialoghi 2026" data-f="img">
           </div>
           <div class="card-detail" hidden>
-            <div class="detail-media"><img src="Dialoghi2026_programma_70x100.jpg" alt="Dialoghi 2026" data-f="d-img"></div>
+            <div class="detail-slider" data-slides><div class="dslide active" style="background-image:url('Dialoghi2026_programma_70x100.jpg')"></div></div>
             <span class="eyebrow" data-f="d-eyebrow">testo qui</span>
             <h2 data-f="d-title">Dialoghi</h2>
             <p data-f="d-p1">testo qui</p>
@@ -1245,7 +1306,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <img src="https://images.unsplash.com/photo-1477281765962-ef34e8bb0967?q=80&w=900&auto=format&fit=crop" alt="Pellegrinaggi" data-f="img">
           </div>
           <div class="card-detail" hidden>
-            <div class="detail-media"><img src="https://images.unsplash.com/photo-1477281765962-ef34e8bb0967?q=80&w=1200&auto=format&fit=crop" alt="Pellegrinaggi" data-f="d-img"></div>
+            <div class="detail-slider" data-slides><div class="dslide active" style="background-image:url('https://images.unsplash.com/photo-1477281765962-ef34e8bb0967?q=80&w=1200&auto=format&fit=crop')"></div></div>
             <span class="eyebrow" data-f="d-eyebrow">testo qui</span>
             <h2 data-f="d-title">Pellegrinaggi</h2>
             <p data-f="d-p1">testo qui</p>
@@ -1260,7 +1321,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <img src="https://images.unsplash.com/photo-1503095396549-807759245b35?q=80&w=900&auto=format&fit=crop" alt="" data-f="img">
           </div>
           <div class="card-detail" hidden>
-            <div class="detail-media"><img src="https://images.unsplash.com/photo-1503095396549-807759245b35?q=80&w=1200&auto=format&fit=crop" alt="" data-f="d-img"></div>
+            <div class="detail-slider" data-slides><div class="dslide active" style="background-image:url('https://images.unsplash.com/photo-1503095396549-807759245b35?q=80&w=1200&auto=format&fit=crop')"></div></div>
             <span class="eyebrow" data-f="d-eyebrow">testo qui</span>
             <h2 data-f="d-title">testo qui</h2>
             <p data-f="d-p1">testo qui</p>
@@ -1275,7 +1336,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <img src="https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?q=80&w=900&auto=format&fit=crop" alt="" data-f="img">
           </div>
           <div class="card-detail" hidden>
-            <div class="detail-media"><img src="https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?q=80&w=1200&auto=format&fit=crop" alt="" data-f="d-img"></div>
+            <div class="detail-slider" data-slides><div class="dslide active" style="background-image:url('https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?q=80&w=1200&auto=format&fit=crop')"></div></div>
             <span class="eyebrow" data-f="d-eyebrow">testo qui</span>
             <h2 data-f="d-title">testo qui</h2>
             <p data-f="d-p1">testo qui</p>
@@ -1290,7 +1351,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <img src="https://images.unsplash.com/photo-1514306191717-452ec28c7814?q=80&w=900&auto=format&fit=crop" alt="" data-f="img">
           </div>
           <div class="card-detail" hidden>
-            <div class="detail-media"><img src="https://images.unsplash.com/photo-1514306191717-452ec28c7814?q=80&w=1200&auto=format&fit=crop" alt="" data-f="d-img"></div>
+            <div class="detail-slider" data-slides><div class="dslide active" style="background-image:url('https://images.unsplash.com/photo-1514306191717-452ec28c7814?q=80&w=1200&auto=format&fit=crop')"></div></div>
             <span class="eyebrow" data-f="d-eyebrow">testo qui</span>
             <h2 data-f="d-title">testo qui</h2>
             <p data-f="d-p1">testo qui</p>
@@ -1400,7 +1461,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <div class="sec-caption" data-f="caption">testo qui</div>
           <div class="poster-sub" data-f="sub">testo qui</div>
           <div class="card-detail" hidden>
-            <div class="detail-media"><img src="https://images.unsplash.com/photo-1503095396549-807759245b35?q=80&w=900&auto=format&fit=crop" alt="" data-f="d-img"></div>
+            <div class="detail-slider" data-slides><div class="dslide active" style="background-image:url('https://images.unsplash.com/photo-1503095396549-807759245b35?q=80&w=900&auto=format&fit=crop')"></div></div>
             <span class="eyebrow" data-f="d-eyebrow">testo qui</span>
             <h2 data-f="d-title">testo qui</h2>
             <p data-f="d-p1">testo qui</p>
@@ -1414,7 +1475,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <div class="sec-caption" data-f="caption">testo qui</div>
           <div class="poster-sub" data-f="sub">testo qui</div>
           <div class="card-detail" hidden>
-            <div class="detail-media"><img src="https://images.unsplash.com/photo-1514306191717-452ec28c7814?q=80&w=900&auto=format&fit=crop" alt="" data-f="d-img"></div>
+            <div class="detail-slider" data-slides><div class="dslide active" style="background-image:url('https://images.unsplash.com/photo-1514306191717-452ec28c7814?q=80&w=900&auto=format&fit=crop')"></div></div>
             <span class="eyebrow" data-f="d-eyebrow">testo qui</span>
             <h2 data-f="d-title">testo qui</h2>
             <p data-f="d-p1">testo qui</p>
@@ -1428,7 +1489,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <div class="sec-caption" data-f="caption">testo qui</div>
           <div class="poster-sub" data-f="sub">testo qui</div>
           <div class="card-detail" hidden>
-            <div class="detail-media"><img src="https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?q=80&w=900&auto=format&fit=crop" alt="" data-f="d-img"></div>
+            <div class="detail-slider" data-slides><div class="dslide active" style="background-image:url('https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?q=80&w=900&auto=format&fit=crop')"></div></div>
             <span class="eyebrow" data-f="d-eyebrow">testo qui</span>
             <h2 data-f="d-title">testo qui</h2>
             <p data-f="d-p1">testo qui</p>
@@ -1455,7 +1516,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <div class="sec-caption" data-f="caption">testo qui</div>
           <div class="poster-sub" data-f="sub">testo qui</div>
           <div class="card-detail" hidden>
-            <div class="detail-media"><img src="https://images.unsplash.com/photo-1503095396549-807759245b35?q=80&w=900&auto=format&fit=crop" alt="" data-f="d-img"></div>
+            <div class="detail-slider" data-slides><div class="dslide active" style="background-image:url('https://images.unsplash.com/photo-1503095396549-807759245b35?q=80&w=900&auto=format&fit=crop')"></div></div>
             <span class="eyebrow" data-f="d-eyebrow">testo qui</span>
             <h2 data-f="d-title">testo qui</h2>
             <p data-f="d-p1">testo qui</p>
@@ -1469,7 +1530,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <div class="sec-caption" data-f="caption">testo qui</div>
           <div class="poster-sub" data-f="sub">testo qui</div>
           <div class="card-detail" hidden>
-            <div class="detail-media"><img src="https://images.unsplash.com/photo-1514306191717-452ec28c7814?q=80&w=900&auto=format&fit=crop" alt="" data-f="d-img"></div>
+            <div class="detail-slider" data-slides><div class="dslide active" style="background-image:url('https://images.unsplash.com/photo-1514306191717-452ec28c7814?q=80&w=900&auto=format&fit=crop')"></div></div>
             <span class="eyebrow" data-f="d-eyebrow">testo qui</span>
             <h2 data-f="d-title">testo qui</h2>
             <p data-f="d-p1">testo qui</p>
@@ -1483,7 +1544,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <div class="sec-caption" data-f="caption">testo qui</div>
           <div class="poster-sub" data-f="sub">testo qui</div>
           <div class="card-detail" hidden>
-            <div class="detail-media"><img src="https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?q=80&w=900&auto=format&fit=crop" alt="" data-f="d-img"></div>
+            <div class="detail-slider" data-slides><div class="dslide active" style="background-image:url('https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?q=80&w=900&auto=format&fit=crop')"></div></div>
             <span class="eyebrow" data-f="d-eyebrow">testo qui</span>
             <h2 data-f="d-title">testo qui</h2>
             <p data-f="d-p1">testo qui</p>
@@ -1510,7 +1571,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <div class="sec-caption" data-f="caption">testo qui</div>
           <div class="poster-sub" data-f="sub">testo qui</div>
           <div class="card-detail" hidden>
-            <div class="detail-media"><img src="https://images.unsplash.com/photo-1503095396549-807759245b35?q=80&w=900&auto=format&fit=crop" alt="" data-f="d-img"></div>
+            <div class="detail-slider" data-slides><div class="dslide active" style="background-image:url('https://images.unsplash.com/photo-1503095396549-807759245b35?q=80&w=900&auto=format&fit=crop')"></div></div>
             <span class="eyebrow" data-f="d-eyebrow">testo qui</span>
             <h2 data-f="d-title">testo qui</h2>
             <p data-f="d-p1">testo qui</p>
@@ -1524,7 +1585,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <div class="sec-caption" data-f="caption">testo qui</div>
           <div class="poster-sub" data-f="sub">testo qui</div>
           <div class="card-detail" hidden>
-            <div class="detail-media"><img src="https://images.unsplash.com/photo-1514306191717-452ec28c7814?q=80&w=900&auto=format&fit=crop" alt="" data-f="d-img"></div>
+            <div class="detail-slider" data-slides><div class="dslide active" style="background-image:url('https://images.unsplash.com/photo-1514306191717-452ec28c7814?q=80&w=900&auto=format&fit=crop')"></div></div>
             <span class="eyebrow" data-f="d-eyebrow">testo qui</span>
             <h2 data-f="d-title">testo qui</h2>
             <p data-f="d-p1">testo qui</p>
@@ -1538,7 +1599,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <div class="sec-caption" data-f="caption">testo qui</div>
           <div class="poster-sub" data-f="sub">testo qui</div>
           <div class="card-detail" hidden>
-            <div class="detail-media"><img src="https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?q=80&w=900&auto=format&fit=crop" alt="" data-f="d-img"></div>
+            <div class="detail-slider" data-slides><div class="dslide active" style="background-image:url('https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?q=80&w=900&auto=format&fit=crop')"></div></div>
             <span class="eyebrow" data-f="d-eyebrow">testo qui</span>
             <h2 data-f="d-title">testo qui</h2>
             <p data-f="d-p1">testo qui</p>
@@ -1565,7 +1626,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <div class="sec-caption" data-f="caption">testo qui</div>
           <div class="poster-sub" data-f="sub">testo qui</div>
           <div class="card-detail" hidden>
-            <div class="detail-media"><img src="https://images.unsplash.com/photo-1503095396549-807759245b35?q=80&w=900&auto=format&fit=crop" alt="" data-f="d-img"></div>
+            <div class="detail-slider" data-slides><div class="dslide active" style="background-image:url('https://images.unsplash.com/photo-1503095396549-807759245b35?q=80&w=900&auto=format&fit=crop')"></div></div>
             <span class="eyebrow" data-f="d-eyebrow">testo qui</span>
             <h2 data-f="d-title">testo qui</h2>
             <p data-f="d-p1">testo qui</p>
@@ -1579,7 +1640,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <div class="sec-caption" data-f="caption">testo qui</div>
           <div class="poster-sub" data-f="sub">testo qui</div>
           <div class="card-detail" hidden>
-            <div class="detail-media"><img src="https://images.unsplash.com/photo-1514306191717-452ec28c7814?q=80&w=900&auto=format&fit=crop" alt="" data-f="d-img"></div>
+            <div class="detail-slider" data-slides><div class="dslide active" style="background-image:url('https://images.unsplash.com/photo-1514306191717-452ec28c7814?q=80&w=900&auto=format&fit=crop')"></div></div>
             <span class="eyebrow" data-f="d-eyebrow">testo qui</span>
             <h2 data-f="d-title">testo qui</h2>
             <p data-f="d-p1">testo qui</p>
@@ -1593,7 +1654,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <div class="sec-caption" data-f="caption">testo qui</div>
           <div class="poster-sub" data-f="sub">testo qui</div>
           <div class="card-detail" hidden>
-            <div class="detail-media"><img src="https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?q=80&w=900&auto=format&fit=crop" alt="" data-f="d-img"></div>
+            <div class="detail-slider" data-slides><div class="dslide active" style="background-image:url('https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?q=80&w=900&auto=format&fit=crop')"></div></div>
             <span class="eyebrow" data-f="d-eyebrow">testo qui</span>
             <h2 data-f="d-title">testo qui</h2>
             <p data-f="d-p1">testo qui</p>
@@ -1653,7 +1714,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <div class="poster-ph"><img src="hero.jpg" alt="" data-f="img"></div>
           <div class="poster-caption" data-f="caption">testo qui</div><div class="poster-sub" data-f="sub">testo qui</div>
           <div class="card-detail" hidden>
-            <div class="detail-media"><img src="hero.jpg" alt="" data-f="d-img"></div>
+            <div class="detail-slider" data-slides><div class="dslide active" style="background-image:url('hero.jpg')"></div></div>
             <span class="eyebrow" data-f="d-eyebrow">testo qui</span>
             <h2 data-f="d-title">testo qui</h2>
             <p data-f="d-p1">testo qui</p>
@@ -1666,7 +1727,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <div class="poster-ph"><img src="Dialoghi2026_programma_70x100.jpg" alt="" data-f="img"></div>
           <div class="poster-caption" data-f="caption">testo qui</div><div class="poster-sub" data-f="sub">testo qui</div>
           <div class="card-detail" hidden>
-            <div class="detail-media"><img src="Dialoghi2026_programma_70x100.jpg" alt="" data-f="d-img"></div>
+            <div class="detail-slider" data-slides><div class="dslide active" style="background-image:url('Dialoghi2026_programma_70x100.jpg')"></div></div>
             <span class="eyebrow" data-f="d-eyebrow">testo qui</span>
             <h2 data-f="d-title">testo qui</h2>
             <p data-f="d-p1">testo qui</p>
@@ -1679,7 +1740,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <div class="poster-ph"><img src="https://images.unsplash.com/photo-1503095396549-807759245b35?q=80&w=800&auto=format&fit=crop" alt="" data-f="img"></div>
           <div class="poster-caption" data-f="caption">testo qui</div><div class="poster-sub" data-f="sub">testo qui</div>
           <div class="card-detail" hidden>
-            <div class="detail-media"><img src="https://images.unsplash.com/photo-1503095396549-807759245b35?q=80&w=1200&auto=format&fit=crop" alt="" data-f="d-img"></div>
+            <div class="detail-slider" data-slides><div class="dslide active" style="background-image:url('https://images.unsplash.com/photo-1503095396549-807759245b35?q=80&w=1200&auto=format&fit=crop')"></div></div>
             <span class="eyebrow" data-f="d-eyebrow">testo qui</span>
             <h2 data-f="d-title">testo qui</h2>
             <p data-f="d-p1">testo qui</p>
@@ -1706,7 +1767,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <div class="sec-caption" data-f="caption">testo qui</div>
           <div class="poster-sub" data-f="sub">testo qui</div>
           <div class="card-detail" hidden>
-            <div class="detail-media"><img src="https://images.unsplash.com/photo-1503095396549-807759245b35?q=80&w=900&auto=format&fit=crop" alt="" data-f="d-img"></div>
+            <div class="detail-slider" data-slides><div class="dslide active" style="background-image:url('https://images.unsplash.com/photo-1503095396549-807759245b35?q=80&w=900&auto=format&fit=crop')"></div></div>
             <span class="eyebrow" data-f="d-eyebrow">testo qui</span>
             <h2 data-f="d-title">testo qui</h2>
             <p data-f="d-p1">testo qui</p>
@@ -1720,7 +1781,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <div class="sec-caption" data-f="caption">testo qui</div>
           <div class="poster-sub" data-f="sub">testo qui</div>
           <div class="card-detail" hidden>
-            <div class="detail-media"><img src="https://images.unsplash.com/photo-1514306191717-452ec28c7814?q=80&w=900&auto=format&fit=crop" alt="" data-f="d-img"></div>
+            <div class="detail-slider" data-slides><div class="dslide active" style="background-image:url('https://images.unsplash.com/photo-1514306191717-452ec28c7814?q=80&w=900&auto=format&fit=crop')"></div></div>
             <span class="eyebrow" data-f="d-eyebrow">testo qui</span>
             <h2 data-f="d-title">testo qui</h2>
             <p data-f="d-p1">testo qui</p>
@@ -1734,7 +1795,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <div class="sec-caption" data-f="caption">testo qui</div>
           <div class="poster-sub" data-f="sub">testo qui</div>
           <div class="card-detail" hidden>
-            <div class="detail-media"><img src="https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?q=80&w=900&auto=format&fit=crop" alt="" data-f="d-img"></div>
+            <div class="detail-slider" data-slides><div class="dslide active" style="background-image:url('https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?q=80&w=900&auto=format&fit=crop')"></div></div>
             <span class="eyebrow" data-f="d-eyebrow">testo qui</span>
             <h2 data-f="d-title">testo qui</h2>
             <p data-f="d-p1">testo qui</p>
@@ -1901,7 +1962,7 @@ var CLOUDINARY_UPLOAD_PRESET = "md5s3dgi";
      data-id  -> campo singolo (titolo, paragrafo, logo...)
      data-f   -> campo dentro un elenco (quadrati, poster, video...)
    ===================================================== */
-var SITE_VERSION = '26';   /* si vede nella barra dell'editor: serve a capire quale codice è online */
+var SITE_VERSION = '31';   /* si vede nella barra dell'editor: serve a capire quale codice è online */
 var SCHEMA = 1;
 var LEGACY_DOC = false;   /* true se nel database c'è ancora il vecchio salvataggio */
 
@@ -2023,6 +2084,13 @@ function collectItem (el, fields) {
     else o[f] = n.innerHTML.trim();
   });
 
+  /* le immagini della fascia che scorre in apertura */
+  var sld = el.querySelector('[data-slides]');
+  if (sld) {
+    o.slides = Array.prototype.map.call(sld.querySelectorAll('.dslide'), slideUrl)
+      .filter(function (u) { return !!u; });
+  }
+
   /* manifesti aggiuntivi dentro il contenuto (elenco a parte) */
   var gal = el.querySelector('[data-gallery]');
   if (gal) {
@@ -2041,7 +2109,11 @@ function collectItem (el, fields) {
   if (fot) {
     o.foto = Array.prototype.map.call(fot.querySelectorAll('.foto-item'), function (f) {
       var img = f.querySelector('[data-p="img"]');
-      return { img: img ? (img.getAttribute('src') || '') : '' };
+      var cap = f.querySelector('[data-p="cap"]');
+      return {
+        img: img ? (img.getAttribute('src') || '') : '',
+        cap: cap ? cap.innerHTML.trim() : ''
+      };
     });
   }
   return o;
@@ -2089,14 +2161,27 @@ function fotoHtml (lista) {
   var items = (lista || []).map(function (f) {
     return '<figure class="foto-item">' +
       '<div class="foto-ph"><img src="' + esc(safeUrl(f.img)) + '" alt="" data-p="img"></div>' +
+      '<figcaption class="foto-cap" data-p="cap">' + safeHtml(f.cap) + '</figcaption>' +
       '</figure>';
   }).join('');
   return '<div class="detail-photos" data-photos>' + items + '</div>';
 }
 
+/* la fascia che scorre in apertura del contenuto.
+   Se un contenuto vecchio aveva una sola immagine fissa, diventa la prima. */
+function sliderHtml (lista) {
+  var items = (lista || []).map(function (u, i) {
+    var url = safeUrl(u).replace(/'/g, '%27');
+    return '<div class="dslide' + (i === 0 ? ' active' : '') +
+      '" style="background-image:url(\'' + esc(url) + '\')"></div>';
+  }).join('');
+  return '<div class="detail-slider" data-slides>' + items + '</div>';
+}
+
 function detailHtml (d) {
+  var slides = (d.slides && d.slides.length) ? d.slides : (d['d-img'] ? [d['d-img']] : []);
   return '<div class="card-detail" hidden>' +
-    '<div class="detail-media"><img src="' + esc(safeUrl(d['d-img'])) + '" alt="" data-f="d-img"></div>' +
+    sliderHtml(slides) +
     '<span class="eyebrow" data-f="d-eyebrow">' + safeHtml(d['d-eyebrow']) + '</span>' +
     '<h2 data-f="d-title">' + safeHtml(d['d-title']) + '</h2>' +
     '<p data-f="d-p1">' + safeHtml(d['d-p1']) + '</p>' +
@@ -2302,8 +2387,62 @@ function startApp () {
   /* il contenuto vive dentro la card: viene spostato nella pagina di
      dettaglio all'apertura e rimesso al suo posto alla chiusura, così
      le modifiche fatte nell'editor restano sempre sulla card. */
+  /* La fascia di apertura scorre da sola, come quella della home.
+     I pallini si costruiscono qui: così valgono anche per i contenuti
+     ricostruiti dal database e per quelli appena creati nell'editor. */
+  var detailTimer = null;
+
+  function fermaSlider () {
+    if (detailTimer) { clearInterval(detailTimer); detailTimer = null; }
+  }
+
+  function avviaSlider (root) {
+    fermaSlider();
+    var box = root.querySelector('[data-slides]');
+    if (!box) return;
+
+    var vecchi = box.querySelector('.slider-dots');
+    if (vecchi) vecchi.remove();
+
+    var sl = box.querySelectorAll('.dslide');
+    if (!sl.length) return;
+    sl[0].classList.add('active');
+    if (sl.length < 2 || document.body.classList.contains('editing')) return;
+
+    var dots = document.createElement('div');
+    dots.className = 'slider-dots';
+    var pos = 0;
+
+    function vai (i) {
+      sl[pos].classList.remove('active');
+      dots.children[pos].classList.remove('active');
+      pos = i;
+      sl[pos].classList.add('active');
+      dots.children[pos].classList.add('active');
+    }
+
+    Array.prototype.forEach.call(sl, function (s, i) {
+      s.classList.toggle('active', i === 0);
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'dot' + (i === 0 ? ' active' : '');
+      b.setAttribute('aria-label', 'Immagine ' + (i + 1));
+      b.addEventListener('click', function (e) {
+        e.preventDefault();
+        vai(i);
+        fermaSlider();
+        detailTimer = setInterval(function () { vai((pos + 1) % sl.length); }, 6000);
+      });
+      dots.appendChild(b);
+    });
+
+    box.appendChild(dots);
+    detailTimer = setInterval(function () { vai((pos + 1) % sl.length); }, 6000);
+  }
+
   function closeDetail () {
     if (!openDetailCard) return;
+    fermaSlider();
     var detail = detailHost.firstElementChild;
     if (detail) {
       detail.hidden = true;
@@ -2319,6 +2458,7 @@ function startApp () {
     detail.hidden = false;
     detailHost.appendChild(detail);
     openDetailCard = card;
+    avviaSlider(detail);
     var tit = detail.querySelector('[data-f="d-title"]');
     if (!document.body.classList.contains('editing')) {
       traccia('apri_spettacolo', { spettacolo: tit ? tit.textContent.trim() : '(senza titolo)' });
@@ -2457,7 +2597,7 @@ function startApp () {
      EDITOR
      ===================================================== */
   var ACCESS_CODE = 'farna2317';
-  var EDITABLE = '[data-id]:not(img):not(.slide), [data-f]:not(img), [data-g]:not(img)';
+  var EDITABLE = '[data-id]:not(img):not(.slide), [data-f]:not(img), [data-g]:not(img), [data-p]:not(img)';
   var PLACEHOLDER_IMG = 'https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?q=80&w=900&auto=format&fit=crop';
 
   var modal = document.getElementById('editModal');
@@ -2738,6 +2878,8 @@ function startApp () {
         decorateImages(item);
         addGalleryButtons(item);
         addPhotoButtons(item);
+        item.querySelectorAll('.dslide').forEach(decorateSlide);
+        addSlideButtons(item);
       });
       l.grid.appendChild(btn);
     });
@@ -2775,6 +2917,37 @@ function startApp () {
     });
   }
 
+  /* un'immagine della fascia di apertura */
+  function decorateSlide (item) {
+    if (item.querySelector('.card-tools')) return;
+    var tools = document.createElement('div');
+    tools.className = 'card-tools edit-only-wrap';
+    tools.appendChild(makeTool('Immagine', function () { pickImage(item); }));
+    tools.appendChild(makeTool('Elimina', function () {
+      if (window.confirm('Eliminare questa immagine di apertura?')) item.remove();
+    }));
+    item.appendChild(tools);
+  }
+
+  /* la fascia di apertura può contenere più immagini: scorreranno da sole */
+  function addSlideButtons (root) {
+    (root || document).querySelectorAll('[data-slides]').forEach(function (box) {
+      if (box.querySelector('.add-slide')) return;
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'add-slide edit-only';
+      btn.textContent = '+ Immagine di apertura';
+      btn.addEventListener('click', function () {
+        var d = document.createElement('div');
+        d.className = 'dslide';
+        d.style.backgroundImage = "url('" + PLACEHOLDER_IMG + "')";
+        box.insertBefore(d, btn);
+        decorateSlide(d);
+      });
+      box.appendChild(btn);
+    });
+  }
+
   /* una fotografia: si sostituisce o si elimina */
   function decorateFoto (item) {
     if (item.querySelector('.card-tools')) return;
@@ -2796,9 +2969,10 @@ function startApp () {
       btn.textContent = '+ Foto';
       btn.addEventListener('click', function () {
         var box = document.createElement('div');
-        box.innerHTML = fotoHtml([{ img: PLACEHOLDER_IMG }]);
+        box.innerHTML = fotoHtml([{ img: PLACEHOLDER_IMG, cap: 'testo qui' }]);
         var item = box.firstElementChild.firstElementChild;
         griglia.insertBefore(item, btn);
+        makeEditable(item);
         decorateFoto(item);
         decorateImages(item);
       });
@@ -2952,11 +3126,13 @@ function startApp () {
     document.querySelectorAll('.trasparenza-row').forEach(decorateRow);
     document.querySelectorAll('.gal-item').forEach(decorateGal);
     document.querySelectorAll('.foto-item').forEach(decorateFoto);
+    document.querySelectorAll('.dslide').forEach(decorateSlide);
     decorateImages(document);
     heroTool();
     addButtons();
     addGalleryButtons();
     addPhotoButtons();
+    addSlideButtons();
   }
 
   function exitEditMode () {

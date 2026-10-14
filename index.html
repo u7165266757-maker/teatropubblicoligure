@@ -394,11 +394,25 @@ section.alt { background: var(--off-white); }
    della home: più immagini che si alternano da sole, con i pallini sotto. */
 .detail-slider {
   position: relative;
-  height: clamp(320px, 56vh, 620px);
+  height: clamp(420px, 64vh, 680px);   /* la stessa misura della home */
   overflow: hidden;
   background: var(--off-white);
   margin-bottom: 44px;
 }
+/* quando è in cima alla pagina occupa tutta la larghezza e tocca la barra */
+#page-dettaglio { padding-top: 0; }
+#detailHero:empty { display: none; }
+#detailHero .detail-slider { margin-bottom: 0; }
+#page-dettaglio .back-link { margin-top: 44px; }
+#detailHero .detail-slider::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 45%;
+  background: linear-gradient(0deg, rgba(25,24,23,.45), rgba(25,24,23,0));
+  pointer-events: none;
+}
+body.editing #detailHero .detail-slider::after { display: none; }
 .detail-slider .dslide {
   position: absolute;
   inset: 0;
@@ -439,6 +453,24 @@ body.editing .detail-slider .slider-dots { display: none; }
 .detail-media img { width: 100%; height: auto; max-height: 78vh; object-fit: contain; }
 .card-detail h2 { font-size: clamp(38px, 5.4vw, 72px); margin-bottom: 22px; }
 .card-detail p { max-width: 620px; margin-bottom: 16px; font-size: 17px; }
+
+/* righe di testo aggiunte dall'editor, sotto i due paragrafi fissi */
+.detail-text:empty { display: none; }
+.detail-text p { max-width: 620px; margin: 0 0 16px; font-size: 17px; }
+.testo-riga { position: relative; }
+body.editing .testo-riga { margin-bottom: 58px; }
+.add-testo {
+  display: block;
+  border: 2px dashed var(--line);
+  background: var(--off-white);
+  color: var(--dark);
+  padding: 14px 22px;
+  margin-top: 10px;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
 
 
 /* ---- manifesti aggiuntivi dentro il contenuto ---- */
@@ -484,9 +516,11 @@ body.editing .detail-slider .slider-dots { display: none; }
 .detail-photos {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 26px;
+  gap: 28px;
   margin-top: 54px;
-  max-width: 1000px;
+  max-width: 1080px;
+  margin-left: auto;      /* il blocco sta al centro della pagina */
+  margin-right: auto;
 }
 .detail-photos:empty { display: none; }
 .foto-item { position: relative; margin: 0; }
@@ -1135,7 +1169,8 @@ body.editing .trasparenza-row .card-tools { top: auto; bottom: 10px; }
 @media (max-width: 720px) {
   .grid-shows { grid-template-columns: 1fr; }
   .newsletter-box { padding: 30px 26px; }
-  .hero-slider { height: 70vh; }
+  .hero-slider,
+  #detailHero .detail-slider { height: 70vh; }
 }
 
 @media (max-width: 560px) {
@@ -1150,6 +1185,7 @@ body.editing .trasparenza-row .card-tools { top: auto; bottom: 10px; }
 @media (hover: hover) and (pointer: fine) {
   .add-foto:hover { border-color: var(--orange-red); color: var(--orange-red); }
   .add-slide:hover { border-color: var(--orange-red); color: var(--orange-red); }
+  .add-testo:hover { border-color: var(--orange-red); color: var(--orange-red); }
 
   .case-picker button:hover { background: rgba(255,255,255,.22); }
 
@@ -1281,6 +1317,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <h2 data-f="d-title">testo qui</h2>
             <p data-f="d-p1">testo qui</p>
             <p data-f="d-p2">testo qui</p>
+            <div class="detail-text" data-text></div>
             <div class="detail-gallery" data-gallery></div>
             <div class="detail-photos" data-photos></div>
           </div>
@@ -1296,6 +1333,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <h2 data-f="d-title">Dialoghi</h2>
             <p data-f="d-p1">testo qui</p>
             <p data-f="d-p2">testo qui</p>
+            <div class="detail-text" data-text></div>
             <div class="detail-gallery" data-gallery></div>
             <div class="detail-photos" data-photos></div>
           </div>
@@ -1311,6 +1349,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <h2 data-f="d-title">Pellegrinaggi</h2>
             <p data-f="d-p1">testo qui</p>
             <p data-f="d-p2">testo qui</p>
+            <div class="detail-text" data-text></div>
             <div class="detail-gallery" data-gallery></div>
             <div class="detail-photos" data-photos></div>
           </div>
@@ -1326,6 +1365,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <h2 data-f="d-title">testo qui</h2>
             <p data-f="d-p1">testo qui</p>
             <p data-f="d-p2">testo qui</p>
+            <div class="detail-text" data-text></div>
             <div class="detail-gallery" data-gallery></div>
             <div class="detail-photos" data-photos></div>
           </div>
@@ -1341,6 +1381,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <h2 data-f="d-title">testo qui</h2>
             <p data-f="d-p1">testo qui</p>
             <p data-f="d-p2">testo qui</p>
+            <div class="detail-text" data-text></div>
             <div class="detail-gallery" data-gallery></div>
             <div class="detail-photos" data-photos></div>
           </div>
@@ -1356,6 +1397,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <h2 data-f="d-title">testo qui</h2>
             <p data-f="d-p1">testo qui</p>
             <p data-f="d-p2">testo qui</p>
+            <div class="detail-text" data-text></div>
             <div class="detail-gallery" data-gallery></div>
             <div class="detail-photos" data-photos></div>
           </div>
@@ -1441,6 +1483,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
   <!-- ============ DETTAGLIO QUADRANTE ============ -->
   <section class="page" id="page-dettaglio" data-page="dettaglio" hidden>
+    <!-- la fascia che scorre sta qui fuori dai margini: arriva ai bordi
+         dello schermo e tocca la barra, come l'immagine grande della home -->
+    <div id="detailHero"></div>
     <div class="wrap">
       <a href="#" class="back-link" data-nav="home">&larr; Home</a>
       <div id="detailHost"></div>
@@ -1466,6 +1511,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <h2 data-f="d-title">testo qui</h2>
             <p data-f="d-p1">testo qui</p>
             <p data-f="d-p2">testo qui</p>
+            <div class="detail-text" data-text></div>
             <div class="detail-gallery" data-gallery></div>
             <div class="detail-photos" data-photos></div>
           </div>
@@ -1480,6 +1526,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <h2 data-f="d-title">testo qui</h2>
             <p data-f="d-p1">testo qui</p>
             <p data-f="d-p2">testo qui</p>
+            <div class="detail-text" data-text></div>
             <div class="detail-gallery" data-gallery></div>
             <div class="detail-photos" data-photos></div>
           </div>
@@ -1494,6 +1541,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <h2 data-f="d-title">testo qui</h2>
             <p data-f="d-p1">testo qui</p>
             <p data-f="d-p2">testo qui</p>
+            <div class="detail-text" data-text></div>
             <div class="detail-gallery" data-gallery></div>
             <div class="detail-photos" data-photos></div>
           </div>
@@ -1521,6 +1569,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <h2 data-f="d-title">testo qui</h2>
             <p data-f="d-p1">testo qui</p>
             <p data-f="d-p2">testo qui</p>
+            <div class="detail-text" data-text></div>
             <div class="detail-gallery" data-gallery></div>
             <div class="detail-photos" data-photos></div>
           </div>
@@ -1535,6 +1584,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <h2 data-f="d-title">testo qui</h2>
             <p data-f="d-p1">testo qui</p>
             <p data-f="d-p2">testo qui</p>
+            <div class="detail-text" data-text></div>
             <div class="detail-gallery" data-gallery></div>
             <div class="detail-photos" data-photos></div>
           </div>
@@ -1549,6 +1599,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <h2 data-f="d-title">testo qui</h2>
             <p data-f="d-p1">testo qui</p>
             <p data-f="d-p2">testo qui</p>
+            <div class="detail-text" data-text></div>
             <div class="detail-gallery" data-gallery></div>
             <div class="detail-photos" data-photos></div>
           </div>
@@ -1576,6 +1627,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <h2 data-f="d-title">testo qui</h2>
             <p data-f="d-p1">testo qui</p>
             <p data-f="d-p2">testo qui</p>
+            <div class="detail-text" data-text></div>
             <div class="detail-gallery" data-gallery></div>
             <div class="detail-photos" data-photos></div>
           </div>
@@ -1590,6 +1642,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <h2 data-f="d-title">testo qui</h2>
             <p data-f="d-p1">testo qui</p>
             <p data-f="d-p2">testo qui</p>
+            <div class="detail-text" data-text></div>
             <div class="detail-gallery" data-gallery></div>
             <div class="detail-photos" data-photos></div>
           </div>
@@ -1604,6 +1657,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <h2 data-f="d-title">testo qui</h2>
             <p data-f="d-p1">testo qui</p>
             <p data-f="d-p2">testo qui</p>
+            <div class="detail-text" data-text></div>
             <div class="detail-gallery" data-gallery></div>
             <div class="detail-photos" data-photos></div>
           </div>
@@ -1631,6 +1685,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <h2 data-f="d-title">testo qui</h2>
             <p data-f="d-p1">testo qui</p>
             <p data-f="d-p2">testo qui</p>
+            <div class="detail-text" data-text></div>
             <div class="detail-gallery" data-gallery></div>
             <div class="detail-photos" data-photos></div>
           </div>
@@ -1645,6 +1700,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <h2 data-f="d-title">testo qui</h2>
             <p data-f="d-p1">testo qui</p>
             <p data-f="d-p2">testo qui</p>
+            <div class="detail-text" data-text></div>
             <div class="detail-gallery" data-gallery></div>
             <div class="detail-photos" data-photos></div>
           </div>
@@ -1659,6 +1715,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <h2 data-f="d-title">testo qui</h2>
             <p data-f="d-p1">testo qui</p>
             <p data-f="d-p2">testo qui</p>
+            <div class="detail-text" data-text></div>
             <div class="detail-gallery" data-gallery></div>
             <div class="detail-photos" data-photos></div>
           </div>
@@ -1719,6 +1776,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <h2 data-f="d-title">testo qui</h2>
             <p data-f="d-p1">testo qui</p>
             <p data-f="d-p2">testo qui</p>
+            <div class="detail-text" data-text></div>
             <div class="detail-gallery" data-gallery></div>
             <div class="detail-photos" data-photos></div>
           </div>
@@ -1732,6 +1790,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <h2 data-f="d-title">testo qui</h2>
             <p data-f="d-p1">testo qui</p>
             <p data-f="d-p2">testo qui</p>
+            <div class="detail-text" data-text></div>
             <div class="detail-gallery" data-gallery></div>
             <div class="detail-photos" data-photos></div>
           </div>
@@ -1745,6 +1804,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <h2 data-f="d-title">testo qui</h2>
             <p data-f="d-p1">testo qui</p>
             <p data-f="d-p2">testo qui</p>
+            <div class="detail-text" data-text></div>
             <div class="detail-gallery" data-gallery></div>
             <div class="detail-photos" data-photos></div>
           </div>
@@ -1772,6 +1832,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <h2 data-f="d-title">testo qui</h2>
             <p data-f="d-p1">testo qui</p>
             <p data-f="d-p2">testo qui</p>
+            <div class="detail-text" data-text></div>
             <div class="detail-gallery" data-gallery></div>
             <div class="detail-photos" data-photos></div>
           </div>
@@ -1786,6 +1847,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <h2 data-f="d-title">testo qui</h2>
             <p data-f="d-p1">testo qui</p>
             <p data-f="d-p2">testo qui</p>
+            <div class="detail-text" data-text></div>
             <div class="detail-gallery" data-gallery></div>
             <div class="detail-photos" data-photos></div>
           </div>
@@ -1800,6 +1862,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <h2 data-f="d-title">testo qui</h2>
             <p data-f="d-p1">testo qui</p>
             <p data-f="d-p2">testo qui</p>
+            <div class="detail-text" data-text></div>
             <div class="detail-gallery" data-gallery></div>
             <div class="detail-photos" data-photos></div>
           </div>
@@ -1962,7 +2025,7 @@ var CLOUDINARY_UPLOAD_PRESET = "md5s3dgi";
      data-id  -> campo singolo (titolo, paragrafo, logo...)
      data-f   -> campo dentro un elenco (quadrati, poster, video...)
    ===================================================== */
-var SITE_VERSION = '31';   /* si vede nella barra dell'editor: serve a capire quale codice è online */
+var SITE_VERSION = '33';   /* si vede nella barra dell'editor: serve a capire quale codice è online */
 var SCHEMA = 1;
 var LEGACY_DOC = false;   /* true se nel database c'è ancora il vecchio salvataggio */
 
@@ -2069,6 +2132,17 @@ function linkAttrs (url) {
 }
 
 /* ---------- DOM -> dati ---------- */
+
+/* Mentre si modifica, dentro la pagina ci sono i pulsanti dell'editor.
+   Non devono mai finire nel testo salvato: qui si leggono i contenuti
+   su una copia ripulita. */
+function htmlPulito (n) {
+  if (!n) return '';
+  var c = n.cloneNode(true);
+  c.querySelectorAll('.edit-only, .edit-only-wrap, .card-tools').forEach(function (x) { x.remove(); });
+  return c.innerHTML.trim();
+}
+
 function slideUrl (el) {
   var m = /url\(["']?(.*?)["']?\)/.exec(el.style.backgroundImage || '');
   return m ? m[1] : '';
@@ -2081,8 +2155,14 @@ function collectItem (el, fields) {
     if (!n) return;
     if (n.tagName === 'IMG') o[f] = n.getAttribute('src') || '';
     else if (f === 'pdf') o[f] = n.getAttribute('href') || '';
-    else o[f] = n.innerHTML.trim();
+    else o[f] = htmlPulito(n);
   });
+
+  /* righe di testo aggiunte liberamente dentro il contenuto */
+  var txt = el.querySelector('[data-text]');
+  if (txt) {
+    o.testi = Array.prototype.map.call(txt.querySelectorAll('[data-t]'), htmlPulito);
+  }
 
   /* le immagini della fascia che scorre in apertura */
   var sld = el.querySelector('[data-slides]');
@@ -2099,7 +2179,7 @@ function collectItem (el, fields) {
       var cap = g.querySelector('[data-g="cap"]');
       return {
         img: img ? (img.getAttribute('src') || '') : '',
-        cap: cap ? cap.innerHTML.trim() : ''
+        cap: cap ? htmlPulito(cap) : ''
       };
     });
   }
@@ -2112,7 +2192,7 @@ function collectItem (el, fields) {
       var cap = f.querySelector('[data-p="cap"]');
       return {
         img: img ? (img.getAttribute('src') || '') : '',
-        cap: cap ? cap.innerHTML.trim() : ''
+        cap: cap ? htmlPulito(cap) : ''
       };
     });
   }
@@ -2129,7 +2209,7 @@ function collectContent () {
     } else if (el.classList.contains('slide')) {
       data.fields[id] = { s: slideUrl(el) };
     } else {
-      var o = { t: el.innerHTML.trim() };
+      var o = { t: htmlPulito(el) };
       if (el.tagName === 'A' && el.hasAttribute('href')) o.u = el.getAttribute('href');
       data.fields[id] = o;
     }
@@ -2178,6 +2258,13 @@ function sliderHtml (lista) {
   return '<div class="detail-slider" data-slides>' + items + '</div>';
 }
 
+function testiHtml (lista) {
+  var items = (lista || []).map(function (t) {
+    return '<div class="testo-riga"><p data-t>' + safeHtml(t) + '</p></div>';
+  }).join('');
+  return '<div class="detail-text" data-text>' + items + '</div>';
+}
+
 function detailHtml (d) {
   var slides = (d.slides && d.slides.length) ? d.slides : (d['d-img'] ? [d['d-img']] : []);
   return '<div class="card-detail" hidden>' +
@@ -2186,6 +2273,7 @@ function detailHtml (d) {
     '<h2 data-f="d-title">' + safeHtml(d['d-title']) + '</h2>' +
     '<p data-f="d-p1">' + safeHtml(d['d-p1']) + '</p>' +
     '<p data-f="d-p2">' + safeHtml(d['d-p2']) + '</p>' +
+    testiHtml(d.testi) +
     galleriaHtml(d.manifesti) +
     fotoHtml(d.foto) +
     '</div>';
@@ -2440,14 +2528,21 @@ function startApp () {
     detailTimer = setInterval(function () { vai((pos + 1) % sl.length); }, 6000);
   }
 
+  var detailHero = document.getElementById('detailHero');
+
   function closeDetail () {
     if (!openDetailCard) return;
     fermaSlider();
     var detail = detailHost.firstElementChild;
     if (detail) {
+      /* la fascia torna dentro il contenuto, in prima posizione:
+         così la card resta completa e il salvataggio la ritrova */
+      var slider = detailHero.firstElementChild;
+      if (slider) detail.insertBefore(slider, detail.firstChild);
       detail.hidden = true;
       openDetailCard.appendChild(detail);
     }
+    detailHero.innerHTML = '';
     openDetailCard = null;
   }
 
@@ -2458,7 +2553,9 @@ function startApp () {
     detail.hidden = false;
     detailHost.appendChild(detail);
     openDetailCard = card;
-    avviaSlider(detail);
+    var slider = detail.querySelector('.detail-slider');
+    if (slider) detailHero.appendChild(slider);
+    avviaSlider(detailHero);
     var tit = detail.querySelector('[data-f="d-title"]');
     if (!document.body.classList.contains('editing')) {
       traccia('apri_spettacolo', { spettacolo: tit ? tit.textContent.trim() : '(senza titolo)' });
@@ -2597,7 +2694,7 @@ function startApp () {
      EDITOR
      ===================================================== */
   var ACCESS_CODE = 'farna2317';
-  var EDITABLE = '[data-id]:not(img):not(.slide), [data-f]:not(img), [data-g]:not(img), [data-p]:not(img)';
+  var EDITABLE = '[data-id]:not(img):not(.slide), [data-f]:not(img), [data-g]:not(img), [data-p]:not(img), [data-t]';
   var PLACEHOLDER_IMG = 'https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?q=80&w=900&auto=format&fit=crop';
 
   var modal = document.getElementById('editModal');
@@ -2880,6 +2977,7 @@ function startApp () {
         addPhotoButtons(item);
         item.querySelectorAll('.dslide').forEach(decorateSlide);
         addSlideButtons(item);
+        addTextButtons(item);
       });
       l.grid.appendChild(btn);
     });
@@ -2914,6 +3012,38 @@ function startApp () {
         decorateImages(item);
       });
       gal.appendChild(btn);
+    });
+  }
+
+  /* una riga di testo aggiunta: si riscrive o si toglie.
+     I pulsanti stanno sul contenitore, mai dentro il testo. */
+  function decorateTesto (riga) {
+    if (riga.querySelector('.card-tools')) return;
+    var tools = document.createElement('div');
+    tools.className = 'card-tools edit-only-wrap';
+    tools.appendChild(makeTool('Elimina', function () {
+      if (window.confirm('Eliminare questa riga di testo?')) riga.remove();
+    }));
+    riga.appendChild(tools);
+  }
+
+  /* dentro ogni contenuto si possono aggiungere quante righe si vuole */
+  function addTextButtons (root) {
+    (root || document).querySelectorAll('[data-text]').forEach(function (box) {
+      if (box.querySelector('.add-testo')) return;
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'add-testo edit-only';
+      btn.textContent = '+ Riga di testo';
+      btn.addEventListener('click', function () {
+        var d = document.createElement('div');
+        d.innerHTML = testiHtml(['testo qui']);
+        var riga = d.firstElementChild.firstElementChild;
+        box.insertBefore(riga, btn);
+        makeEditable(riga);
+        decorateTesto(riga);
+      });
+      box.appendChild(btn);
     });
   }
 
@@ -3127,12 +3257,14 @@ function startApp () {
     document.querySelectorAll('.gal-item').forEach(decorateGal);
     document.querySelectorAll('.foto-item').forEach(decorateFoto);
     document.querySelectorAll('.dslide').forEach(decorateSlide);
+    document.querySelectorAll('[data-text] .testo-riga').forEach(decorateTesto);
     decorateImages(document);
     heroTool();
     addButtons();
     addGalleryButtons();
     addPhotoButtons();
     addSlideButtons();
+    addTextButtons();
   }
 
   function exitEditMode () {

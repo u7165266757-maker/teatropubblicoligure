@@ -373,6 +373,7 @@ section.alt { background: var(--off-white); }
   transition: transform .7s cubic-bezier(.2,.7,.3,1);
 }
 
+
 .section-foot { text-align: center; margin-top: 46px; }
 
 .btn-calendar {
@@ -805,6 +806,54 @@ body.editing .gal-cap:empty::before {
   padding: 44px 46px;
   transition: background .25s ease, transform .3s ease, box-shadow .3s ease;
 }
+/* I pulsanti della biglietteria stanno sotto la newsletter, nel blu del logo.
+   Se ce n'è uno solo occupa tutta la riga come la newsletter; appena se ne
+   aggiungono altri si affiancano e si rimpiccioliscono da soli. */
+.tickets-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+  gap: 16px;
+  margin-top: 18px;
+}
+.tickets-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  background: var(--tinta, var(--blue));
+  color: #fff;
+  border-radius: 0;
+  padding: 34px 38px;
+  transition: background .25s ease, transform .3s ease, box-shadow .3s ease;
+}
+/* ogni pulsante un colore del logo, a rotazione */
+.tickets-grid .tickets-box:nth-child(4n+1) { --tinta: var(--blue); }
+.tickets-grid .tickets-box:nth-child(4n+2) { --tinta: var(--orange); }
+.tickets-grid .tickets-box:nth-child(4n+3) { --tinta: var(--green); }
+.tickets-grid .tickets-box:nth-child(4n+4) { --tinta: var(--orange-red); }
+
+.tickets-label {
+  font-size: clamp(17px, 1.9vw, 27px);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  line-height: 1.1;
+}
+.tickets-box .newsletter-arrow { font-size: clamp(18px, 2vw, 27px); }
+.add-ticket {
+  border: 2px dashed var(--line);
+  background: var(--off-white);
+  color: var(--dark);
+  padding: 34px 20px;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.newsletter-box, .tickets-box { position: relative; }
+body.editing .newsletter-box { margin-bottom: 56px; }
+body.editing .tickets-grid { row-gap: 70px; }
+
 .newsletter-label {
   font-size: clamp(21px, 3vw, 34px);
   font-weight: 600;
@@ -1169,6 +1218,8 @@ body.editing .trasparenza-row .card-tools { top: auto; bottom: 10px; }
 @media (max-width: 720px) {
   .grid-shows { grid-template-columns: 1fr; }
   .newsletter-box { padding: 30px 26px; }
+  .tickets-box { padding: 26px 24px; }
+  .tickets-grid { grid-template-columns: 1fr; }
   .hero-slider,
   #detailHero .detail-slider { height: 70vh; }
 }
@@ -1221,6 +1272,13 @@ body.editing .trasparenza-row .card-tools { top: auto; bottom: 10px; }
     box-shadow: 0 18px 40px rgba(229,80,30,.25);
   }
   .newsletter-box:hover .newsletter-arrow { transform: translateX(8px); }
+  .tickets-box:hover {
+    filter: brightness(.88);      /* scurisce il suo colore, qualunque sia */
+    transform: translateY(-3px);
+    box-shadow: 0 18px 40px rgba(25,24,23,.18);
+  }
+  .tickets-box:hover .newsletter-arrow { transform: translateX(8px); }
+  .add-ticket:hover { border-color: var(--orange-red); color: var(--orange-red); }
   .editor-entry button:hover { color: var(--orange-red); }
   .footer-social a:hover {
     background: var(--white);
@@ -1411,10 +1469,16 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
     <section class="cta-newsletter">
       <div class="wrap">
-        <a class="newsletter-box reveal" href="https://newsletter.teatropubblicoligure.it/" target="_blank" rel="noopener noreferrer">
+        <a class="newsletter-box reveal" href="https://newsletter.teatropubblicoligure.it/" target="_blank" rel="noopener noreferrer" data-link="newsletter">
           <span class="newsletter-label" data-id="newsletter-label">Iscriviti alla newsletter</span>
           <span class="newsletter-arrow">&rarr;</span>
         </a>
+        <div class="tickets-grid" data-list="biglietti" data-kind="ticket">
+          <a class="tickets-box" href="https://calendariotpl.it/" target="_blank" rel="noopener noreferrer">
+            <span class="tickets-label" data-f="label">Acquista i biglietti</span>
+            <span class="newsletter-arrow">&rarr;</span>
+          </a>
+        </div>
         <div class="editor-entry">
           <button type="button" id="editorOpen">Editor</button>
         </div>
@@ -2025,7 +2089,7 @@ var CLOUDINARY_UPLOAD_PRESET = "md5s3dgi";
      data-id  -> campo singolo (titolo, paragrafo, logo...)
      data-f   -> campo dentro un elenco (quadrati, poster, video...)
    ===================================================== */
-var SITE_VERSION = '33';   /* si vede nella barra dell'editor: serve a capire quale codice è online */
+var SITE_VERSION = '37';   /* si vede nella barra dell'editor: serve a capire quale codice è online */
 var SCHEMA = 1;
 var LEGACY_DOC = false;   /* true se nel database c'è ancora il vecchio salvataggio */
 
@@ -2053,14 +2117,16 @@ var FIELDS = {
   poster: ['img', 'caption', 'sub', 'd-img', 'd-eyebrow', 'd-title', 'd-p1', 'd-p2'],
   sec:    ['img', 'caption', 'sub', 'd-img', 'd-eyebrow', 'd-title', 'd-p1', 'd-p2'],
   video:  ['img', 'caption', 'sub'],
+  ticket: ['label'],
   news:   ['img', 'meta', 'title', 'text'],
   row:    ['voce', 'dato', 'pdf']
 };
 var ITEM_SEL = {
   card: '.show-card', poster: '.poster-item', sec: '.sec-card',
-  video: '.video-item', news: '.news-card', row: '.trasparenza-row'
+  video: '.video-item', news: '.news-card', row: '.trasparenza-row',
+  ticket: '.tickets-box'
 };
-var CON_LINK = { card: 1, poster: 1, sec: 1, video: 1 };
+var CON_LINK = { card: 1, poster: 1, sec: 1, video: 1, ticket: 1 };
 
 /* ogni griglia dichiara da sé il proprio elenco:
    data-list = nome con cui viene salvato, data-kind = tipo di elemento.
@@ -2215,6 +2281,12 @@ function collectContent () {
     }
   });
 
+  /* destinazioni dei pulsanti (newsletter, biglietti...): si salva solo
+     l'indirizzo, il testo viaggia già come campo a sé */
+  document.querySelectorAll('[data-link]').forEach(function (a) {
+    data.fields['link:' + a.getAttribute('data-link')] = { u: a.getAttribute('href') || '#' };
+  });
+
   elenchi().forEach(function (l) {
     data[l.key] = Array.prototype.map.call(l.grid.querySelectorAll(ITEM_SEL[l.kind]), function (el) {
       var o = collectItem(el, FIELDS[l.kind]);
@@ -2319,6 +2391,12 @@ function renderNews (n) {
     '</div></article>';
 }
 
+function renderTicket (t) {
+  return '<a class="tickets-box" ' + linkAttrs(t.href) + '>' +
+    '<span class="tickets-label" data-f="label">' + safeHtml(t.label) + '</span>' +
+    '<span class="newsletter-arrow">&rarr;</span></a>';
+}
+
 var PDF_ICON = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16l-5-5h3V4h4v7h3l-5 5zm-7 2h14v2H5v-2z"/></svg>';
 
 function renderRow (r) {
@@ -2331,7 +2409,8 @@ function renderRow (r) {
     '</div>';
 }
 
-var RENDERERS = { card: renderCard, poster: renderPoster, sec: renderSec, video: renderVideo, news: renderNews, row: renderRow };
+var RENDERERS = { card: renderCard, poster: renderPoster, sec: renderSec, video: renderVideo,
+  news: renderNews, row: renderRow, ticket: renderTicket };
 
 function applyContent (data) {
   if (!data) return;
@@ -2348,6 +2427,11 @@ function applyContent (data) {
       if (typeof v.t === 'string') el.innerHTML = safeHtml(v.t);
       if (v.u && el.tagName === 'A') setLink(el, v.u);
     }
+  });
+
+  document.querySelectorAll('[data-link]').forEach(function (a) {
+    var v = fields['link:' + a.getAttribute('data-link')];
+    if (v && v.u) setLink(a, v.u);
   });
 
   elenchi().forEach(function (l) {
@@ -2939,7 +3023,7 @@ function startApp () {
     'd-title': 'testo qui', 'd-p1': 'testo qui', 'd-p2': 'testo qui',
     caption: 'testo qui', sub: 'testo qui', meta: 'testo qui',
     title: 'testo qui', text: 'testo qui', voce: 'testo qui', dato: 'testo qui',
-    pdf: '', href: '#'
+    pdf: '', href: '#', label: 'Acquista i biglietti'
   };
 
   var AGGIUNGI = {
@@ -2948,7 +3032,8 @@ function startApp () {
     sec:    { cls: 'add-sec',    testo: '+ Aggiungi quadrotto', decora: decorateCard },
     video:  { cls: 'add-video',  testo: '+ Aggiungi video',     decora: decorateVideo },
     news:   { cls: 'add-news',   testo: '+ Aggiungi notizia',   decora: decorateSimple },
-    row:    { cls: 'add-row',    testo: '+ Aggiungi riga',      decora: decorateRow }
+    row:    { cls: 'add-row',    testo: '+ Aggiungi riga',      decora: decorateRow },
+    ticket: { cls: 'add-ticket', testo: '+ Aggiungi biglietteria', decora: decorateTicket }
   };
 
   /* un pulsante "aggiungi" per ogni griglia dichiarata nella pagina */
@@ -2965,6 +3050,8 @@ function startApp () {
         var vuoto = VUOTO;
         if (l.kind === 'video') {
           vuoto = Object.assign({}, VUOTO, { href: 'https://www.youtube.com/@TeatroPubblicoLigure/playlists' });
+        } else if (l.kind === 'ticket') {
+          vuoto = Object.assign({}, VUOTO, { href: 'https://calendariotpl.it/' });
         }
         var box = document.createElement('div');
         box.innerHTML = RENDERERS[l.kind](vuoto);
@@ -3047,6 +3134,20 @@ function startApp () {
     });
   }
 
+  /* pulsanti con una destinazione (newsletter, biglietti):
+     il nome si riscrive cliccandoci sopra, l'indirizzo con questo pulsante */
+  function decorateLink (box) {
+    if (box.querySelector('.card-tools')) return;
+    var tools = document.createElement('div');
+    tools.className = 'card-tools edit-only-wrap';
+    tools.appendChild(makeTool('Link', function () {
+      var url = window.prompt('Indirizzo a cui porta il pulsante:', box.getAttribute('href') || '');
+      if (url === null) return;
+      setLink(box, url);
+    }));
+    box.appendChild(tools);
+  }
+
   /* un'immagine della fascia di apertura */
   function decorateSlide (item) {
     if (item.querySelector('.card-tools')) return;
@@ -3076,6 +3177,22 @@ function startApp () {
       });
       box.appendChild(btn);
     });
+  }
+
+  /* un pulsante della biglietteria: nome scrivibile, indirizzo ed eliminazione */
+  function decorateTicket (item) {
+    if (item.querySelector('.card-tools')) return;
+    var tools = document.createElement('div');
+    tools.className = 'card-tools edit-only-wrap';
+    tools.appendChild(makeTool('Link', function () {
+      var url = window.prompt('Indirizzo della biglietteria:', item.getAttribute('href') || '');
+      if (url === null) return;
+      setLink(item, url);
+    }));
+    tools.appendChild(makeTool('Elimina', function () {
+      if (window.confirm('Eliminare questo pulsante?')) item.remove();
+    }));
+    item.appendChild(tools);
   }
 
   /* una fotografia: si sostituisce o si elimina */
@@ -3253,11 +3370,13 @@ function startApp () {
     document.querySelectorAll('.video-item').forEach(decorateVideo);
     document.querySelectorAll('.sec-card').forEach(decorateCard);
     document.querySelectorAll('.news-card').forEach(decorateSimple);
+    document.querySelectorAll('.tickets-box').forEach(decorateTicket);
     document.querySelectorAll('.trasparenza-row').forEach(decorateRow);
     document.querySelectorAll('.gal-item').forEach(decorateGal);
     document.querySelectorAll('.foto-item').forEach(decorateFoto);
     document.querySelectorAll('.dslide').forEach(decorateSlide);
     document.querySelectorAll('[data-text] .testo-riga').forEach(decorateTesto);
+    document.querySelectorAll('[data-link]').forEach(decorateLink);
     decorateImages(document);
     heroTool();
     addButtons();

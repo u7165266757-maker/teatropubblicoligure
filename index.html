@@ -575,24 +575,61 @@ body.editing .gal-cap:empty::before {
 .split .ph-block { height: 480px; overflow: hidden; }
 .split .ph-block img { width: 100%; height: 100%; object-fit: cover; }
 .split h2 { font-size: clamp(32px, 4vw, 52px); }
-.split .stat-row {
-  display: flex;
-  gap: 40px;
+/* ============ GRUPPI DI PERSONE (Chi siamo) ============ */
+.gruppi {
   margin-top: 40px;
   padding-top: 30px;
   border-top: 1px solid var(--line-soft);
+  display: grid;
+  gap: 34px;
+}
+.gruppo-titolo {
+  font-size: 19px;
+  font-weight: 500;
+  color: var(--blue);
+  margin-bottom: 14px;
+}
+.gruppo:nth-child(2) .gruppo-titolo { color: var(--orange); }
+.gruppo:nth-child(3) .gruppo-titolo { color: var(--green); }
+
+.persone { display: flex; flex-direction: column; gap: 10px; }
+.persona {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
   flex-wrap: wrap;
 }
-.stat b {
-  display: block;
-  font-family: 'Playfair Display', Georgia, serif;
-  font-size: 40px;
-  font-weight: 400;
-  color: var(--blue);
+.persona-nome { font-size: 16px; color: var(--black); }
+
+/* il quadratino accanto al nome: si vede solo se ha un documento o un link */
+.persona-doc {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--line);
+  padding: 4px 11px;
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--black);
+  white-space: nowrap;
+  transition: background .2s ease, color .2s ease, border-color .2s ease;
 }
-.stat:nth-child(2) b { color: var(--orange); }
-.stat:nth-child(3) b { color: var(--green); }
-.stat span { font-size: 10px; text-transform: uppercase; letter-spacing: 0.16em; color: var(--dark); }
+.persona-doc[hidden] { display: none; }
+/* in editor è sempre visibile, anche quando è ancora vuoto */
+body.editing .persona-doc[hidden] { display: inline-flex; opacity: .5; }
+body.editing .persone { gap: 56px; }
+.add-persona {
+  border: 2px dashed var(--line);
+  background: var(--off-white);
+  color: var(--dark);
+  padding: 12px 18px;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
 
 /* ============ NEWS ============ */
 .grid-news {
@@ -737,6 +774,25 @@ body.editing .gal-cap:empty::before {
   line-height: 1.3;
   color: var(--black);
 }
+
+/* tasto sotto il quadrato (es. "Guarda il sito"): compare solo se gli si
+   dà una destinazione, così dove non serve non si vede */
+.sec-btn {
+  display: inline-flex;
+  align-items: center;
+  margin-top: 12px;
+  border: 1px solid var(--black);
+  padding: 9px 18px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--black);
+  cursor: pointer;
+  transition: background .2s ease, color .2s ease;
+}
+.sec-btn[hidden] { display: none; }
+body.editing .sec-btn[hidden] { display: inline-flex; opacity: .5; }
 .add-sec {
   border: 2px dashed var(--line);
   background: var(--off-white);
@@ -1243,6 +1299,9 @@ body.editing .trasparenza-row .card-tools { top: auto; bottom: 10px; }
   .add-gal:hover { border-color: var(--orange-red); color: var(--orange-red); }
 
   .sec-card:hover .sec-ph img { transform: scale(1.04); }
+  .sec-btn:hover { background: var(--black); color: var(--white); }
+  .persona-doc:hover { background: var(--black); border-color: var(--black); color: var(--white); }
+  .add-persona:hover { border-color: var(--orange-red); color: var(--orange-red); }
   .add-sec:hover { border-color: var(--orange-red); color: var(--orange-red); }
   .trasparenza-pdf:hover { background: var(--black); border-color: var(--black); color: var(--white); }
 
@@ -1499,10 +1558,34 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <h2 data-id="chisiamo-title">testo qui</h2>
           <p style="margin-top:20px;" data-id="chisiamo-p1">testo qui</p>
           <p style="margin-top:14px;" data-id="chisiamo-p2">testo qui</p>
-          <div class="stat-row">
-            <div class="stat"><b data-id="stat1-num">testo qui</b><span data-id="stat1-lab">Teatri in rete</span></div>
-            <div class="stat"><b data-id="stat2-num">testo qui</b><span data-id="stat2-lab">Spettacoli l'anno</span></div>
-            <div class="stat"><b data-id="stat3-num">testo qui</b><span data-id="stat3-lab">Spettatori</span></div>
+          <div class="gruppi">
+            <div class="gruppo">
+              <h3 class="gruppo-titolo" data-id="stat1-num">testo qui</h3>
+              <div class="persone" data-list="persone1" data-kind="persona">
+                <div class="persona">
+                  <span class="persona-nome" data-f="nome">testo qui</span>
+                  <a class="persona-doc" data-f="pdf" href="" hidden><span data-f="etichetta">c.v</span></a>
+                </div>
+              </div>
+            </div>
+            <div class="gruppo">
+              <h3 class="gruppo-titolo" data-id="stat2-num">testo qui</h3>
+              <div class="persone" data-list="persone2" data-kind="persona">
+                <div class="persona">
+                  <span class="persona-nome" data-f="nome">testo qui</span>
+                  <a class="persona-doc" data-f="pdf" href="" hidden><span data-f="etichetta">c.v</span></a>
+                </div>
+              </div>
+            </div>
+            <div class="gruppo">
+              <h3 class="gruppo-titolo" data-id="stat3-num">testo qui</h3>
+              <div class="persone" data-list="persone3" data-kind="persona">
+                <div class="persona">
+                  <span class="persona-nome" data-f="nome">testo qui</span>
+                  <a class="persona-doc" data-f="pdf" href="" hidden><span data-f="etichetta">c.v</span></a>
+                </div>
+              </div>
+            </div>
           </div>
           <div style="margin-top:34px;">
             <a href="#" class="btn btn-blue" data-id="chisiamo-btn">Scopri il progetto</a>
@@ -1569,7 +1652,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <div class="sec-ph"><img src="https://images.unsplash.com/photo-1503095396549-807759245b35?q=80&w=900&auto=format&fit=crop" alt="" data-f="img"></div>
           <div class="sec-caption" data-f="caption">testo qui</div>
           <div class="poster-sub" data-f="sub">testo qui</div>
-          <div class="card-detail" hidden>
+          <span class="sec-btn" data-f="btn" data-url="" hidden><span data-f="etichetta">Guarda il sito</span></span>
+                    <div class="card-detail" hidden>
             <div class="detail-slider" data-slides><div class="dslide active" style="background-image:url('https://images.unsplash.com/photo-1503095396549-807759245b35?q=80&w=900&auto=format&fit=crop')"></div></div>
             <span class="eyebrow" data-f="d-eyebrow">testo qui</span>
             <h2 data-f="d-title">testo qui</h2>
@@ -1584,7 +1668,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <div class="sec-ph"><img src="https://images.unsplash.com/photo-1514306191717-452ec28c7814?q=80&w=900&auto=format&fit=crop" alt="" data-f="img"></div>
           <div class="sec-caption" data-f="caption">testo qui</div>
           <div class="poster-sub" data-f="sub">testo qui</div>
-          <div class="card-detail" hidden>
+          <span class="sec-btn" data-f="btn" data-url="" hidden><span data-f="etichetta">Guarda il sito</span></span>
+                    <div class="card-detail" hidden>
             <div class="detail-slider" data-slides><div class="dslide active" style="background-image:url('https://images.unsplash.com/photo-1514306191717-452ec28c7814?q=80&w=900&auto=format&fit=crop')"></div></div>
             <span class="eyebrow" data-f="d-eyebrow">testo qui</span>
             <h2 data-f="d-title">testo qui</h2>
@@ -1599,7 +1684,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <div class="sec-ph"><img src="https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?q=80&w=900&auto=format&fit=crop" alt="" data-f="img"></div>
           <div class="sec-caption" data-f="caption">testo qui</div>
           <div class="poster-sub" data-f="sub">testo qui</div>
-          <div class="card-detail" hidden>
+          <span class="sec-btn" data-f="btn" data-url="" hidden><span data-f="etichetta">Guarda il sito</span></span>
+                    <div class="card-detail" hidden>
             <div class="detail-slider" data-slides><div class="dslide active" style="background-image:url('https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?q=80&w=900&auto=format&fit=crop')"></div></div>
             <span class="eyebrow" data-f="d-eyebrow">testo qui</span>
             <h2 data-f="d-title">testo qui</h2>
@@ -1627,7 +1713,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <div class="sec-ph"><img src="https://images.unsplash.com/photo-1503095396549-807759245b35?q=80&w=900&auto=format&fit=crop" alt="" data-f="img"></div>
           <div class="sec-caption" data-f="caption">testo qui</div>
           <div class="poster-sub" data-f="sub">testo qui</div>
-          <div class="card-detail" hidden>
+          <span class="sec-btn" data-f="btn" data-url="" hidden><span data-f="etichetta">Guarda il sito</span></span>
+                    <div class="card-detail" hidden>
             <div class="detail-slider" data-slides><div class="dslide active" style="background-image:url('https://images.unsplash.com/photo-1503095396549-807759245b35?q=80&w=900&auto=format&fit=crop')"></div></div>
             <span class="eyebrow" data-f="d-eyebrow">testo qui</span>
             <h2 data-f="d-title">testo qui</h2>
@@ -1642,7 +1729,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <div class="sec-ph"><img src="https://images.unsplash.com/photo-1514306191717-452ec28c7814?q=80&w=900&auto=format&fit=crop" alt="" data-f="img"></div>
           <div class="sec-caption" data-f="caption">testo qui</div>
           <div class="poster-sub" data-f="sub">testo qui</div>
-          <div class="card-detail" hidden>
+          <span class="sec-btn" data-f="btn" data-url="" hidden><span data-f="etichetta">Guarda il sito</span></span>
+                    <div class="card-detail" hidden>
             <div class="detail-slider" data-slides><div class="dslide active" style="background-image:url('https://images.unsplash.com/photo-1514306191717-452ec28c7814?q=80&w=900&auto=format&fit=crop')"></div></div>
             <span class="eyebrow" data-f="d-eyebrow">testo qui</span>
             <h2 data-f="d-title">testo qui</h2>
@@ -1657,7 +1745,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <div class="sec-ph"><img src="https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?q=80&w=900&auto=format&fit=crop" alt="" data-f="img"></div>
           <div class="sec-caption" data-f="caption">testo qui</div>
           <div class="poster-sub" data-f="sub">testo qui</div>
-          <div class="card-detail" hidden>
+          <span class="sec-btn" data-f="btn" data-url="" hidden><span data-f="etichetta">Guarda il sito</span></span>
+                    <div class="card-detail" hidden>
             <div class="detail-slider" data-slides><div class="dslide active" style="background-image:url('https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?q=80&w=900&auto=format&fit=crop')"></div></div>
             <span class="eyebrow" data-f="d-eyebrow">testo qui</span>
             <h2 data-f="d-title">testo qui</h2>
@@ -1685,7 +1774,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <div class="sec-ph"><img src="https://images.unsplash.com/photo-1503095396549-807759245b35?q=80&w=900&auto=format&fit=crop" alt="" data-f="img"></div>
           <div class="sec-caption" data-f="caption">testo qui</div>
           <div class="poster-sub" data-f="sub">testo qui</div>
-          <div class="card-detail" hidden>
+          <span class="sec-btn" data-f="btn" data-url="" hidden><span data-f="etichetta">Guarda il sito</span></span>
+                    <div class="card-detail" hidden>
             <div class="detail-slider" data-slides><div class="dslide active" style="background-image:url('https://images.unsplash.com/photo-1503095396549-807759245b35?q=80&w=900&auto=format&fit=crop')"></div></div>
             <span class="eyebrow" data-f="d-eyebrow">testo qui</span>
             <h2 data-f="d-title">testo qui</h2>
@@ -1700,7 +1790,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <div class="sec-ph"><img src="https://images.unsplash.com/photo-1514306191717-452ec28c7814?q=80&w=900&auto=format&fit=crop" alt="" data-f="img"></div>
           <div class="sec-caption" data-f="caption">testo qui</div>
           <div class="poster-sub" data-f="sub">testo qui</div>
-          <div class="card-detail" hidden>
+          <span class="sec-btn" data-f="btn" data-url="" hidden><span data-f="etichetta">Guarda il sito</span></span>
+                    <div class="card-detail" hidden>
             <div class="detail-slider" data-slides><div class="dslide active" style="background-image:url('https://images.unsplash.com/photo-1514306191717-452ec28c7814?q=80&w=900&auto=format&fit=crop')"></div></div>
             <span class="eyebrow" data-f="d-eyebrow">testo qui</span>
             <h2 data-f="d-title">testo qui</h2>
@@ -1715,7 +1806,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <div class="sec-ph"><img src="https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?q=80&w=900&auto=format&fit=crop" alt="" data-f="img"></div>
           <div class="sec-caption" data-f="caption">testo qui</div>
           <div class="poster-sub" data-f="sub">testo qui</div>
-          <div class="card-detail" hidden>
+          <span class="sec-btn" data-f="btn" data-url="" hidden><span data-f="etichetta">Guarda il sito</span></span>
+                    <div class="card-detail" hidden>
             <div class="detail-slider" data-slides><div class="dslide active" style="background-image:url('https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?q=80&w=900&auto=format&fit=crop')"></div></div>
             <span class="eyebrow" data-f="d-eyebrow">testo qui</span>
             <h2 data-f="d-title">testo qui</h2>
@@ -1743,7 +1835,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <div class="sec-ph"><img src="https://images.unsplash.com/photo-1503095396549-807759245b35?q=80&w=900&auto=format&fit=crop" alt="" data-f="img"></div>
           <div class="sec-caption" data-f="caption">testo qui</div>
           <div class="poster-sub" data-f="sub">testo qui</div>
-          <div class="card-detail" hidden>
+          <span class="sec-btn" data-f="btn" data-url="" hidden><span data-f="etichetta">Guarda il sito</span></span>
+                    <div class="card-detail" hidden>
             <div class="detail-slider" data-slides><div class="dslide active" style="background-image:url('https://images.unsplash.com/photo-1503095396549-807759245b35?q=80&w=900&auto=format&fit=crop')"></div></div>
             <span class="eyebrow" data-f="d-eyebrow">testo qui</span>
             <h2 data-f="d-title">testo qui</h2>
@@ -1758,7 +1851,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <div class="sec-ph"><img src="https://images.unsplash.com/photo-1514306191717-452ec28c7814?q=80&w=900&auto=format&fit=crop" alt="" data-f="img"></div>
           <div class="sec-caption" data-f="caption">testo qui</div>
           <div class="poster-sub" data-f="sub">testo qui</div>
-          <div class="card-detail" hidden>
+          <span class="sec-btn" data-f="btn" data-url="" hidden><span data-f="etichetta">Guarda il sito</span></span>
+                    <div class="card-detail" hidden>
             <div class="detail-slider" data-slides><div class="dslide active" style="background-image:url('https://images.unsplash.com/photo-1514306191717-452ec28c7814?q=80&w=900&auto=format&fit=crop')"></div></div>
             <span class="eyebrow" data-f="d-eyebrow">testo qui</span>
             <h2 data-f="d-title">testo qui</h2>
@@ -1773,7 +1867,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <div class="sec-ph"><img src="https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?q=80&w=900&auto=format&fit=crop" alt="" data-f="img"></div>
           <div class="sec-caption" data-f="caption">testo qui</div>
           <div class="poster-sub" data-f="sub">testo qui</div>
-          <div class="card-detail" hidden>
+          <span class="sec-btn" data-f="btn" data-url="" hidden><span data-f="etichetta">Guarda il sito</span></span>
+                    <div class="card-detail" hidden>
             <div class="detail-slider" data-slides><div class="dslide active" style="background-image:url('https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?q=80&w=900&auto=format&fit=crop')"></div></div>
             <span class="eyebrow" data-f="d-eyebrow">testo qui</span>
             <h2 data-f="d-title">testo qui</h2>
@@ -1890,7 +1985,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <div class="sec-ph"><img src="https://images.unsplash.com/photo-1503095396549-807759245b35?q=80&w=900&auto=format&fit=crop" alt="" data-f="img"></div>
           <div class="sec-caption" data-f="caption">testo qui</div>
           <div class="poster-sub" data-f="sub">testo qui</div>
-          <div class="card-detail" hidden>
+          <span class="sec-btn" data-f="btn" data-url="" hidden><span data-f="etichetta">Guarda il sito</span></span>
+                    <div class="card-detail" hidden>
             <div class="detail-slider" data-slides><div class="dslide active" style="background-image:url('https://images.unsplash.com/photo-1503095396549-807759245b35?q=80&w=900&auto=format&fit=crop')"></div></div>
             <span class="eyebrow" data-f="d-eyebrow">testo qui</span>
             <h2 data-f="d-title">testo qui</h2>
@@ -1905,7 +2001,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <div class="sec-ph"><img src="https://images.unsplash.com/photo-1514306191717-452ec28c7814?q=80&w=900&auto=format&fit=crop" alt="" data-f="img"></div>
           <div class="sec-caption" data-f="caption">testo qui</div>
           <div class="poster-sub" data-f="sub">testo qui</div>
-          <div class="card-detail" hidden>
+          <span class="sec-btn" data-f="btn" data-url="" hidden><span data-f="etichetta">Guarda il sito</span></span>
+                    <div class="card-detail" hidden>
             <div class="detail-slider" data-slides><div class="dslide active" style="background-image:url('https://images.unsplash.com/photo-1514306191717-452ec28c7814?q=80&w=900&auto=format&fit=crop')"></div></div>
             <span class="eyebrow" data-f="d-eyebrow">testo qui</span>
             <h2 data-f="d-title">testo qui</h2>
@@ -1920,7 +2017,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <div class="sec-ph"><img src="https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?q=80&w=900&auto=format&fit=crop" alt="" data-f="img"></div>
           <div class="sec-caption" data-f="caption">testo qui</div>
           <div class="poster-sub" data-f="sub">testo qui</div>
-          <div class="card-detail" hidden>
+          <span class="sec-btn" data-f="btn" data-url="" hidden><span data-f="etichetta">Guarda il sito</span></span>
+                    <div class="card-detail" hidden>
             <div class="detail-slider" data-slides><div class="dslide active" style="background-image:url('https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?q=80&w=900&auto=format&fit=crop')"></div></div>
             <span class="eyebrow" data-f="d-eyebrow">testo qui</span>
             <h2 data-f="d-title">testo qui</h2>
@@ -2089,7 +2187,7 @@ var CLOUDINARY_UPLOAD_PRESET = "md5s3dgi";
      data-id  -> campo singolo (titolo, paragrafo, logo...)
      data-f   -> campo dentro un elenco (quadrati, poster, video...)
    ===================================================== */
-var SITE_VERSION = '37';   /* si vede nella barra dell'editor: serve a capire quale codice è online */
+var SITE_VERSION = '38';   /* si vede nella barra dell'editor: serve a capire quale codice è online */
 var SCHEMA = 1;
 var LEGACY_DOC = false;   /* true se nel database c'è ancora il vecchio salvataggio */
 
@@ -2115,16 +2213,17 @@ function ensureSignedIn () {
 var FIELDS = {
   card:   ['img', 'd-img', 'd-eyebrow', 'd-title', 'd-p1', 'd-p2'],
   poster: ['img', 'caption', 'sub', 'd-img', 'd-eyebrow', 'd-title', 'd-p1', 'd-p2'],
-  sec:    ['img', 'caption', 'sub', 'd-img', 'd-eyebrow', 'd-title', 'd-p1', 'd-p2'],
+  sec:    ['img', 'caption', 'sub', 'btn', 'etichetta', 'd-img', 'd-eyebrow', 'd-title', 'd-p1', 'd-p2'],
   video:  ['img', 'caption', 'sub'],
   ticket: ['label'],
+  persona: ['nome', 'etichetta', 'pdf'],
   news:   ['img', 'meta', 'title', 'text'],
   row:    ['voce', 'dato', 'pdf']
 };
 var ITEM_SEL = {
   card: '.show-card', poster: '.poster-item', sec: '.sec-card',
   video: '.video-item', news: '.news-card', row: '.trasparenza-row',
-  ticket: '.tickets-box'
+  ticket: '.tickets-box', persona: '.persona'
 };
 var CON_LINK = { card: 1, poster: 1, sec: 1, video: 1, ticket: 1 };
 
@@ -2221,6 +2320,7 @@ function collectItem (el, fields) {
     if (!n) return;
     if (n.tagName === 'IMG') o[f] = n.getAttribute('src') || '';
     else if (f === 'pdf') o[f] = n.getAttribute('href') || '';
+    else if (f === 'btn') o[f] = n.getAttribute('data-url') || '';
     else o[f] = htmlPulito(n);
   });
 
@@ -2365,12 +2465,31 @@ function renderPoster (p) {
     detailHtml(p) + '</a>';
 }
 
+/* il tasto sotto il quadrato: non e' un link dentro un link (sarebbe
+   sbagliato), tiene l'indirizzo in un attributo e ci pensa il copione */
+function secBtnHtml (s) {
+  var u = safeUrl(s.btn);
+  var et = safeHtml(s.etichetta) || 'Guarda il sito';
+  return '<span class="sec-btn" data-f="btn" data-url="' + esc(u) + '"' + (u ? '' : ' hidden') + '>' +
+    '<span data-f="etichetta">' + et + '</span></span>';
+}
+
 function renderSec (s) {
   return '<a class="sec-card" ' + linkAttrs(s.href) + '>' +
     '<div class="sec-ph"><img src="' + esc(safeUrl(s.img)) + '" alt="" data-f="img"></div>' +
     '<div class="sec-caption" data-f="caption">' + safeHtml(s.caption) + '</div>' +
     '<div class="poster-sub" data-f="sub">' + safeHtml(s.sub) + '</div>' +
-    detailHtml(s) + '</a>';
+    secBtnHtml(s) + detailHtml(s) + '</a>';
+}
+
+function renderPersona (p) {
+  var u = safeUrl(p.pdf);
+  var et = safeHtml(p.etichetta) || 'c.v';
+  return '<div class="persona">' +
+    '<span class="persona-nome" data-f="nome">' + safeHtml(p.nome) + '</span>' +
+    '<a class="persona-doc" data-f="pdf" href="' + esc(u) + '"' +
+      (u ? ' target="_blank" rel="noopener noreferrer"' : ' hidden') + '>' +
+    '<span data-f="etichetta">' + et + '</span></a></div>';
 }
 
 function renderVideo (v) {
@@ -2410,10 +2529,31 @@ function renderRow (r) {
 }
 
 var RENDERERS = { card: renderCard, poster: renderPoster, sec: renderSec, video: renderVideo,
-  news: renderNews, row: renderRow, ticket: renderTicket };
+  news: renderNews, row: renderRow, ticket: renderTicket, persona: renderPersona };
+
+/* I nomi erano scritti tutti in un unico testo, separati dagli a capo.
+   La prima volta vengono trasformati in persone, ciascuna con il proprio
+   spazio per il curriculum: nessuno deve riscriverli a mano. */
+function migraPersone (data) {
+  [1, 2, 3].forEach(function (n) {
+    var key = 'persone' + n;
+    if (data[key] && data[key].length) return;
+    var v = (data.fields || {})['stat' + n + '-lab'];
+    if (!v || !v.t) return;
+    var righe = String(v.t).split(/<br\s*\/?>/i).map(function (r) {
+      return r.replace(/<[^>]*>/g, '').replace(/&nbsp;/gi, ' ').trim();
+    }).filter(function (r) { return r && r !== 'testo qui'; });
+    if (righe.length) {
+      data[key] = righe.map(function (nome) {
+        return { nome: nome, etichetta: 'c.v', pdf: '' };
+      });
+    }
+  });
+}
 
 function applyContent (data) {
   if (!data) return;
+  migraPersone(data);
   var fields = data.fields || {};
 
   document.querySelectorAll('[data-id]').forEach(function (el) {
@@ -2683,6 +2823,15 @@ function startApp () {
   /* click su un quadrante: link esterno naviga, altrimenti apre il contenuto interno */
   document.addEventListener('click', function (e) {
     if (document.body.classList.contains('editing')) return;
+
+    var tasto = e.target.closest('.sec-btn');
+    if (tasto) {
+      e.preventDefault();
+      var dove = tasto.getAttribute('data-url');
+      if (dove) window.open(dove, '_blank', 'noopener');
+      return;
+    }
+
     var card = e.target.closest('.show-card, .poster-item, .sec-card');
     if (!card) return;
     var href = card.getAttribute('href') || '';
@@ -2778,7 +2927,8 @@ function startApp () {
      EDITOR
      ===================================================== */
   var ACCESS_CODE = 'farna2317';
-  var EDITABLE = '[data-id]:not(img):not(.slide), [data-f]:not(img), [data-g]:not(img), [data-p]:not(img), [data-t]';
+  var EDITABLE = '[data-id]:not(img):not(.slide), [data-f]:not(img):not([data-f="pdf"]):not([data-f="btn"]),' +
+    ' [data-g]:not(img), [data-p]:not(img), [data-t]';
   var PLACEHOLDER_IMG = 'https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?q=80&w=900&auto=format&fit=crop';
 
   var modal = document.getElementById('editModal');
@@ -2986,6 +3136,18 @@ function startApp () {
       }
     }));
 
+    var bottone = card.querySelector('.sec-btn');
+    if (bottone) {
+      tools.appendChild(makeTool('Tasto', function () {
+        var url = window.prompt('Indirizzo del tasto sotto il quadrato\n(lascia vuoto per toglierlo):',
+          bottone.getAttribute('data-url') || '');
+        if (url === null) return;
+        var u = safeUrl(url);
+        bottone.setAttribute('data-url', u);
+        bottone.hidden = !u;
+      }));
+    }
+
     tools.appendChild(makeTool('Elimina', function () {
       if (window.confirm('Eliminare questo elemento?')) card.remove();
     }));
@@ -3023,7 +3185,8 @@ function startApp () {
     'd-title': 'testo qui', 'd-p1': 'testo qui', 'd-p2': 'testo qui',
     caption: 'testo qui', sub: 'testo qui', meta: 'testo qui',
     title: 'testo qui', text: 'testo qui', voce: 'testo qui', dato: 'testo qui',
-    pdf: '', href: '#', label: 'Acquista i biglietti'
+    pdf: '', href: '#', label: 'Acquista i biglietti',
+    nome: 'testo qui', etichetta: '', btn: ''
   };
 
   var AGGIUNGI = {
@@ -3033,7 +3196,8 @@ function startApp () {
     video:  { cls: 'add-video',  testo: '+ Aggiungi video',     decora: decorateVideo },
     news:   { cls: 'add-news',   testo: '+ Aggiungi notizia',   decora: decorateSimple },
     row:    { cls: 'add-row',    testo: '+ Aggiungi riga',      decora: decorateRow },
-    ticket: { cls: 'add-ticket', testo: '+ Aggiungi biglietteria', decora: decorateTicket }
+    ticket: { cls: 'add-ticket', testo: '+ Aggiungi biglietteria', decora: decorateTicket },
+    persona: { cls: 'add-persona', testo: '+ Aggiungi persona', decora: decoratePersona }
   };
 
   /* un pulsante "aggiungi" per ogni griglia dichiarata nella pagina */
@@ -3177,6 +3341,34 @@ function startApp () {
       });
       box.appendChild(btn);
     });
+  }
+
+  /* accanto al nome: documento da allegare, indirizzo, rimozione */
+  function decoratePersona (item) {
+    if (item.querySelector('.card-tools')) return;
+    var doc = item.querySelector('[data-f="pdf"]');
+    var tools = document.createElement('div');
+    tools.className = 'card-tools edit-only-wrap';
+
+    tools.appendChild(makeTool('Allega PDF', function () { pickPdf(item); }));
+
+    tools.appendChild(makeTool('Link', function () {
+      var url = window.prompt('Indirizzo a cui porta il quadratino:', doc.getAttribute('href') || '');
+      if (url === null) return;
+      setLink(doc, url);
+      doc.hidden = !safeUrl(url);
+    }));
+
+    tools.appendChild(makeTool('Togli', function () {
+      doc.setAttribute('href', '');
+      doc.hidden = true;
+    }));
+
+    tools.appendChild(makeTool('Elimina', function () {
+      if (window.confirm('Eliminare questa persona?')) item.remove();
+    }));
+
+    item.appendChild(tools);
   }
 
   /* un pulsante della biglietteria: nome scrivibile, indirizzo ed eliminazione */
@@ -3371,6 +3563,7 @@ function startApp () {
     document.querySelectorAll('.sec-card').forEach(decorateCard);
     document.querySelectorAll('.news-card').forEach(decorateSimple);
     document.querySelectorAll('.tickets-box').forEach(decorateTicket);
+    document.querySelectorAll('.persona').forEach(decoratePersona);
     document.querySelectorAll('.trasparenza-row').forEach(decorateRow);
     document.querySelectorAll('.gal-item').forEach(decorateGal);
     document.querySelectorAll('.foto-item').forEach(decorateFoto);

@@ -570,7 +570,44 @@ body.editing .gal-cap:empty::before {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 70px;
-  align-items: center;
+  align-items: start;     /* la fotografia resta in alto, non al centro */
+}
+
+/* ---- colonna Contatti, sotto la fotografia ---- */
+.contatti { margin-top: 36px; }
+.contatti-titolo {
+  font-size: 19px;
+  font-weight: 500;
+  color: var(--orange-red);
+  margin-bottom: 16px;
+}
+.elenco-contatti { display: flex; flex-direction: column; gap: 20px; }
+.contatto {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.contatto-nome { font-size: 15px; font-weight: 500; color: var(--black); }
+.contatto-mail, .contatto-tel { font-size: 14px; color: var(--dark); }
+.contatto-mail:empty, .contatto-tel:empty { display: none; }
+
+/* in editor le righe vuote restano visibili, altrimenti non si potrebbe
+   cliccarci dentro per scrivere */
+body.editing .contatto-mail,
+body.editing .contatto-tel { display: block; min-height: 21px; }
+body.editing .contatto-mail:empty::before { content: 'indirizzo email'; color: #a39c93; }
+body.editing .contatto-tel:empty::before { content: 'telefono'; color: #a39c93; }
+body.editing .elenco-contatti { gap: 62px; }
+.add-contatto {
+  border: 2px dashed var(--line);
+  background: var(--off-white);
+  color: var(--dark);
+  padding: 12px 18px;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
 }
 .split .ph-block { height: 480px; overflow: hidden; }
 .split .ph-block img { width: 100%; height: 100%; object-fit: cover; }
@@ -1302,6 +1339,8 @@ body.editing .trasparenza-row .card-tools { top: auto; bottom: 10px; }
   .sec-btn:hover { background: var(--black); color: var(--white); }
   .persona-doc:hover { background: var(--black); border-color: var(--black); color: var(--white); }
   .add-persona:hover { border-color: var(--orange-red); color: var(--orange-red); }
+  .add-contatto:hover { border-color: var(--orange-red); color: var(--orange-red); }
+  .contatto-mail:hover, .contatto-tel:hover { color: var(--orange-red); }
   .add-sec:hover { border-color: var(--orange-red); color: var(--orange-red); }
   .trasparenza-pdf:hover { background: var(--black); border-color: var(--black); color: var(--white); }
 
@@ -1550,8 +1589,20 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div class="wrap">
       <a href="#" class="back-link" data-nav="home">&larr; Home</a>
       <div class="split reveal">
-        <div class="ph-block">
-          <img src="https://images.unsplash.com/photo-1503095396549-807759245b35?q=80&w=1000&auto=format&fit=crop" alt="Sala teatrale" data-id="chisiamo-img">
+        <div>
+          <div class="ph-block">
+            <img src="https://images.unsplash.com/photo-1503095396549-807759245b35?q=80&w=1000&auto=format&fit=crop" alt="Sala teatrale" data-id="chisiamo-img">
+          </div>
+          <div class="contatti">
+            <h3 class="contatti-titolo" data-id="contatti-titolo">Contatti</h3>
+            <div class="elenco-contatti" data-list="contatti" data-kind="contatto">
+              <div class="contatto">
+                <span class="contatto-nome" data-f="nome">testo qui</span>
+                <a class="contatto-mail" data-f="mail"></a>
+                <a class="contatto-tel" data-f="tel"></a>
+              </div>
+            </div>
+          </div>
         </div>
         <div>
           <span class="eyebrow" data-id="chisiamo-eyebrow">Chi siamo</span>
@@ -2187,7 +2238,7 @@ var CLOUDINARY_UPLOAD_PRESET = "md5s3dgi";
      data-id  -> campo singolo (titolo, paragrafo, logo...)
      data-f   -> campo dentro un elenco (quadrati, poster, video...)
    ===================================================== */
-var SITE_VERSION = '38';   /* si vede nella barra dell'editor: serve a capire quale codice è online */
+var SITE_VERSION = '39';   /* si vede nella barra dell'editor: serve a capire quale codice è online */
 var SCHEMA = 1;
 var LEGACY_DOC = false;   /* true se nel database c'è ancora il vecchio salvataggio */
 
@@ -2217,13 +2268,14 @@ var FIELDS = {
   video:  ['img', 'caption', 'sub'],
   ticket: ['label'],
   persona: ['nome', 'etichetta', 'pdf'],
+  contatto: ['nome', 'mail', 'tel'],
   news:   ['img', 'meta', 'title', 'text'],
   row:    ['voce', 'dato', 'pdf']
 };
 var ITEM_SEL = {
   card: '.show-card', poster: '.poster-item', sec: '.sec-card',
   video: '.video-item', news: '.news-card', row: '.trasparenza-row',
-  ticket: '.tickets-box', persona: '.persona'
+  ticket: '.tickets-box', persona: '.persona', contatto: '.contatto'
 };
 var CON_LINK = { card: 1, poster: 1, sec: 1, video: 1, ticket: 1 };
 
@@ -2492,6 +2544,24 @@ function renderPersona (p) {
     '<span data-f="etichetta">' + et + '</span></a></div>';
 }
 
+/* un contatto: nome o funzione, email e telefono.
+   L'indirizzo scritto diventa anche il collegamento per scrivere o chiamare. */
+function soloTesto (v) {
+  return String(v == null ? '' : v).replace(/<[^>]*>/g, '').replace(/&nbsp;/gi, ' ').trim();
+}
+
+function renderContatto (c) {
+  var mail = soloTesto(c.mail);
+  var tel = soloTesto(c.tel);
+  return '<div class="contatto">' +
+    '<span class="contatto-nome" data-f="nome">' + safeHtml(c.nome) + '</span>' +
+    '<a class="contatto-mail" data-f="mail"' +
+      (mail ? ' href="mailto:' + esc(mail) + '"' : '') + '>' + safeHtml(c.mail) + '</a>' +
+    '<a class="contatto-tel" data-f="tel"' +
+      (tel ? ' href="tel:' + esc(tel.replace(/[^0-9+]/g, '')) + '"' : '') + '>' + safeHtml(c.tel) + '</a>' +
+    '</div>';
+}
+
 function renderVideo (v) {
   return '<a class="video-item" ' + linkAttrs(v.href) + '>' +
     '<div class="video-ph"><img src="' + esc(safeUrl(v.img)) + '" alt="" data-f="img">' +
@@ -2529,7 +2599,8 @@ function renderRow (r) {
 }
 
 var RENDERERS = { card: renderCard, poster: renderPoster, sec: renderSec, video: renderVideo,
-  news: renderNews, row: renderRow, ticket: renderTicket, persona: renderPersona };
+  news: renderNews, row: renderRow, ticket: renderTicket, persona: renderPersona,
+  contatto: renderContatto };
 
 /* I nomi erano scritti tutti in un unico testo, separati dagli a capo.
    La prima volta vengono trasformati in persone, ciascuna con il proprio
@@ -2961,29 +3032,37 @@ function startApp () {
   }
 
   var pdfInput = document.getElementById('editorPdfInput');
-  var pendingRow = null;
+  var pendingPdf = null;
 
-  function pickPdf (row) {
-    pendingRow = row;
+  /* chi chiama dice che cosa fare del documento una volta caricato:
+     così lo stesso meccanismo serve le righe della trasparenza, i
+     curriculum delle persone e i tasti sotto i quadrati */
+  function pickPdf (quandoPronto) {
+    pendingPdf = quandoPronto;
     pdfInput.value = '';
     pdfInput.click();
   }
 
+  function allegaA (contenitore) {
+    return function (url) {
+      var a = contenitore.querySelector('[data-f="pdf"]');
+      if (!a) return;
+      a.setAttribute('href', url);
+      a.setAttribute('target', '_blank');
+      a.setAttribute('rel', 'noopener noreferrer');
+      a.hidden = false;
+    };
+  }
+
   pdfInput.addEventListener('change', function () {
     var file = pdfInput.files && pdfInput.files[0];
-    if (!file || !pendingRow) return;
-    var riga = pendingRow;
-    pendingRow = null;
+    if (!file || !pendingPdf) return;
+    var fatto = pendingPdf;
+    pendingPdf = null;
 
     setEditorBusy('Caricamento PDF…');
     uploadFile(file, 'auto').then(function (url) {
-      var a = riga.querySelector('[data-f="pdf"]');
-      if (a) {
-        a.setAttribute('href', url);
-        a.setAttribute('target', '_blank');
-        a.setAttribute('rel', 'noopener noreferrer');
-        a.hidden = false;
-      }
+      fatto(url);
       setEditorBusy('');
     }).catch(function () {
       setEditorBusy('');
@@ -3138,13 +3217,20 @@ function startApp () {
 
     var bottone = card.querySelector('.sec-btn');
     if (bottone) {
-      tools.appendChild(makeTool('Tasto', function () {
+      tools.appendChild(makeTool('Tasto: link', function () {
         var url = window.prompt('Indirizzo del tasto sotto il quadrato\n(lascia vuoto per toglierlo):',
           bottone.getAttribute('data-url') || '');
         if (url === null) return;
         var u = safeUrl(url);
         bottone.setAttribute('data-url', u);
         bottone.hidden = !u;
+      }));
+
+      tools.appendChild(makeTool('Tasto: PDF', function () {
+        pickPdf(function (url) {
+          bottone.setAttribute('data-url', url);
+          bottone.hidden = false;
+        });
       }));
     }
 
@@ -3197,7 +3283,8 @@ function startApp () {
     news:   { cls: 'add-news',   testo: '+ Aggiungi notizia',   decora: decorateSimple },
     row:    { cls: 'add-row',    testo: '+ Aggiungi riga',      decora: decorateRow },
     ticket: { cls: 'add-ticket', testo: '+ Aggiungi biglietteria', decora: decorateTicket },
-    persona: { cls: 'add-persona', testo: '+ Aggiungi persona', decora: decoratePersona }
+    persona: { cls: 'add-persona', testo: '+ Aggiungi persona', decora: decoratePersona },
+    contatto: { cls: 'add-contatto', testo: '+ Aggiungi contatto', decora: decorateSimple }
   };
 
   /* un pulsante "aggiungi" per ogni griglia dichiarata nella pagina */
@@ -3350,7 +3437,7 @@ function startApp () {
     var tools = document.createElement('div');
     tools.className = 'card-tools edit-only-wrap';
 
-    tools.appendChild(makeTool('Allega PDF', function () { pickPdf(item); }));
+    tools.appendChild(makeTool('Allega PDF', function () { pickPdf(allegaA(item)); }));
 
     tools.appendChild(makeTool('Link', function () {
       var url = window.prompt('Indirizzo a cui porta il quadratino:', doc.getAttribute('href') || '');
@@ -3461,7 +3548,7 @@ function startApp () {
     var tools = document.createElement('div');
     tools.className = 'card-tools edit-only-wrap';
 
-    tools.appendChild(makeTool('Allega PDF', function () { pickPdf(item); }));
+    tools.appendChild(makeTool('Allega PDF', function () { pickPdf(allegaA(item)); }));
 
     tools.appendChild(makeTool('Togli PDF', function () {
       var a = item.querySelector('[data-f="pdf"]');
@@ -3564,6 +3651,7 @@ function startApp () {
     document.querySelectorAll('.news-card').forEach(decorateSimple);
     document.querySelectorAll('.tickets-box').forEach(decorateTicket);
     document.querySelectorAll('.persona').forEach(decoratePersona);
+    document.querySelectorAll('.contatto').forEach(decorateSimple);
     document.querySelectorAll('.trasparenza-row').forEach(decorateRow);
     document.querySelectorAll('.gal-item').forEach(decorateGal);
     document.querySelectorAll('.foto-item').forEach(decorateFoto);

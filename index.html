@@ -400,6 +400,8 @@ section.alt { background: var(--off-white); }
   background: var(--off-white);
   margin-bottom: 44px;
 }
+.detail-slider:empty { display: none; }   /* nessuna immagine: nessuna fascia vuota */
+
 /* quando è in cima alla pagina occupa tutta la larghezza e tocca la barra */
 #page-dettaglio { padding-top: 0; }
 #detailHero:empty { display: none; }
@@ -626,8 +628,15 @@ body.editing .elenco-contatti { gap: 62px; }
   color: var(--blue);
   margin-bottom: 14px;
 }
-.gruppo:nth-child(2) .gruppo-titolo { color: var(--orange); }
-.gruppo:nth-child(3) .gruppo-titolo { color: var(--green); }
+/* un colore del logo per ogni gruppo, nell'ordine in cui stanno in pagina */
+.gruppi .gruppo:nth-child(2) .gruppo-titolo { color: var(--orange); }
+.gruppi .gruppo:nth-child(3) .gruppo-titolo { color: var(--green); }
+.gruppi .gruppo:nth-child(4) .gruppo-titolo { color: var(--orange-red); }
+.gruppi .gruppo:nth-child(5) .gruppo-titolo { color: var(--blue); }
+
+/* il gruppo nella colonna di sinistra, sotto i contatti */
+.gruppo-extra { margin-top: 38px; padding-top: 30px; border-top: 1px solid var(--line-soft); }
+.gruppo-extra .gruppo-titolo { color: var(--blue); }
 
 .persone { display: flex; flex-direction: column; gap: 10px; }
 .persona {
@@ -1603,6 +1612,25 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
               </div>
             </div>
           </div>
+          <div class="gruppo-extra">
+            <h3 class="gruppo-titolo" data-id="gruppo5-titolo">Consulenze e collaborazioni:</h3>
+            <div class="persone" data-list="persone5" data-kind="persona">
+              <div class="persona">
+                <span class="persona-nome" data-f="nome">testo qui</span>
+                <a class="persona-doc" data-f="pdf" href="" hidden><span data-f="etichetta">c.v</span></a>
+                  <div class="card-detail" hidden>
+                    <div class="detail-slider" data-slides></div>
+                    <span class="eyebrow" data-f="d-eyebrow">testo qui</span>
+                    <h2 data-f="d-title">testo qui</h2>
+                    <p data-f="d-p1">testo qui</p>
+                    <p data-f="d-p2">testo qui</p>
+                    <div class="detail-text" data-text></div>
+                    <div class="detail-gallery" data-gallery></div>
+                    <div class="detail-photos" data-photos></div>
+                  </div>
+              </div>
+            </div>
+          </div>
         </div>
         <div>
           <span class="eyebrow" data-id="chisiamo-eyebrow">Chi siamo</span>
@@ -1616,6 +1644,16 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 <div class="persona">
                   <span class="persona-nome" data-f="nome">testo qui</span>
                   <a class="persona-doc" data-f="pdf" href="" hidden><span data-f="etichetta">c.v</span></a>
+                  <div class="card-detail" hidden>
+                    <div class="detail-slider" data-slides></div>
+                    <span class="eyebrow" data-f="d-eyebrow">testo qui</span>
+                    <h2 data-f="d-title">testo qui</h2>
+                    <p data-f="d-p1">testo qui</p>
+                    <p data-f="d-p2">testo qui</p>
+                    <div class="detail-text" data-text></div>
+                    <div class="detail-gallery" data-gallery></div>
+                    <div class="detail-photos" data-photos></div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -1625,6 +1663,35 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 <div class="persona">
                   <span class="persona-nome" data-f="nome">testo qui</span>
                   <a class="persona-doc" data-f="pdf" href="" hidden><span data-f="etichetta">c.v</span></a>
+                  <div class="card-detail" hidden>
+                    <div class="detail-slider" data-slides></div>
+                    <span class="eyebrow" data-f="d-eyebrow">testo qui</span>
+                    <h2 data-f="d-title">testo qui</h2>
+                    <p data-f="d-p1">testo qui</p>
+                    <p data-f="d-p2">testo qui</p>
+                    <div class="detail-text" data-text></div>
+                    <div class="detail-gallery" data-gallery></div>
+                    <div class="detail-photos" data-photos></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="gruppo">
+              <h3 class="gruppo-titolo" data-id="gruppo4-titolo">Consiglio artistico under 35</h3>
+              <div class="persone" data-list="persone4" data-kind="persona">
+                <div class="persona">
+                  <span class="persona-nome" data-f="nome">testo qui</span>
+                  <a class="persona-doc" data-f="pdf" href="" hidden><span data-f="etichetta">c.v</span></a>
+                  <div class="card-detail" hidden>
+                    <div class="detail-slider" data-slides></div>
+                    <span class="eyebrow" data-f="d-eyebrow">testo qui</span>
+                    <h2 data-f="d-title">testo qui</h2>
+                    <p data-f="d-p1">testo qui</p>
+                    <p data-f="d-p2">testo qui</p>
+                    <div class="detail-text" data-text></div>
+                    <div class="detail-gallery" data-gallery></div>
+                    <div class="detail-photos" data-photos></div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -1634,6 +1701,16 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 <div class="persona">
                   <span class="persona-nome" data-f="nome">testo qui</span>
                   <a class="persona-doc" data-f="pdf" href="" hidden><span data-f="etichetta">c.v</span></a>
+                  <div class="card-detail" hidden>
+                    <div class="detail-slider" data-slides></div>
+                    <span class="eyebrow" data-f="d-eyebrow">testo qui</span>
+                    <h2 data-f="d-title">testo qui</h2>
+                    <p data-f="d-p1">testo qui</p>
+                    <p data-f="d-p2">testo qui</p>
+                    <div class="detail-text" data-text></div>
+                    <div class="detail-gallery" data-gallery></div>
+                    <div class="detail-photos" data-photos></div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -2238,7 +2315,7 @@ var CLOUDINARY_UPLOAD_PRESET = "md5s3dgi";
      data-id  -> campo singolo (titolo, paragrafo, logo...)
      data-f   -> campo dentro un elenco (quadrati, poster, video...)
    ===================================================== */
-var SITE_VERSION = '39';   /* si vede nella barra dell'editor: serve a capire quale codice è online */
+var SITE_VERSION = '41';   /* si vede nella barra dell'editor: serve a capire quale codice è online */
 var SCHEMA = 1;
 var LEGACY_DOC = false;   /* true se nel database c'è ancora il vecchio salvataggio */
 
@@ -2267,7 +2344,7 @@ var FIELDS = {
   sec:    ['img', 'caption', 'sub', 'btn', 'etichetta', 'd-img', 'd-eyebrow', 'd-title', 'd-p1', 'd-p2'],
   video:  ['img', 'caption', 'sub'],
   ticket: ['label'],
-  persona: ['nome', 'etichetta', 'pdf'],
+  persona: ['nome', 'etichetta', 'pdf', 'd-eyebrow', 'd-title', 'd-p1', 'd-p2'],
   contatto: ['nome', 'mail', 'tel'],
   news:   ['img', 'meta', 'title', 'text'],
   row:    ['voce', 'dato', 'pdf']
@@ -2534,14 +2611,31 @@ function renderSec (s) {
     secBtnHtml(s) + detailHtml(s) + '</a>';
 }
 
+/* C'e' qualcosa da leggere nella pagina interna? Serve a decidere se il
+   quadratino accanto al nome va mostrato ai visitatori. */
+function haContenuto (d) {
+  var scritto = ['d-title', 'd-p1', 'd-p2'].some(function (k) {
+    var t = soloTesto(d[k]);
+    return t && t !== 'testo qui';
+  });
+  return scritto ||
+    (d.testi || []).some(function (t) { return soloTesto(t) && soloTesto(t) !== 'testo qui'; }) ||
+    (d.slides || []).length > 0 ||
+    (d.manifesti || []).length > 0 ||
+    (d.foto || []).length > 0;
+}
+
 function renderPersona (p) {
   var u = safeUrl(p.pdf);
   var et = safeHtml(p.etichetta) || 'c.v';
+  var mostra = u || haContenuto(p);
   return '<div class="persona">' +
     '<span class="persona-nome" data-f="nome">' + safeHtml(p.nome) + '</span>' +
     '<a class="persona-doc" data-f="pdf" href="' + esc(u) + '"' +
-      (u ? ' target="_blank" rel="noopener noreferrer"' : ' hidden') + '>' +
-    '<span data-f="etichetta">' + et + '</span></a></div>';
+      (u ? ' target="_blank" rel="noopener noreferrer"' : '') +
+      (mostra ? '' : ' hidden') + '>' +
+    '<span data-f="etichetta">' + et + '</span></a>' +
+    detailHtml(p) + '</div>';
 }
 
 /* un contatto: nome o funzione, email e telefono.
@@ -2622,9 +2716,44 @@ function migraPersone (data) {
   });
 }
 
+/* "Consiglio artistico under 35" era stato scritto come se fosse una persona,
+   dentro un altro elenco. Qui diventa il titolo di un gruppo a sé e i nomi
+   che lo seguivano gli vengono messi sotto. Le frasi lunghe (le note, non i
+   nomi) restano dov'erano. */
+function migraGruppo4 (data) {
+  if (data.persone4 && data.persone4.length) return;
+
+  ['persone1', 'persone2', 'persone3'].forEach(function (key) {
+    if (data.persone4 && data.persone4.length) return;
+    var lista = data[key];
+    if (!lista || !lista.length) return;
+
+    var i = -1;
+    lista.forEach(function (p, idx) {
+      if (i === -1 && /under\s*35/i.test(soloTesto(p.nome))) i = idx;
+    });
+    if (i === -1) return;
+
+    var rimasti = lista.slice(0, i);
+    var spostati = [];
+    lista.slice(i + 1).forEach(function (p) {
+      if (soloTesto(p.nome).length > 45) rimasti.push(p);   /* è una frase, non un nome */
+      else spostati.push(p);
+    });
+
+    data[key] = rimasti;
+    data.persone4 = spostati;
+    data.fields = data.fields || {};
+    if (!data.fields['gruppo4-titolo']) {
+      data.fields['gruppo4-titolo'] = { t: soloTesto(lista[i].nome).replace(/[:\s]+$/, '') };
+    }
+  });
+}
+
 function applyContent (data) {
   if (!data) return;
   migraPersone(data);
+  migraGruppo4(data);
   var fields = data.fields || {};
 
   document.querySelectorAll('[data-id]').forEach(function (el) {
@@ -2851,6 +2980,17 @@ function startApp () {
     var slider = detail.querySelector('.detail-slider');
     if (slider) detailHero.appendChild(slider);
     avviaSlider(detailHero);
+
+    /* il tasto indietro riporta da dove si è arrivati: dal curriculum di una
+       persona si torna a Chi Siamo, non alla Home */
+    var corrente = document.querySelector('.page:not([hidden])');
+    var da = corrente ? corrente.getAttribute('data-page') : 'home';
+    var indietro = document.querySelector('#page-dettaglio .back-link');
+    if (indietro && da && da !== 'dettaglio') {
+      indietro.setAttribute('data-nav', da);
+      var voce = document.querySelector('.main-nav [data-nav="' + da + '"]');
+      indietro.textContent = '← ' + (da === 'home' ? 'Home' : (voce ? voce.textContent.trim() : 'Indietro'));
+    }
     var tit = detail.querySelector('[data-f="d-title"]');
     if (!document.body.classList.contains('editing')) {
       traccia('apri_spettacolo', { spettacolo: tit ? tit.textContent.trim() : '(senza titolo)' });
@@ -2894,6 +3034,16 @@ function startApp () {
   /* click su un quadrante: link esterno naviga, altrimenti apre il contenuto interno */
   document.addEventListener('click', function (e) {
     if (document.body.classList.contains('editing')) return;
+
+    var cv = e.target.closest('.persona-doc');
+    if (cv) {
+      var dove = cv.getAttribute('href') || '';
+      if (/^https?:/i.test(dove)) return;        /* ha un link: ci va */
+      e.preventDefault();
+      var chi = cv.closest('.persona');
+      if (chi && chi.querySelector('.card-detail')) openDetail(chi);
+      return;
+    }
 
     var tasto = e.target.closest('.sec-btn');
     if (tasto) {
@@ -3064,6 +3214,18 @@ function startApp () {
     uploadFile(file, 'auto').then(function (url) {
       fatto(url);
       setEditorBusy('');
+      /* Cloudinary può avere la consegna dei PDF disattivata: in quel caso il
+         file si carica ma nessuno riesce ad aprirlo (risposta 401). Meglio
+         accorgersene subito che scoprirlo dal sito pubblicato. */
+      return fetch(url, { method: 'HEAD' }).then(function (res) {
+        if (!res.ok) throw new Error('non raggiungibile');
+      }).catch(function () {
+        window.alert('Il PDF è stato caricato, ma non si riesce ad aprirlo.\n\n' +
+          'Nel pannello Cloudinary va tolto il blocco:\n' +
+          'Settings > Security > "PDF and ZIP files delivery"\n' +
+          '(oppure "Restricted media types": togli la spunta a PDF), poi Salva.\n\n' +
+          'Fatto questo, anche i PDF già caricati funzioneranno da soli.');
+      });
     }).catch(function () {
       setEditorBusy('');
       window.alert('Non sono riuscito a caricare il PDF.\n\nSe l\'errore si ripete, in Cloudinary va abilitata\nla voce "Allow delivery of PDF and ZIP files"\n(Impostazioni > Sicurezza).');
@@ -3437,16 +3599,18 @@ function startApp () {
     var tools = document.createElement('div');
     tools.className = 'card-tools edit-only-wrap';
 
-    tools.appendChild(makeTool('Allega PDF', function () { pickPdf(allegaA(item)); }));
+    tools.appendChild(makeTool('Contenuto', function () { openDetail(item); }));
 
     tools.appendChild(makeTool('Link', function () {
-      var url = window.prompt('Indirizzo a cui porta il quadratino:', doc.getAttribute('href') || '');
+      var url = window.prompt('Indirizzo a cui porta il quadratino.\n' +
+        'Lascia vuoto per far aprire invece la pagina del contenuto:',
+        doc.getAttribute('href') || '');
       if (url === null) return;
       setLink(doc, url);
-      doc.hidden = !safeUrl(url);
+      doc.hidden = false;
     }));
 
-    tools.appendChild(makeTool('Togli', function () {
+    tools.appendChild(makeTool('Nascondi', function () {
       doc.setAttribute('href', '');
       doc.hidden = true;
     }));
@@ -3549,6 +3713,16 @@ function startApp () {
     tools.className = 'card-tools edit-only-wrap';
 
     tools.appendChild(makeTool('Allega PDF', function () { pickPdf(allegaA(item)); }));
+
+    /* in alternativa al documento caricato: un indirizzo già esistente */
+    tools.appendChild(makeTool('Link', function () {
+      var a = item.querySelector('[data-f="pdf"]');
+      if (!a) return;
+      var url = window.prompt('Indirizzo del documento:', a.getAttribute('href') || '');
+      if (url === null) return;
+      setLink(a, url);
+      a.hidden = !safeUrl(url);
+    }));
 
     tools.appendChild(makeTool('Togli PDF', function () {
       var a = item.querySelector('[data-f="pdf"]');

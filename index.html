@@ -2288,6 +2288,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-storage-compat.js"></script>
 <script>
 /* Stesso progetto Firebase del calendario. Il sito usa un documento tutto suo,
    "calendars/sito-tpl": il calendario continua a usare "calendars/main" e i due
@@ -2301,7 +2302,15 @@ var firebaseConfig = {
   messagingSenderId: "195557936917",
   appId: "1:195557936917:web:ba17c3253c8f0fa821631c"
 };
-/* Cloudinary: le foto caricate dall'editor finiscono qui, non nel database */
+/* DOVE FINISCONO LE IMMAGINI CARICATE DALL'EDITOR
+   Appena qui sotto ci sono l'indirizzo del progetto Supabase e la sua chiave
+   pubblica, il sito usa Supabase. Finche' restano vuoti continua a usare
+   Cloudinary, come prima: cosi' il passaggio avviene senza rotture. */
+var SUPABASE_URL = "";          /* es. https://abcdefgh.supabase.co */
+var SUPABASE_KEY = "";          /* la chiave pubblica "anon" */
+var SUPABASE_BUCKET = "immagini";
+
+/* Cloudinary: impianto precedente, resta come riserva */
 var CLOUDINARY_CLOUD_NAME = "orqjfhcj";
 var CLOUDINARY_UPLOAD_PRESET = "md5s3dgi";
 </script>
@@ -2315,16 +2324,18 @@ var CLOUDINARY_UPLOAD_PRESET = "md5s3dgi";
      data-id  -> campo singolo (titolo, paragrafo, logo...)
      data-f   -> campo dentro un elenco (quadrati, poster, video...)
    ===================================================== */
-var SITE_VERSION = '41';   /* si vede nella barra dell'editor: serve a capire quale codice è online */
+var SITE_VERSION = '44';   /* si vede nella barra dell'editor: serve a capire quale codice è online */
 var SCHEMA = 1;
 var LEGACY_DOC = false;   /* true se nel database c'è ancora il vecchio salvataggio */
 
 var SITE_DOC = null;
 var SITE_AUTH = null;
+var SITE_STORAGE = null;
 try {
   firebase.initializeApp(firebaseConfig);
   SITE_DOC = firebase.firestore().collection('calendars').doc('sito-tpl');
   SITE_AUTH = firebase.auth();
+  if (firebase.storage) SITE_STORAGE = firebase.storage();
 } catch (e) {
   SITE_DOC = null;
 }
@@ -2402,6 +2413,28 @@ function safeUrl (value) {
   return u;
 }
 
+/* COPIE LEGGERE
+   Cloudinary sa consegnare la stessa immagine ridimensionata e nel formato
+   piu' moderno che il browser accetta: pesa anche dieci volte meno. Finora
+   si scaricava sempre l'originale a piena risoluzione (una foto da 4 MB
+   dentro un quadrato di 373 pixel), ed e' cio' che ha esaurito il piano
+   gratuito. Nel database resta sempre scritto l'indirizzo originale: la
+   copia leggera si chiede solo al momento di mostrarla. */
+var CDN = /^(https:\/\/res\.cloudinary\.com\/[^\/]+\/image\/upload\/)(?:f_auto,q_auto,w_\d+\/)?(.*)$/;
+
+function leggera (url, larghezza) {
+  var u = safeUrl(url);
+  var m = CDN.exec(u);
+  if (!m) return u;                     /* non e' Cloudinary: si lascia com'e' */
+  return m[1] + 'f_auto,q_auto,w_' + (larghezza || 900) + '/' + m[2];
+}
+
+function originale (url) {
+  var u = safeUrl(url);
+  var m = CDN.exec(u);
+  return m ? m[1] + m[2] : u;
+}
+
 function esc (value) {
   return String(value == null ? '' : value).replace(/[&<>"]/g, function (c) {
     return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
@@ -2439,7 +2472,7 @@ function htmlPulito (n) {
 
 function slideUrl (el) {
   var m = /url\(["']?(.*?)["']?\)/.exec(el.style.backgroundImage || '');
-  return m ? m[1] : '';
+  return m ? originale(m[1]) : '';
 }
 
 function collectItem (el, fields) {
@@ -2447,7 +2480,7 @@ function collectItem (el, fields) {
   fields.forEach(function (f) {
     var n = el.querySelector('[data-f="' + f + '"]');
     if (!n) return;
-    if (n.tagName === 'IMG') o[f] = n.getAttribute('src') || '';
+    if (n.tagName === 'IMG') o[f] = originale(n.getAttribute('src'));
     else if (f === 'pdf') o[f] = n.getAttribute('href') || '';
     else if (f === 'btn') o[f] = n.getAttribute('data-url') || '';
     else o[f] = htmlPulito(n);
@@ -2473,7 +2506,7 @@ function collectItem (el, fields) {
       var img = g.querySelector('[data-g="img"]');
       var cap = g.querySelector('[data-g="cap"]');
       return {
-        img: img ? (img.getAttribute('src') || '') : '',
+        img: img ? originale(img.getAttribute('src')) : '',
         cap: cap ? htmlPulito(cap) : ''
       };
     });
@@ -2486,7 +2519,7 @@ function collectItem (el, fields) {
       var img = f.querySelector('[data-p="img"]');
       var cap = f.querySelector('[data-p="cap"]');
       return {
-        img: img ? (img.getAttribute('src') || '') : '',
+        img: img ? originale(img.getAttribute('src')) : '',
         cap: cap ? htmlPulito(cap) : ''
       };
     });
@@ -2500,7 +2533,7 @@ function collectContent () {
   document.querySelectorAll('[data-id]').forEach(function (el) {
     var id = el.getAttribute('data-id');
     if (el.tagName === 'IMG') {
-      data.fields[id] = { s: el.getAttribute('src') || '' };
+      data.fields[id] = { s: originale(el.getAttribute('src')) };
     } else if (el.classList.contains('slide')) {
       data.fields[id] = { s: slideUrl(el) };
     } else {
@@ -2531,7 +2564,7 @@ function collectContent () {
 function galleriaHtml (lista) {
   var items = (lista || []).map(function (g) {
     return '<figure class="gal-item">' +
-      '<div class="gal-ph"><img src="' + esc(safeUrl(g.img)) + '" alt="" data-g="img"></div>' +
+      '<div class="gal-ph"><img src="' + esc(leggera(g.img, 700)) + '" alt="" loading="lazy" data-g="img"></div>' +
       '<figcaption class="gal-cap" data-g="cap">' + safeHtml(g.cap) + '</figcaption>' +
       '</figure>';
   }).join('');
@@ -2541,7 +2574,7 @@ function galleriaHtml (lista) {
 function fotoHtml (lista) {
   var items = (lista || []).map(function (f) {
     return '<figure class="foto-item">' +
-      '<div class="foto-ph"><img src="' + esc(safeUrl(f.img)) + '" alt="" data-p="img"></div>' +
+      '<div class="foto-ph"><img src="' + esc(leggera(f.img, 600)) + '" alt="" loading="lazy" data-p="img"></div>' +
       '<figcaption class="foto-cap" data-p="cap">' + safeHtml(f.cap) + '</figcaption>' +
       '</figure>';
   }).join('');
@@ -2552,7 +2585,7 @@ function fotoHtml (lista) {
    Se un contenuto vecchio aveva una sola immagine fissa, diventa la prima. */
 function sliderHtml (lista) {
   var items = (lista || []).map(function (u, i) {
-    var url = safeUrl(u).replace(/'/g, '%27');
+    var url = leggera(u, 1600).replace(/'/g, '%27');
     return '<div class="dslide' + (i === 0 ? ' active' : '') +
       '" style="background-image:url(\'' + esc(url) + '\')"></div>';
   }).join('');
@@ -2582,13 +2615,13 @@ function detailHtml (d) {
 
 function renderCard (c) {
   return '<a class="show-card reveal" ' + linkAttrs(c.href) + '>' +
-    '<div class="ph"><img src="' + esc(safeUrl(c.img)) + '" alt="" data-f="img"></div>' +
+    '<div class="ph"><img src="' + esc(leggera(c.img, 800)) + '" alt="" loading="lazy" data-f="img"></div>' +
     detailHtml(c) + '</a>';
 }
 
 function renderPoster (p) {
   return '<a class="poster-item" ' + linkAttrs(p.href) + '>' +
-    '<div class="poster-ph"><img src="' + esc(safeUrl(p.img)) + '" alt="" data-f="img"></div>' +
+    '<div class="poster-ph"><img src="' + esc(leggera(p.img, 700)) + '" alt="" loading="lazy" data-f="img"></div>' +
     '<div class="poster-caption" data-f="caption">' + safeHtml(p.caption) + '</div>' +
     '<div class="poster-sub" data-f="sub">' + safeHtml(p.sub) + '</div>' +
     detailHtml(p) + '</a>';
@@ -2605,7 +2638,7 @@ function secBtnHtml (s) {
 
 function renderSec (s) {
   return '<a class="sec-card" ' + linkAttrs(s.href) + '>' +
-    '<div class="sec-ph"><img src="' + esc(safeUrl(s.img)) + '" alt="" data-f="img"></div>' +
+    '<div class="sec-ph"><img src="' + esc(leggera(s.img, 800)) + '" alt="" loading="lazy" data-f="img"></div>' +
     '<div class="sec-caption" data-f="caption">' + safeHtml(s.caption) + '</div>' +
     '<div class="poster-sub" data-f="sub">' + safeHtml(s.sub) + '</div>' +
     secBtnHtml(s) + detailHtml(s) + '</a>';
@@ -2658,7 +2691,7 @@ function renderContatto (c) {
 
 function renderVideo (v) {
   return '<a class="video-item" ' + linkAttrs(v.href) + '>' +
-    '<div class="video-ph"><img src="' + esc(safeUrl(v.img)) + '" alt="" data-f="img">' +
+    '<div class="video-ph"><img src="' + esc(leggera(v.img, 800)) + '" alt="" loading="lazy" data-f="img">' +
     '<span class="video-play"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span></div>' +
     '<div class="video-caption" data-f="caption">' + safeHtml(v.caption) + '</div>' +
     '<div class="poster-sub" data-f="sub">' + safeHtml(v.sub) + '</div></a>';
@@ -2666,7 +2699,7 @@ function renderVideo (v) {
 
 function renderNews (n) {
   return '<article class="news-card reveal">' +
-    '<div class="ph"><img src="' + esc(safeUrl(n.img)) + '" alt="" data-f="img"></div>' +
+    '<div class="ph"><img src="' + esc(leggera(n.img, 700)) + '" alt="" loading="lazy" data-f="img"></div>' +
     '<div class="body">' +
     '<div class="meta" data-f="meta">' + safeHtml(n.meta) + '</div>' +
     '<h3 data-f="title">' + safeHtml(n.title) + '</h3>' +
@@ -2760,9 +2793,9 @@ function applyContent (data) {
     var v = fields[el.getAttribute('data-id')];
     if (!v) return;
     if (el.tagName === 'IMG') {
-      if (v.s) el.setAttribute('src', safeUrl(v.s));
+      if (v.s) el.setAttribute('src', leggera(v.s, 1100));
     } else if (el.classList.contains('slide')) {
-      if (v.s) el.style.backgroundImage = "url('" + safeUrl(v.s) + "')";
+      if (v.s) el.style.backgroundImage = "url('" + leggera(v.s, 1600) + "')";
     } else {
       if (typeof v.t === 'string') el.innerHTML = safeHtml(v.t);
       if (v.u && el.tagName === 'A') setLink(el, v.u);
@@ -2854,8 +2887,62 @@ function traccia (evento, dati) {
   window.dataLayer.push(voce);
 }
 
-/* carica una foto su Cloudinary e restituisce l'indirizzo pubblico */
-function uploadFile (file, tipo) {
+/* IL BROWSER RIMPICCIOLISCE PRIMA DI CARICARE
+   Una fotografia appena scattata pesa qualche megabyte e ha 4000 pixel di
+   lato: nel sito non se ne vedono mai piu' di 1600. Ridotta qui, parte gia'
+   leggera, si carica in un lampo e consuma pochissimo spazio. L'originale
+   sul computer del cliente non viene toccato. */
+function ridimensiona (file, maxLato) {
+  return new Promise(function (ok) {
+    if (!file || !/^image\//.test(file.type) || /svg|gif/i.test(file.type)) return ok(file);
+    var url = URL.createObjectURL(file);
+    var img = new Image();
+    img.onload = function () {
+      var w = img.naturalWidth, h = img.naturalHeight;
+      var scala = Math.min(1, (maxLato || 1600) / Math.max(w, h));
+      if (scala === 1 && file.size < 400000) { URL.revokeObjectURL(url); return ok(file); }
+      var c = document.createElement('canvas');
+      c.width = Math.max(1, Math.round(w * scala));
+      c.height = Math.max(1, Math.round(h * scala));
+      c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+      c.toBlob(function (blob) {
+        URL.revokeObjectURL(url);
+        ok(blob && blob.size < file.size ? blob : file);
+      }, 'image/jpeg', 0.82);
+    };
+    img.onerror = function () { URL.revokeObjectURL(url); ok(file); };
+    img.src = url;
+  });
+}
+
+function nomeFile (file) {
+  var base = (file && file.name ? file.name : 'file')
+    .replace(/[^a-zA-Z0-9._-]/g, '_').slice(-40);
+  if (file && file.type === 'image/jpeg' && !/\.(jpe?g)$/i.test(base)) base += '.jpg';
+  return Date.now() + '-' + Math.random().toString(36).slice(2, 8) + '-' + base;
+}
+
+function uploadSupabase (file) {
+  var percorso = SUPABASE_BUCKET + '/' + nomeFile(file);
+  return fetch(SUPABASE_URL.replace(/\/$/, '') + '/storage/v1/object/' + percorso, {
+    method: 'POST',
+    headers: {
+      apikey: SUPABASE_KEY,
+      Authorization: 'Bearer ' + SUPABASE_KEY,
+      'Content-Type': file.type || 'application/octet-stream'
+    },
+    body: file
+  }).then(function (res) {
+    if (!res.ok) {
+      return res.text().then(function (t) {
+        throw new Error('Supabase ha rifiutato il file (' + res.status + '): ' + t.slice(0, 140));
+      });
+    }
+    return SUPABASE_URL.replace(/\/$/, '') + '/storage/v1/object/public/' + percorso;
+  });
+}
+
+function uploadCloudinary (file, tipo) {
   var form = new FormData();
   form.append('file', file);
   form.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
@@ -2868,7 +2955,40 @@ function uploadFile (file, tipo) {
   }).then(function (json) { return json.secure_url; });
 }
 
-function uploadImage (file) { return uploadFile(file, 'image'); }
+/* I file caricati dall'editor finiscono nello spazio del progetto Firebase,
+   lo stesso che ospita i testi. Le regole consentono di scrivere solo a chi
+   e' entrato nell'editor (accesso anonimo), e solo immagini o PDF sotto i
+   10 MB; a leggere invece sono ammessi tutti, come dev'essere per un sito. */
+function uploadFirebase (file) {
+  return ensureSignedIn().then(function () {
+    var rif = SITE_STORAGE.ref('immagini/' + nomeFile(file));
+    return rif.put(file, { contentType: file.type || 'application/octet-stream' });
+  }).then(function (esito) {
+    return esito.ref.getDownloadURL();
+  });
+}
+
+/* carica un file e restituisce l'indirizzo pubblico */
+function uploadFile (file, tipo) {
+  if (SITE_STORAGE) return uploadFirebase(file);
+  if (SUPABASE_URL && SUPABASE_KEY) return uploadSupabase(file);
+  return uploadCloudinary(file, tipo);     /* impianto vecchio, ormai spento */
+}
+
+function uploadImage (file) {
+  return ridimensiona(file, 1600).then(function (ridotto) {
+    /* l'immagine ridotta mantiene il nome di partenza: nell'archivio
+       si continua a capire che cos'è */
+    if (ridotto !== file && typeof File === 'function') {
+      try {
+        ridotto = new File([ridotto],
+          String(file.name || 'foto').replace(/\.[^.]+$/, '') + '.jpg',
+          { type: 'image/jpeg' });
+      } catch (e) {}
+    }
+    return uploadFile(ridotto, 'image');
+  });
+}
 
 document.addEventListener('DOMContentLoaded', function () {
   loadPublishedContent(startApp);

@@ -551,6 +551,16 @@ body.editing .testo-riga { margin-bottom: 58px; }
   cursor: pointer;
   align-self: start;
 }
+/* il pulsante per la scelta multipla si distingue da quello singolo */
+.add-molte { border-style: solid; border-color: var(--orange-red); color: var(--orange-red); }
+.add-molte small {
+  display: block;
+  margin-top: 5px;
+  font-size: 9px;
+  letter-spacing: 0.06em;
+  text-transform: none;
+  opacity: .75;
+}
 body.editing .detail-photos { row-gap: 76px; }
 body.editing .foto-item { overflow: visible; }
 
@@ -2284,6 +2294,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 <input type="file" id="editorFileInput" accept="image/*" hidden>
 <input type="file" id="editorMultiInput" accept="image/*" multiple hidden>
+<input type="file" id="editorUnoInput" accept="image/*" hidden>
 <input type="file" id="editorPdfInput" accept="application/pdf" hidden>
 
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -2325,7 +2336,7 @@ var CLOUDINARY_UPLOAD_PRESET = "md5s3dgi";
      data-id  -> campo singolo (titolo, paragrafo, logo...)
      data-f   -> campo dentro un elenco (quadrati, poster, video...)
    ===================================================== */
-var SITE_VERSION = '46';   /* si vede nella barra dell'editor: serve a capire quale codice è online */
+var SITE_VERSION = '47';   /* si vede nella barra dell'editor: serve a capire quale codice è online */
 var SCHEMA = 1;
 var LEGACY_DOC = false;   /* true se nel database c'è ancora il vecchio salvataggio */
 
@@ -3371,7 +3382,32 @@ function startApp () {
     multiInput.click();
   }
 
+  var MAX_INSIEME = 20;
+
+  var unoInput = document.getElementById('editorUnoInput');
+  var pendingUno = null;
+
+  function pickUno (perUna) {
+    pendingUno = perUna;
+    unoInput.value = '';
+    unoInput.click();
+  }
+
+  unoInput.addEventListener('change', function () {
+    var f = unoInput.files && unoInput.files[0];
+    if (!f || !pendingUno) return;
+    var fn = pendingUno;
+    pendingUno = null;
+    caricaInSerie([f], fn);
+  });
+
   function caricaInSerie (files, perOgnuna) {
+    if (files.length > MAX_INSIEME) {
+      window.alert('Ne hai scelte ' + files.length + '.\n' +
+        'Se ne possono caricare al massimo ' + MAX_INSIEME + ' per volta:\n' +
+        'carico le prime ' + MAX_INSIEME + ', poi ripeti per le altre.');
+      files = files.slice(0, MAX_INSIEME);
+    }
     var totale = files.length, fatte = 0, errori = 0;
     (function passo (i) {
       if (i >= totale) {
@@ -3666,22 +3702,33 @@ function startApp () {
   function addGalleryButtons (root) {
     (root || document).querySelectorAll('[data-gallery]').forEach(function (gal) {
       if (gal.querySelector('.add-gal')) return;
+      function aggiungiManifesto (dove, url) {
+        var box = document.createElement('div');
+        box.innerHTML = galleriaHtml([{ img: url, cap: '' }]);
+        var item = box.firstElementChild.firstElementChild;
+        gal.insertBefore(item, dove);
+        makeEditable(item);
+        decorateGal(item);
+        decorateImages(item);
+      }
+
       var btn = document.createElement('button');
       btn.type = 'button';
       btn.className = 'add-gal edit-only';
-      btn.textContent = '+ Manifesto (anche piu\u0027 insieme)';
+      btn.textContent = '+ Manifesto';
       btn.addEventListener('click', function () {
-        pickMolte(function (url) {
-          var box = document.createElement('div');
-          box.innerHTML = galleriaHtml([{ img: url, cap: '' }]);
-          var item = box.firstElementChild.firstElementChild;
-          gal.insertBefore(item, btn);
-          makeEditable(item);
-          decorateGal(item);
-          decorateImages(item);
-        });
+        pickUno(function (url) { aggiungiManifesto(btn, url); });
       });
       gal.appendChild(btn);
+
+      var molti = document.createElement('button');
+      molti.type = 'button';
+      molti.className = 'add-gal add-molte edit-only';
+      molti.innerHTML = '+ Pi\u00f9 manifesti insieme<small>scegline fino a 20</small>';
+      molti.addEventListener('click', function () {
+        pickMolte(function (url) { aggiungiManifesto(molti, url); });
+      });
+      gal.appendChild(molti);
     });
   }
 
@@ -3747,20 +3794,31 @@ function startApp () {
   function addSlideButtons (root) {
     (root || document).querySelectorAll('[data-slides]').forEach(function (box) {
       if (box.querySelector('.add-slide')) return;
+      function aggiungiApertura (dove, url) {
+        var d = document.createElement('div');
+        d.className = 'dslide';
+        d.style.backgroundImage = "url('" + url + "')";
+        box.insertBefore(d, dove);
+        decorateSlide(d);
+      }
+
       var btn = document.createElement('button');
       btn.type = 'button';
       btn.className = 'add-slide edit-only';
-      btn.textContent = '+ Immagini di apertura (anche piu\u0027 insieme)';
+      btn.textContent = '+ Immagine di apertura';
       btn.addEventListener('click', function () {
-        pickMolte(function (url) {
-          var d = document.createElement('div');
-          d.className = 'dslide';
-          d.style.backgroundImage = "url('" + url + "')";
-          box.insertBefore(d, btn);
-          decorateSlide(d);
-        });
+        pickUno(function (url) { aggiungiApertura(btn, url); });
       });
       box.appendChild(btn);
+
+      var molte = document.createElement('button');
+      molte.type = 'button';
+      molte.className = 'add-slide add-molte edit-only';
+      molte.innerHTML = '+ Pi\u00f9 immagini di apertura insieme<small>scegline fino a 20</small>';
+      molte.addEventListener('click', function () {
+        pickMolte(function (url) { aggiungiApertura(molte, url); });
+      });
+      box.appendChild(molte);
     });
   }
 
@@ -3825,22 +3883,33 @@ function startApp () {
   function addPhotoButtons (root) {
     (root || document).querySelectorAll('[data-photos]').forEach(function (griglia) {
       if (griglia.querySelector('.add-foto')) return;
+      function aggiungiFoto (dove, url) {
+        var box = document.createElement('div');
+        box.innerHTML = fotoHtml([{ img: url, cap: '' }]);
+        var item = box.firstElementChild.firstElementChild;
+        griglia.insertBefore(item, dove);
+        makeEditable(item);
+        decorateFoto(item);
+        decorateImages(item);
+      }
+
       var btn = document.createElement('button');
       btn.type = 'button';
       btn.className = 'add-foto edit-only';
-      btn.textContent = '+ Foto (anche piu\u0027 insieme)';
+      btn.textContent = '+ Foto';
       btn.addEventListener('click', function () {
-        pickMolte(function (url) {
-          var box = document.createElement('div');
-          box.innerHTML = fotoHtml([{ img: url, cap: '' }]);
-          var item = box.firstElementChild.firstElementChild;
-          griglia.insertBefore(item, btn);
-          makeEditable(item);
-          decorateFoto(item);
-          decorateImages(item);
-        });
+        pickUno(function (url) { aggiungiFoto(btn, url); });
       });
       griglia.appendChild(btn);
+
+      var molte = document.createElement('button');
+      molte.type = 'button';
+      molte.className = 'add-foto add-molte edit-only';
+      molte.innerHTML = '+ Pi\u00f9 foto insieme<small>scegline fino a 20</small>';
+      molte.addEventListener('click', function () {
+        pickMolte(function (url) { aggiungiFoto(molte, url); });
+      });
+      griglia.appendChild(molte);
     });
   }
 

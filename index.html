@@ -2283,6 +2283,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </div>
 
 <input type="file" id="editorFileInput" accept="image/*" hidden>
+<input type="file" id="editorMultiInput" accept="image/*" multiple hidden>
 <input type="file" id="editorPdfInput" accept="application/pdf" hidden>
 
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -2324,16 +2325,19 @@ var CLOUDINARY_UPLOAD_PRESET = "md5s3dgi";
      data-id  -> campo singolo (titolo, paragrafo, logo...)
      data-f   -> campo dentro un elenco (quadrati, poster, video...)
    ===================================================== */
-var SITE_VERSION = '44';   /* si vede nella barra dell'editor: serve a capire quale codice è online */
+var SITE_VERSION = '46';   /* si vede nella barra dell'editor: serve a capire quale codice è online */
 var SCHEMA = 1;
 var LEGACY_DOC = false;   /* true se nel database c'è ancora il vecchio salvataggio */
 
 var SITE_DOC = null;
+var SITE_PREC = null;      /* copia del contenuto precedente: salvagente */
+var CONTENUTO_PRONTO = false;   /* true solo quando i contenuti pubblicati sono arrivati */
 var SITE_AUTH = null;
 var SITE_STORAGE = null;
 try {
   firebase.initializeApp(firebaseConfig);
   SITE_DOC = firebase.firestore().collection('calendars').doc('sito-tpl');
+  SITE_PREC = firebase.firestore().collection('calendars').doc('sito-tpl-prec');
   SITE_AUTH = firebase.auth();
   if (firebase.storage) SITE_STORAGE = firebase.storage();
 } catch (e) {
@@ -2859,6 +2863,7 @@ function loadPublishedContent (done) {
   if (!cache) window.setTimeout(avvia, 2500);
 
   SITE_DOC.get().then(function (snap) {
+    CONTENUTO_PRONTO = true;        /* da qui in poi la pagina mostra il vero */
     if (snap.exists) {
       var d = snap.data();
       if (d && !d.fields && (d.main || d.nav || d.footer)) {
@@ -3352,6 +3357,49 @@ function startApp () {
     });
   });
 
+  /* SCELTA MULTIPLA
+     I pulsanti "+" aprono direttamente la finestra dei file e accettano piu'
+     immagini insieme: vengono caricate una dopo l'altra (non tutte in una
+     volta, per non intasare la rete) e aggiunte in fondo alla sezione da cui
+     si e' premuto. Se una non riesce, le altre proseguono lo stesso. */
+  var multiInput = document.getElementById('editorMultiInput');
+  var pendingMolte = null;
+
+  function pickMolte (perOgnuna) {
+    pendingMolte = perOgnuna;
+    multiInput.value = '';
+    multiInput.click();
+  }
+
+  function caricaInSerie (files, perOgnuna) {
+    var totale = files.length, fatte = 0, errori = 0;
+    (function passo (i) {
+      if (i >= totale) {
+        setEditorBusy('');
+        if (errori) {
+          window.alert('Aggiunte ' + fatte + ' immagini su ' + totale + '.\n' +
+            errori + ' non sono riuscite: riprova con quelle.');
+        }
+        return;
+      }
+      setEditorBusy('Caricamento ' + (i + 1) + ' di ' + totale + '…');
+      uploadImage(files[i]).then(function (url) {
+        fatte++;
+        perOgnuna(url);
+      }).catch(function () {
+        errori++;
+      }).then(function () { passo(i + 1); });
+    })(0);
+  }
+
+  multiInput.addEventListener('change', function () {
+    var files = Array.prototype.slice.call(multiInput.files || []);
+    if (!files.length || !pendingMolte) return;
+    var fn = pendingMolte;
+    pendingMolte = null;
+    caricaInSerie(files, fn);
+  });
+
   function pickImage (target) {
     pendingTarget = target;
     fileInput.value = '';
@@ -3621,15 +3669,17 @@ function startApp () {
       var btn = document.createElement('button');
       btn.type = 'button';
       btn.className = 'add-gal edit-only';
-      btn.textContent = '+ Manifesto';
+      btn.textContent = '+ Manifesto (anche piu\u0027 insieme)';
       btn.addEventListener('click', function () {
-        var box = document.createElement('div');
-        box.innerHTML = galleriaHtml([{ img: PLACEHOLDER_IMG, cap: 'testo qui' }]);
-        var item = box.firstElementChild.firstElementChild;
-        gal.insertBefore(item, btn);
-        makeEditable(item);
-        decorateGal(item);
-        decorateImages(item);
+        pickMolte(function (url) {
+          var box = document.createElement('div');
+          box.innerHTML = galleriaHtml([{ img: url, cap: '' }]);
+          var item = box.firstElementChild.firstElementChild;
+          gal.insertBefore(item, btn);
+          makeEditable(item);
+          decorateGal(item);
+          decorateImages(item);
+        });
       });
       gal.appendChild(btn);
     });
@@ -3700,13 +3750,15 @@ function startApp () {
       var btn = document.createElement('button');
       btn.type = 'button';
       btn.className = 'add-slide edit-only';
-      btn.textContent = '+ Immagine di apertura';
+      btn.textContent = '+ Immagini di apertura (anche piu\u0027 insieme)';
       btn.addEventListener('click', function () {
-        var d = document.createElement('div');
-        d.className = 'dslide';
-        d.style.backgroundImage = "url('" + PLACEHOLDER_IMG + "')";
-        box.insertBefore(d, btn);
-        decorateSlide(d);
+        pickMolte(function (url) {
+          var d = document.createElement('div');
+          d.className = 'dslide';
+          d.style.backgroundImage = "url('" + url + "')";
+          box.insertBefore(d, btn);
+          decorateSlide(d);
+        });
       });
       box.appendChild(btn);
     });
@@ -3776,15 +3828,17 @@ function startApp () {
       var btn = document.createElement('button');
       btn.type = 'button';
       btn.className = 'add-foto edit-only';
-      btn.textContent = '+ Foto';
+      btn.textContent = '+ Foto (anche piu\u0027 insieme)';
       btn.addEventListener('click', function () {
-        var box = document.createElement('div');
-        box.innerHTML = fotoHtml([{ img: PLACEHOLDER_IMG, cap: 'testo qui' }]);
-        var item = box.firstElementChild.firstElementChild;
-        griglia.insertBefore(item, btn);
-        makeEditable(item);
-        decorateFoto(item);
-        decorateImages(item);
+        pickMolte(function (url) {
+          var box = document.createElement('div');
+          box.innerHTML = fotoHtml([{ img: url, cap: '' }]);
+          var item = box.firstElementChild.firstElementChild;
+          griglia.insertBefore(item, btn);
+          makeEditable(item);
+          decorateFoto(item);
+          decorateImages(item);
+        });
       });
       griglia.appendChild(btn);
     });
@@ -3920,7 +3974,21 @@ function startApp () {
     if (current) syncPageSelect(current.getAttribute('data-page'));
   }
 
+  /* PROTEZIONE CONTRO LA PERDITA DI CONTENUTI
+     Se la rete è lenta, per qualche secondo la pagina mostra ancora i testi
+     e le immagini di esempio. Entrare in editor in quel momento e premere
+     SALVA cancellerebbe tutto il lavoro pubblicato, sostituendolo con gli
+     esempi. Qui si aspetta che i contenuti veri siano arrivati. */
+  function contenutiArrivati () {
+    if (CONTENUTO_PRONTO) return true;
+    window.alert('Aspetta qualche secondo: i contenuti del sito non sono ancora\n' +
+      'stati caricati del tutto.\n\nSe entrassi adesso rischieresti di salvare la pagina\n' +
+      'di esempio al posto del lavoro pubblicato. Riprova fra poco.');
+    return false;
+  }
+
   function enterEditMode () {
+    if (!contenutiArrivati()) return;
     document.body.classList.add('editing');
     editorBar.hidden = false;
     var stamp = document.getElementById('editorVersion');
@@ -3980,6 +4048,8 @@ function startApp () {
       return;
     }
 
+    if (!contenutiArrivati()) return;
+
     var dati;
     try {
       closeDetail();
@@ -3992,6 +4062,13 @@ function startApp () {
     setEditorBusy('Pubblicazione in corso…');
 
     ensureSignedIn().then(function () {
+      /* salvagente: la versione attuale viene messa da parte prima di
+         essere sostituita, così un salvataggio sbagliato si può annullare */
+      if (!SITE_PREC) return null;
+      return SITE_DOC.get().then(function (vecchio) {
+        if (vecchio.exists) return SITE_PREC.set(vecchio.data());
+      }).catch(function () {});
+    }).then(function () {
       return SITE_DOC.set(dati);
     }).then(function () {
       /* rileggo dal database per essere certo che sia stato scritto davvero */
@@ -4049,7 +4126,10 @@ function startApp () {
   document.getElementById('editorExit').addEventListener('click', exitEditMode);
 
   document.getElementById('editorReset').addEventListener('click', function () {
-    if (!window.confirm('Ripristinare il contenuto originale del sito e annullare tutte le modifiche pubblicate?')) return;
+    var conferma = window.prompt('ATTENZIONE: questo cancella TUTTI i contenuti pubblicati\n' +
+      '(testi, immagini, pagine) e riporta il sito agli esempi iniziali.\n\n' +
+      'Se sei sicuro scrivi qui sotto la parola CANCELLA:');
+    if (conferma === null || conferma.trim().toUpperCase() !== 'CANCELLA') return;
     if (!SITE_DOC) { window.location.reload(); return; }
     setEditorBusy('Ripristino in corso…');
     SITE_DOC.delete().then(function () {
